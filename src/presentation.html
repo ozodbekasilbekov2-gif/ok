@@ -182,7 +182,7 @@ table.ledger{width:100%;border-collapse:collapse;background:#fff;border:1px soli
 .ck li{position:relative;padding:9px 0 9px 30px;font-size:14.5px;line-height:1.55;border-bottom:1px dashed var(--line)}
 .ck li:last-child{border-bottom:none}
 .ck li::before{content:"";position:absolute;left:2px;top:15px;width:14px;height:14px;border-radius:4px;background:var(--olive-soft);border:1.5px solid var(--olive)}
-.ck li::after{content:"✓";position:absolute;left:5px;top:7.5px;font-size:10px;color:var(--olive);font-weight:700}
+.ck li::after{content:"✓";position:absolute;left:2px;top:15px;width:17px;height:17px;line-height:17px;text-align:center;font-size:10px;color:var(--olive);font-weight:700}
 
 /* ---------- tags ---------- */
 .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:99px}
@@ -245,6 +245,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <a href="#history">Эволюция</a>
       <a href="#research">Данные</a>
       <a href="#product">Продукт</a>
+      <a href="#ai">AI-фильтр</a>
       <a href="#paynet">Paynet</a>
       <a href="#economics">Экономика</a>
       <a href="#plan">План</a>
@@ -295,24 +296,23 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <div class="sec-no">01</div>
       <div>
         <div class="sec-kicker">Одна история вместо тысячи слайдов</div>
-        <h2 style="margin-top:8px">Мухтар и купюра в две тысячи</h2>
+        <h2 style="margin-top:8px">День без смартфона</h2>
       </div>
     </div>
     <div class="split-r" style="margin-top:44px">
       <div class="prose dc rv">
-        Мухтару шестьдесят один. Утром он вышел за хлебом — паспорт остался дома, телефон тоже: он не носит его с собой, кнопочный, тяжёлый, «зачем он мне на десять минут». У прилавка его догоняет сосед: <strong>жена звонила всем подряд — Мухтара срочно ждут на рынке Алай, с паспортом, до четырёх часов.</strong>
-        <p style="margin-top:20px">Сообщить домой — одно предложение. Восемь слов. Но между Мухтаром и этими восемью словами — целая пропасть: чужие телефоны, неловкие просьбы, «извините, мне только позвонить». В кармане у него — пять тысяч сум мелочью и одна мысль: <em>тридцать лет назад я бы просто дошёл до таксофона у метро «Алишер Навои».</em></p>
-        <p style="margin-top:20px">Таксофона больше нет. А вот жёлто-зелёный терминал Paynet — <strong>в восьмидесяти метрах, у входа в магазин.</strong> Мухтар вставляет купюру в две тысячи сум, выбирает готовую фразу, вводит номер жены. Через четыре секунды на её экране: <em>«Принеси паспорт на рынок Алай, до 16:00».</em></p>
-        <p style="margin-top:20px">Вот и весь продукт. Мы не изобрели ничего нового — мы вернули городу таксофон. Только теперь он принимает купюры и говорит по-русски и по-узбекски.</p>
+        Утро понедельника. Бахтиёр уезжает на главную встречу месяца — а смартфон остаётся на зарядке дома. Он понимает это на полпути. Вернуться — опоздать. Ехать дальше — партнёр так и не узнает, что встреча в силе и где его ждать.
+        <p style="margin-top:20px">У кассы супермаркета он видит терминал Paynet, а на экране — заставку: <strong>«Остались без телефона? Отправьте сообщение».</strong> Купюра в две тысячи, номер с визитки, свой текст — и через четыре секунды партнёр читает: <em>«Я без связи до вечера. Встреча в силе, буду к 15:00».</em></p>
+        <p style="margin-top:20px">Проблема, которая грозила сорвать сделку, решена за минуту — ценой одной купюры. Вот и весь продукт: мы вернули городу таксофон — только теперь он принимает купюры и пишет вашими словами.</p>
       </div>
       <div>
         <div class="marginalia rv">
           <b>Почему это не мелочь</b>
-          В Ташкенте живут 3,04 млн человек, а мобильных подключений в стране — 33,9 млн. Цифры создают иллюзию, что телефон есть у всех и всегда. Но телефон разряжается, теряется, остаётся дома, отбирается, не покупается — а срочные восемь слов случаются со всеми.
+          В Ташкенте живут 3,04 млн человек, а мобильных подключений в стране — 33,9 млн. Цифры создают иллюзию, что телефон есть у всех и всегда. Но телефон забывается, разряжается, теряется — а срочное сообщение случается со всеми — и с бизнесменом, и с пенсионером.
         </div>
         <div class="card-clay rv" style="margin-top:26px">
           <div class="tag tag-c">суть продукта</div>
-          <p style="margin-top:14px;font-size:15px;line-height:1.65">Купюра 2 000 сум → готовое SMS получателю. Всё, что выше 2 000, — обычное пополнение баланса. Одно движение, ноль регистраций, ноль приложений.</p>
+          <p style="margin-top:14px;font-size:15px;line-height:1.65">Купюра 2 000 сум → SMS своими словами, проверенное AI-фильтром. Всё, что выше 2 000, — обычное пополнение баланса. Одно движение, ноль регистраций, ноль приложений.</p>
         </div>
       </div>
     </div>
@@ -545,13 +545,13 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       </div>
       <div class="card rv">
         <div class="step-when">шаг 3</div>
-        <h3 style="font-size:17px">Шаблон + номер</h3>
-        <p class="xs mut" style="margin-top:8px">Пять готовых фраз на трёх языках: «Перезвони мне», «Я жду тебя в …», «Срочно свяжись с …». Свободного текста нет — это антифрод.</p>
+        <h3 style="font-size:17px">Свой текст + номер</h3>
+        <p class="xs mut" style="margin-top:8px">Человек пишет своими словами — на русском или узбекском. Быстрые подсказки есть, но они необязательны: жизнь не помещается в пять шаблонов.</p>
       </div>
-      <div class="card rv">
+      <div class="card rv" style="border-color:var(--clay);background:var(--clay-soft)">
         <div class="step-when">шаг 4</div>
-        <h3 style="font-size:17px">Номер отправителя</h3>
-        <p class="xs mut" style="margin-top:8px">Обязательное поле «от кого» — получатель всегда видит, чей это номер и куда перезванивать.</p>
+        <h3 style="font-size:17px">AI-фильтр Xabar</h3>
+        <p class="xs mut" style="margin-top:8px">Текст проходит через нашу LLM: мошеннические формулировки блокируются или перефразируются с предупреждением получателю. Обязательный номер отправителя — в каждом SMS.</p>
       </div>
       <div class="card rv" style="border-color:var(--olive);background:var(--olive-soft)">
         <div class="step-when" style="color:var(--olive)">шаг 5</div>
@@ -564,8 +564,8 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
     <div class="g3">
       <div class="card-f rv">
         <div class="tag tag-c">сцена · документы</div>
-        <h3 style="margin-top:16px">Забытый паспорт</h3>
-        <p class="small mut" style="margin-top:10px">История Мухтара — самый частый сюжет: нужного документа нет, телефона нет, время идёт. Одно SMS с точным «что и куда принести» решает вопрос за цену буханки хлеба.</p>
+        <h3 style="margin-top:16px">Сорванная встреча</h3>
+        <p class="small mut" style="margin-top:10px">История Бахтиёра — самый частый сюжет: телефон дома, встреча через час, партнёр в неведении. Одно SMS своими словами — и сделка спасена за цену буханки хлеба.</p>
       </div>
       <div class="card-f rv">
         <div class="tag tag-c">сцена · семья</div>
@@ -581,11 +581,85 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
   </div>
 </section>
 
+<!-- ================= AI FILTER ================= -->
+<section id="ai" class="dark" style="background:var(--dark);color:#EDEAE2">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no" style="-webkit-text-stroke-color:#3A372F">05</div>
+      <div>
+        <div class="sec-kicker" style="color:#D8B36A">Сердце продукта</div>
+        <h2 style="margin-top:8px;color:#F5F2E9">Умный фильтр: наша роль в цепочке</h2>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:44px">
+      <div class="rv">
+        <div class="rule-lb" style="margin-bottom:22px"><span style="background:var(--dark);color:#8A8577">две уязвимости первой версии</span></div>
+        <div class="card-d" style="border-color:#4A3A32">
+          <div class="tag tag-c" style="background:rgba(194,86,47,.15);border-color:rgba(194,86,47,.4);color:#E08A66">уязвимость 1 · позиция</div>
+          <h3 style="margin-top:14px;color:#F5F2E9">Нас можно было выключить</h3>
+          <p class="small" style="margin-top:10px;color:#B8B3A4">В первой схеме мы были просто трубой: Paynet передавал нам данные, мы пересылали их SMS-агрегатору. Как только сервис стал бы по-настоящему прибыльным, Paynet мог бы соединиться с агрегатором напрямую — и исключить нас из игры одним контрактом.</p>
+        </div>
+        <div class="card-d" style="margin-top:16px;border-color:#4A3A32">
+          <div class="tag tag-c" style="background:rgba(194,86,47,.15);border-color:rgba(194,86,47,.4);color:#E08A66">уязвимость 2 · продукт</div>
+          <h3 style="margin-top:14px;color:#F5F2E9">Шаблоны — сломанный телефон</h3>
+          <p class="small" style="margin-top:10px;color:#B8B3A4">Пять готовых фраз отлично защищали от исков и берегли репутацию — нашу и партнёров. Но в реальном использовании это испорченный телефон: невозможно придумать шаблоны на все случаи жизни. Человек в стрессе, который не находит нужную фразу, — потерянный клиент.</p>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="prose" style="color:#CFCabc;color:#CFCABC">
+          <p>Обе проблемы упираются в один и тот же вывод: <em style="color:#D8B36A">нельзя придумать шаблоны на все случаи жизни.</em> К этому выводу инженеры пришли ещё двадцать лет назад — когда перестали строить искусственный интеллект из тысяч жёстких правил и научили модели самим находить закономерности в данных. Так родилось современное машинное обучение.</p>
+          <p style="margin-top:18px">Сегодня эта технология доступна нам в готовом виде: большие языковые модели работают на относительно скромном оборудовании. И она закрывает обе уязвимости разом.</p>
+        </div>
+        <div class="q" style="margin-top:28px">
+          <p style="color:#F5F2E9;font-size:clamp(18px,2vw,22px)">Paynet присылает нам текст — наша LLM читает его как живой модератор: пропускает честное, блокирует мошенническое, а сомнительное перефразирует и снабжает предупреждением для получателя.</p>
+          <cite style="color:#8A8577">— вся архитектура Xabar в одном предложении</cite>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-lb rv" style="margin:56px 0 34px"><span style="background:var(--dark);color:#8A8577">что это даёт</span></div>
+    <div class="g4">
+      <div class="card-l rv" style="border-left-color:#4A463C">
+        <div class="stat" style="color:#D8B36A;font-size:21px">Незаменимость</div>
+        <div class="cap" style="color:#8A8577">Мы больше не труба, а интеллектуальное звено. Убрать нас — значит остаться без модерации и принять весь юридический и репутационный риск на себя. Теперь каждый в цепочке — монополист в своей роли, и мы говорим с партнёрами на равных.</div>
+      </div>
+      <div class="card-l rv" style="border-left-color:#4A463C">
+        <div class="stat" style="color:#D8B36A;font-size:21px">Свободный текст</div>
+        <div class="cap" style="color:#8A8577">Пользователь пишет своими словами — на русском, узбекском, как умеет. Никаких поисков «подходящей фразы» в состоянии стресса. Защита не исчезла — она стала умнее: фильтр понимает смысл, а не ищет запрещённые слова.</div>
+      </div>
+      <div class="card-l rv" style="border-left-color:#4A463C">
+        <div class="stat" style="color:#D8B36A;font-size:21px">Статус AI-проекта</div>
+        <div class="cap" style="color:#8A8577">В Узбекистане проекты с искусственным интеллектом сегодня получают внимание национального уровня — от регуляторов до госпрограмм. Xabar входит в эту повестку не декларацией, а работающей моделью в продакшене.</div>
+      </div>
+      <div class="card-l rv" style="border-left-color:#4A463C">
+        <div class="stat" style="color:#D8B36A;font-size:21px">Понятный CAPEX</div>
+        <div class="cap" style="color:#8A8577">Заметная часть инвестиций идёт в вычислительное оборудование для LLM — актив, который дорожает день ото дня и остаётся на балансе компании, а не растворяется в операционке.</div>
+      </div>
+    </div>
+
+    <div class="g3 rv" style="margin-top:44px">
+      <div class="card-d" style="border-color:#3A372F">
+        <div class="tag tag-o" style="background:rgba(110,125,78,.15);border-color:rgba(110,125,78,.4);color:#A9BA84">пропускает</div>
+        <p class="small" style="margin-top:12px;color:#CFCABC">«Я без телефона, встреча в силе, буду к 15:00» — обычное человеческое сообщение уходит как есть, за 4 секунды.</p>
+      </div>
+      <div class="card-d" style="border-color:#3A372F">
+        <div class="tag tag-g" style="background:rgba(185,138,46,.14);border-color:rgba(185,138,46,.35);color:#D8B36A">перефразирует + предупреждает</div>
+        <p class="small" style="margin-top:12px;color:#CFCABC">«Скинь срочно 500 тысяч на карту, потом объясню» — получатель увидит нейтральную формулировку и пометку: «Отправитель просит деньги. Перезвоните и проверьте лично».</p>
+      </div>
+      <div class="card-d" style="border-color:#3A372F">
+        <div class="tag tag-c" style="background:rgba(194,86,47,.15);border-color:rgba(194,86,47,.4);color:#E08A66">блокирует</div>
+        <p class="small" style="margin-top:12px;color:#CFCABC">Угрозы, вымогательство, фишинговые сценарии «безопасного счёта» — не уходят вовсе. Терминал вернёт купюру и объяснит причину.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= PAYNET ================= -->
 <section id="paynet" class="bg2" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">05</div>
+      <div class="sec-no">06</div>
       <div>
         <div class="sec-kicker">Партнёр, а не гипотеза</div>
         <h2 style="margin-top:8px">Почему Paynet скажет «да»</h2>
@@ -638,7 +712,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 <section id="economics">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">06</div>
+      <div class="sec-no">07</div>
       <div>
         <div class="sec-kicker">Юнит-экономика без тумана</div>
         <h2 style="margin-top:8px">Куда уходит купюра в 2 000 сум</h2>
@@ -655,7 +729,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
             <tr><td>НДС 12%</td><td class="num neg">−214</td><td class="cm">2 000 ÷ 1,12</td></tr>
             <tr><td>Комиссия Paynet</td><td class="num neg">−500</td><td class="cm">переговорный коридор 300–800</td></tr>
             <tr><td>SMS-агрегатор Eskiz</td><td class="num neg">−95</td><td class="cm">транзакционная цена доставки</td></tr>
-            <tr><td>Операционный резерв</td><td class="num neg">−50</td><td class="cm">поддержка, мониторинг, логи</td></tr>
+            <tr><td>Операционный резерв</td><td class="num neg">−50</td><td class="cm">AI-фильтр, мониторинг, логи</td></tr>
             <tr class="sum"><td><strong>Маржа Xabar</strong></td><td class="num">1 141</td><td class="cm"><strong>57% цены · ×3,4 к себестоимости</strong></td></tr>
           </tbody>
         </table>
@@ -700,7 +774,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 <section class="bg2" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">07</div>
+      <div class="sec-no">08</div>
       <div>
         <div class="sec-kicker">Домашняя работа сделана</div>
         <h2 style="margin-top:8px">Три вопроса, которые задаст любой инвестор</h2>
@@ -715,7 +789,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <div class="card rv">
         <div class="tag tag-c">антифрод</div>
         <h3 style="margin-top:16px">«А спам и мошенники?»</h3>
-        <p class="small mut" style="margin-top:10px">Свободного текста нет — только 5 шаблонов; в них исключены слова «код», «банк», «карта», «пароль». Лимиты: ≤3 SMS в день на получателя, ≤10 в час с терминала. Blacklist после 2 жалоб за 30 дней, полные логи хранятся 12 месяцев. <strong style="color:var(--ink)">Красная линия: шаблоны — навсегда.</strong> Свободный текст не появится ни в какой версии продукта.</p>
+        <p class="small mut" style="margin-top:10px">Каждое сообщение читает LLM-фильтр: он понимает смысл, а не ищет запрещённые слова — просьбы о деньгах перефразируются с предупреждением, угрозы и фишинг блокируются. Плюс жёсткие лимиты: ≤3 SMS в день на получателя, ≤10 в час с терминала, blacklist после 2 жалоб за 30 дней, обязательный номер отправителя, полные логи 12 месяцев. <strong style="color:var(--ink)">Защита стала умнее — не слабее.</strong></p>
       </div>
       <div class="card rv">
         <div class="tag tag-c">каналы доставки</div>
@@ -730,7 +804,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 <section id="plan">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">08</div>
+      <div class="sec-no">09</div>
       <div>
         <div class="sec-kicker">Четырнадцать недель до ответа</div>
         <h2 style="margin-top:8px">План, у которого есть конец</h2>
@@ -748,7 +822,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
         <div class="rail-i">
           <div class="rail-when">Недели 3–6</div>
           <h3 style="margin-top:6px">Backend</h3>
-          <p class="small mut" style="margin-top:6px">Ядро сервиса: приём события от терминала, антифрод-фильтры, очередь отправки, DLR-трекинг, панель мониторинга.</p>
+          <p class="small mut" style="margin-top:6px">Ядро сервиса: приём текста от терминала, развёртывание LLM-фильтра на собственных GPU, очередь отправки, DLR-трекинг, панель мониторинга.</p>
         </div>
         <div class="rail-i">
           <div class="rail-when">Недели 7–10</div>
@@ -789,7 +863,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 <section id="ask" class="bg2" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">09</div>
+      <div class="sec-no">10</div>
       <div>
         <div class="sec-kicker">Предложение инвестору</div>
         <h2 style="margin-top:8px">650 млн сум. Двумя траншами. С правом остановки</h2>
@@ -802,10 +876,11 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
         <p class="small mut" style="margin-top:10px">≈ $51 000 — полный бюджет до конца пилота включительно</p>
         <table class="ledger" style="margin-top:26px">
           <tbody>
-            <tr><td>Разработка и интеграция</td><td class="num">230</td><td class="cm">backend, экран терминала, антифрод</td></tr>
-            <tr><td>Команда на 14 недель</td><td class="num">180</td><td class="cm">инженеры, продукт, поддержка пилота</td></tr>
-            <tr><td>Маркетинг пилота</td><td class="num">140</td><td class="cm">стикеры на терминалах, наружка у точек</td></tr>
-            <tr><td>Юристы и резерв</td><td class="num">100</td><td class="cm">из них 40 — регуляторная схема</td></tr>
+            <tr><td>GPU-оборудование для LLM</td><td class="num">200</td><td class="cm">серверы AI-фильтра — актив на балансе, который дорожает</td></tr>
+            <tr><td>Разработка и интеграция</td><td class="num">180</td><td class="cm">backend, экран терминала, дообучение модели</td></tr>
+            <tr><td>Команда на 14 недель</td><td class="num">130</td><td class="cm">инженеры, ML, поддержка пилота</td></tr>
+            <tr><td>Маркетинг пилота</td><td class="num">80</td><td class="cm">заставки на экранах терминалов, стикеры</td></tr>
+            <tr><td>Юристы и резерв</td><td class="num">60</td><td class="cm">из них 40 — регуляторная схема</td></tr>
           </tbody>
         </table>
         <div class="g2" style="margin-top:22px;gap:14px">
@@ -848,7 +923,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
     <div class="wrap-n" style="padding:0;max-width:780px">
       <div class="sec-kicker rv" style="color:#D8B36A">вместо заключения</div>
       <h2 class="rv" style="margin-top:18px;color:#F5F2E9;font-size:clamp(34px,4.4vw,52px)">Телефонная будка умерла.<br>Смартфон её не заменил.<br><span style="color:#D8B36A">Терминал Paynet — может.</span></h2>
-      <p class="rv" style="margin-top:26px;font-size:17.5px;line-height:1.78;color:#B8B3A4">Будка на пирсе служила морякам без адреса. Таксофон на вокзале — командировочным без монеты в кармане было не обойтись. Терминал у магазина послужит Мухтару — и трём миллионам таких, как он. Публичная связь никогда не была нишей. Она была инфраструктурой достоинства: возможностью сказать важное, никого ни о чём не прося.</p>
+      <p class="rv" style="margin-top:26px;font-size:17.5px;line-height:1.78;color:#B8B3A4">Будка на пирсе служила морякам без адреса. Таксофон на вокзале — командировочным, у которых не было ничего, кроме монеты. Терминал у магазина послужит Бахтиёру — и трём миллионам таких, как он. Публичная связь никогда не была нишей. Она была инфраструктурой достоинства: возможностью сказать важное, никого ни о чём не прося.</p>
     </div>
     <div class="fin-nums rv">
       <div>
@@ -875,7 +950,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 <section id="sources" style="padding:84px 0">
   <div class="wrap">
     <div class="sec-head rv">
-      <div class="sec-no">10</div>
+      <div class="sec-no">11</div>
       <div>
         <div class="sec-kicker">Проверяемость</div>
         <h2 style="margin-top:8px">Источники</h2>
@@ -1007,6 +1082,7 @@ gsap.utils.toArray('.rv').forEach(el => {
     V(p, 0, 2.21, 0, .5, .16, .46, 0x3A342B);
     V(p, -.36, .95, 0, .16, .62, .16, shirt);
     V(p, .36, .95, 0, .16, .62, .16, shirt);
+    p.scale.setScalar(1.9);
     p.position.set(x, 0, z);
     p.rotation.y = ry;
     p.userData = Object.assign({bobP: Math.random()*6.28, bx:x, bz:z}, ud);
@@ -1058,9 +1134,9 @@ gsap.utils.toArray('.rv').forEach(el => {
     V(g, 0, 2.1, -1.2, .9, 1.3, .35, 0x37393B);
     V(g, 0, 2.5, -1.02, .55, .5, .12, 0x8A8D90);
     V(g, .55, 2.0, -1.05, .22, .9, .22, 0x2A2C2E, {ud:{sway:1}});
-    person(g, 3.4, 2.6, 0x5B7EA6, 0xE8B88E, -.8);
-    person(g, 5.0, 3.4, 0x9A6C4F, 0xD9A67C, -.7);
-    person(g, 6.7, 4.1, 0x6E7D4E, 0xE8B88E, -.6);
+    person(g, 3.6, 2.8, 0x5B7EA6, 0xE8B88E, -.8);
+    person(g, 5.4, 3.7, 0x9A6C4F, 0xD9A67C, -.7);
+    person(g, 7.2, 4.5, 0x6E7D4E, 0xE8B88E, -.6);
     tree(g, -6.5, -4.5, 1.2); tree(g, 7.5, -5.5, .9);
     lamppost(g, -4.2, .8);
     cloud(g, -9, 13, -8, 1.2); cloud(g, 8, 15, -10, .9);
@@ -1127,8 +1203,8 @@ gsap.utils.toArray('.rv').forEach(el => {
     V(g, .65, 3.12, .76, .4, .08, .06, 0x111111);
     V(g, .65, 3.45, 1.15, .5, .04, .9, 0x9FB86A, {ud:{note:1}});
     V(g, 0, 2.0, .77, 2.2, .35, .05, YLW);
-    person(g, 0, 2.6, 0x8A5A3A, 0xE8B88E, Math.PI);
-    const rp = person(g, 8.5, -4.5, 0x5B7EA6, 0xD9A67C, -2.4);
+    person(g, 0, 3.1, 0x8A5A3A, 0xE8B88E, Math.PI);
+    const rp = person(g, 9.2, -4.8, 0x5B7EA6, 0xD9A67C, -2.4);
     V(rp, .42, 1.75, .16, .14, .28, .1, 0x2A2C2E);
     const env = new THREE.Group();
     V(env, 0, 0, 0, 1.1, .7, .1, 0xFDFBF4);
