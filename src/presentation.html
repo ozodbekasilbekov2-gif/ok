@@ -3,795 +3,960 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Xabar × Paynet — Инвесторская презентация</title>
-<meta name="description" content="Xabar — SMS-сообщения из платёжных терминалов Paynet для людей без телефона. Инвесторская аналитическая презентация.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23060a14'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold'%3EX%3C/text%3E%3C/svg%3E">
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+<title>Xabar — связь для тех, у кого нет телефона под рукой</title>
+<meta name="description" content="Xabar × Paynet: SMS из платёжного терминала за наличные. Инвесторская презентация, построенная на исследовании эволюции публичной связи.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23C96442'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle' fill='%23FAF9F5' font-family='Georgia,serif' font-weight='bold'%3EX%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  :root{ --amber:#f59e0b; --cyan:#22d3ee; --bg:#060a14; }
-  *{ -webkit-tap-highlight-color:transparent; }
+  :root{
+    --bg:#FAF9F5; --bg-alt:#F0EEE6; --card:#FFFFFF;
+    --ink:#1F1E1B; --ink-2:#5E5C55; --ink-3:#8A877D;
+    --clay:#C96442; --clay-dark:#A94F32; --clay-soft:#F3E2DA;
+    --olive:#7C8B5D; --blue:#6A8BA4; --sand:#C9A227;
+    --line:#E5E2D9; --dark:#22211E;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html{ scroll-behavior:smooth; }
-  body{ font-family:'Manrope',sans-serif; background:var(--bg); color:#e2e8f0; overflow-x:hidden; }
-  .font-display{ font-family:'Unbounded',sans-serif; }
-  .glass{ background:rgba(15,23,42,.55); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(148,163,184,.14); }
-  .glass-deep{ background:rgba(8,12,24,.72); backdrop-filter:blur(18px); border:1px solid rgba(148,163,184,.12); }
-  .grad-text{ background:linear-gradient(92deg,#fbbf24 0%,#f59e0b 45%,#fb923c 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .grad-cyan{ background:linear-gradient(92deg,#67e8f9,#22d3ee,#38bdf8); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .grad-amber-cyan{ background:linear-gradient(92deg,#fbbf24,#22d3ee); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .card3d{ transform-style:preserve-3d; transition:transform .25s ease, box-shadow .25s ease; will-change:transform; }
-  .card3d:hover{ box-shadow:0 24px 60px -18px rgba(245,158,11,.22); }
-  .reveal{ opacity:0; transform:translateY(34px); }
-  .floaty{ animation:floaty 7s ease-in-out infinite; }
-  @keyframes floaty{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-14px) } }
-  .scanline{ position:relative; overflow:hidden; }
-  .scanline::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 0%,rgba(34,211,238,.06) 50%,transparent 100%); background-size:100% 220%; animation:scan 5s linear infinite; pointer-events:none; }
-  @keyframes scan{ 0%{ background-position:0 -120% } 100%{ background-position:0 220% } }
-  .pulse-ring{ position:relative; }
-  .pulse-ring::before{ content:''; position:absolute; inset:-6px; border-radius:inherit; border:1px solid rgba(245,158,11,.45); animation:pring 2.4s ease-out infinite; pointer-events:none; }
-  @keyframes pring{ 0%{ opacity:.9; transform:scale(.94) } 100%{ opacity:0; transform:scale(1.12) } }
-  .navdot{ width:9px; height:9px; border-radius:9999px; background:rgba(148,163,184,.35); transition:all .3s; display:block; }
-  .navdot.active{ background:var(--amber); box-shadow:0 0 12px rgba(245,158,11,.8); transform:scale(1.35); }
-  #progressbar{ position:fixed; top:0; left:0; height:3px; width:0%; z-index:60; background:linear-gradient(90deg,#f59e0b,#22d3ee); box-shadow:0 0 14px rgba(245,158,11,.6); }
-  .kpill{ display:inline-flex; align-items:center; gap:.45rem; padding:.3rem .8rem; border-radius:9999px; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; border:1px solid rgba(245,158,11,.35); color:#fbbf24; background:rgba(245,158,11,.08); }
-  .kpill-cyan{ border-color:rgba(34,211,238,.35); color:#67e8f9; background:rgba(34,211,238,.07); }
-  .num-mono{ font-variant-numeric:tabular-nums; }
-  input[type=range]{ -webkit-appearance:none; appearance:none; height:6px; border-radius:9999px; background:linear-gradient(90deg,#f59e0b,#22d3ee); outline:none; }
-  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:20px; height:20px; border-radius:9999px; background:#fff; border:3px solid var(--amber); box-shadow:0 0 12px rgba(245,158,11,.7); cursor:pointer; }
-  input[type=range]::-moz-range-thumb{ width:20px; height:20px; border-radius:9999px; background:#fff; border:3px solid var(--amber); cursor:pointer; }
-  .src-card:hover{ border-color:rgba(34,211,238,.5); transform:translateY(-3px); }
-  .src-card{ transition:all .25s; }
-  ::selection{ background:rgba(245,158,11,.35); }
-  ::-webkit-scrollbar{ width:9px; }
-  ::-webkit-scrollbar-track{ background:#0b1020; }
-  ::-webkit-scrollbar-thumb{ background:#334155; border-radius:8px; }
+  body{ font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--ink);
+        font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  .serif{ font-family:'Source Serif 4',Georgia,serif; }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  ::selection{ background:var(--clay-soft); }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  .wrap-narrow{ max-width:760px; margin:0 auto; padding:0 24px; }
+  section{ padding:96px 0; }
+  @media (max-width:640px){ section{ padding:64px 0; } body{ font-size:16px; } }
+
+  /* header */
+  header{ position:sticky; top:0; z-index:50; background:rgba(250,249,245,.88);
+          backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .hnav{ display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:600; letter-spacing:.01em; text-decoration:none; color:var(--ink); }
+  .brand-mark{ width:28px; height:28px; border-radius:8px; background:var(--clay); color:#FAF9F5;
+               display:flex; align-items:center; justify-content:center; font-family:'Source Serif 4',serif; font-weight:700; }
+  .hlinks{ display:flex; gap:22px; }
+  .hlinks a{ font-size:14px; color:var(--ink-2); text-decoration:none; transition:color .2s; }
+  .hlinks a:hover{ color:var(--clay); }
+  @media (max-width:820px){ .hlinks{ display:none; } }
+
+  /* type */
+  h1{ font-family:'Source Serif 4',serif; font-weight:600; font-size:clamp(38px,6vw,64px); line-height:1.12; letter-spacing:-.015em; }
+  h2{ font-family:'Source Serif 4',serif; font-weight:600; font-size:clamp(28px,4vw,40px); line-height:1.2; letter-spacing:-.01em; }
+  h3{ font-family:'Source Serif 4',serif; font-weight:600; font-size:21px; line-height:1.35; }
+  .lead{ font-size:20px; color:var(--ink-2); line-height:1.6; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600;
+            letter-spacing:.14em; text-transform:uppercase; color:var(--clay); margin-bottom:20px; }
+  .eyebrow::before{ content:''; width:22px; height:1.5px; background:var(--clay); }
+  .accent{ color:var(--clay); }
+  .muted{ color:var(--ink-2); }
+  .small{ font-size:14.5px; }
+  .xsmall{ font-size:13px; color:var(--ink-3); }
+
+  /* cards */
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:28px; }
+  .card-beige{ background:var(--bg-alt); border:1px solid transparent; border-radius:16px; padding:28px; }
+  .grid{ display:grid; gap:20px; }
+  .g2{ grid-template-columns:repeat(2,1fr); } .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+  @media (max-width:860px){ .g3,.g4{ grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .g2,.g3,.g4{ grid-template-columns:1fr;} }
+
+  .stat-num{ font-family:'Source Serif 4',serif; font-weight:600; font-size:34px; line-height:1.1; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .stat-cap{ font-size:14px; color:var(--ink-2); margin-top:8px; line-height:1.5; }
+  .stat-src{ font-size:12px; color:var(--ink-3); margin-top:10px; }
+
+  .divider{ height:1px; background:var(--line); border:0; }
+
+  /* voxel scene */
+  #voxel-wrap{ position:relative; border-radius:20px; overflow:hidden; background:linear-gradient(180deg,#EAF0F2 0%, #F2EFE6 70%, #EFEBDF 100%); border:1px solid var(--line); }
+  #voxel-canvas{ display:block; width:100%; height:520px; }
+  @media (max-width:640px){ #voxel-canvas{ height:400px; } }
+  .era-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; }
+  .era-tab{ flex:1; min-width:180px; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:14px;
+            padding:14px 18px; cursor:pointer; transition:all .25s; font-family:inherit; }
+  .era-tab .et-year{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-3); letter-spacing:.06em; }
+  .era-tab .et-name{ font-weight:600; font-size:15.5px; margin-top:2px; color:var(--ink); }
+  .era-tab.active{ border-color:var(--clay); background:var(--clay-soft); }
+  .era-tab.active .et-year{ color:var(--clay-dark); }
+  .era-info{ margin-top:18px; }
+  .era-panel{ display:none; }
+  .era-panel.active{ display:block; animation:fadein .5s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+  /* pull quote */
+  .pull{ border-left:3px solid var(--clay); padding:6px 0 6px 26px; font-family:'Source Serif 4',serif;
+         font-size:clamp(21px,2.6vw,27px); line-height:1.45; color:var(--ink); font-weight:500; }
+  .pull .src{ display:block; margin-top:14px; font-family:'Inter',sans-serif; font-size:14px; color:var(--ink-3); font-weight:400; }
+
+  /* timeline */
+  .tl{ position:relative; padding-left:28px; }
+  .tl::before{ content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1.5px; background:var(--line); }
+  .tl-item{ position:relative; padding-bottom:30px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{ content:''; position:absolute; left:-27px; top:7px; width:11px; height:11px; border-radius:50%;
+                    background:var(--bg); border:2.5px solid var(--clay); }
+  .tl-year{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--clay-dark); letter-spacing:.04em; }
+  .tl-text{ margin-top:4px; }
+
+  /* steps */
+  .step{ display:flex; gap:18px; align-items:flex-start; }
+  .step-n{ flex:none; width:34px; height:34px; border-radius:50%; background:var(--ink); color:var(--bg);
+           display:flex; align-items:center; justify-content:center; font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; margin-top:2px; }
+
+  /* dark section */
+  .dark{ background:var(--dark); color:#EDEBE3; }
+  .dark h2{ color:#FAF9F5; }
+  .dark .muted{ color:#A5A29A; }
+  .dark .card{ background:#2B2A26; border-color:#3A3833; }
+
+  /* calculator */
+  input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:99px;
+                     background:var(--line); outline:none; }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:20px; height:20px; border-radius:50%;
+                     background:var(--clay); border:3px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.2); cursor:pointer; }
+  input[type=range]::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--clay); border:3px solid #fff; cursor:pointer; }
+  .calc-val{ font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--clay-dark); font-weight:500; }
+  .calc-out{ background:var(--bg-alt); border-radius:12px; padding:16px 18px; }
+  .calc-out .co-l{ font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3); }
+  .calc-out .co-v{ font-family:'Source Serif 4',serif; font-size:24px; font-weight:600; margin-top:2px; font-variant-numeric:tabular-nums; }
+
+  /* misc */
+  .btn{ display:inline-block; background:var(--ink); color:var(--bg); padding:13px 26px; border-radius:99px;
+        font-weight:600; font-size:15px; text-decoration:none; transition:background .2s; }
+  .btn:hover{ background:var(--clay-dark); }
+  .btn-ghost{ display:inline-block; border:1px solid var(--line); color:var(--ink); padding:13px 26px; border-radius:99px;
+        font-weight:600; font-size:15px; text-decoration:none; transition:all .2s; background:transparent; }
+  .btn-ghost:hover{ border-color:var(--clay); color:var(--clay); }
+  .src-link{ color:inherit; text-decoration:none; display:block; }
+  .src-link:hover h3{ color:var(--clay); }
+  .rv{ opacity:0; transform:translateY(22px); }
+  .chart-box{ position:relative; }
+  .tag{ display:inline-block; font-size:12px; font-weight:600; padding:3px 10px; border-radius:99px; letter-spacing:.03em; }
+  .tag-clay{ background:var(--clay-soft); color:var(--clay-dark); }
+  .tag-olive{ background:#EAEDE2; color:#5C6A43; }
+  ::-webkit-scrollbar{ width:10px; } ::-webkit-scrollbar-track{ background:var(--bg); }
+  ::-webkit-scrollbar-thumb{ background:#D6D3C8; border-radius:8px; }
+  table.brk{ width:100%; border-collapse:collapse; font-size:15px; }
+  table.brk td{ padding:11px 8px; border-bottom:1px solid var(--line); }
+  table.brk tr:last-child td{ border-bottom:none; font-weight:600; }
+  table.brk td:last-child{ text-align:right; font-family:'JetBrains Mono',monospace; font-size:14px; }
 </style>
 </head>
 <body>
-<div id="progressbar"></div>
 
-<!-- Nav rail -->
-<nav id="navrail" class="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-50 flex-col gap-3"></nav>
-
-<!-- ============ 1. HERO ============ -->
-<section id="hero" data-nav="Главная" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-  <div class="absolute inset-0">
-    <img src="/static/img/hero-terminal.jpg" alt="Терминал Paynet ночью в Ташкенте" class="w-full h-full object-cover opacity-40">
-    <div class="absolute inset-0 bg-gradient-to-b from-[#060a14]/70 via-[#060a14]/55 to-[#060a14]"></div>
+<header>
+  <div class="wrap hnav">
+    <a class="brand" href="#top"><span class="brand-mark">X</span> Xabar <span style="color:var(--ink-3);font-weight:400">× Paynet</span></a>
+    <nav class="hlinks">
+      <a href="#history">История</a>
+      <a href="#insight">Вывод</a>
+      <a href="#product">Продукт</a>
+      <a href="#economics">Экономика</a>
+      <a href="#ask">Запрос</a>
+      <a href="#sources">Источники</a>
+    </nav>
   </div>
-  <canvas id="bg3d" class="absolute inset-0 w-full h-full"></canvas>
-  <div class="relative z-10 max-w-6xl mx-auto px-6 py-28 text-center">
-    <div class="hero-a kpill mb-8"><i class="fas fa-bolt"></i> Инвесторская аналитическая презентация · 2026</div>
-    <h1 class="hero-a font-display text-4xl sm:text-6xl lg:text-7xl font-800 leading-tight tracking-tight">
-      <span class="grad-text">XABAR</span> <span class="text-slate-500">×</span> <span class="grad-cyan">PAYNET</span>
-    </h1>
-    <p class="hero-a mt-6 text-xl sm:text-2xl text-slate-300 font-light max-w-3xl mx-auto">
-      Человек без телефона вставляет купюру <b class="text-amber-400">2 000 сум</b> в терминал —<br class="hidden sm:block">
-      и его близкий получает <b class="text-cyan-300">SMS</b>. Всё, что сверху — падает на баланс получателя.
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="top" style="padding-top:110px">
+  <div class="wrap-narrow">
+    <div class="eyebrow rv">Инвесторская записка · 2026</div>
+    <h1 class="rv">Связь для тех, у кого нет телефона под&nbsp;рукой.</h1>
+    <p class="lead rv" style="margin-top:26px">
+      Сто лет люди без собственного телефона звонили из будки на углу — и платили за это охотно.
+      Будки исчезли, но потребность осталась. <strong style="color:var(--ink)">Xabar</strong> возвращает эту услугу
+      в&nbsp;современном виде: человек вставляет купюру в&nbsp;терминал Paynet —
+      и&nbsp;его близкий получает SMS.
     </p>
-    <p class="hero-a mt-4 text-sm text-slate-400 max-w-2xl mx-auto">
-      Коммуникация как коммунальная услуга — через 30 000+ точек Paynet по всему Узбекистану.
+    <div class="rv" style="margin-top:36px; display:flex; gap:14px; flex-wrap:wrap">
+      <a class="btn" href="#history">Смотреть историю ↓</a>
+      <a class="btn-ghost" href="#economics">Проверить экономику</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VOXEL EVOLUTION ============ -->
+<section id="history" style="padding-top:40px">
+  <div class="wrap">
+    <div class="eyebrow rv">Эволюция публичной связи</div>
+    <h2 class="rv">Три эпохи одной и той же потребности</h2>
+    <p class="lead rv" style="margin-top:18px; max-width:720px">
+      Технологии менялись, а услуга оставалась той же: <em>заплатить наличными и связаться с человеком прямо сейчас</em>.
+      Покрутите сцену — и посмотрите, как одна потребность прожила три поколения техники.
     </p>
-    <div class="hero-a mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-      <div class="glass rounded-2xl p-5 card3d">
-        <div class="font-display text-3xl grad-text num-mono"><span data-count="36.3" data-decimals="1"></span><span class="text-lg">М</span></div>
-        <div class="mt-1 text-xs text-slate-400">абонентов мобильной связи в Узбекистане</div>
-      </div>
-      <div class="glass rounded-2xl p-5 card3d">
-        <div class="font-display text-3xl grad-cyan num-mono"><span data-count="30" data-suffix=" 000+"></span></div>
-        <div class="mt-1 text-xs text-slate-400">точек приёма Paynet по стране</div>
-      </div>
-      <div class="glass rounded-2xl p-5 card3d">
-        <div class="font-display text-3xl grad-text num-mono">×<span data-count="21"></span></div>
-        <div class="mt-1 text-xs text-slate-400">маржа к себестоимости SMS при цене 2 000 сум</div>
-      </div>
-      <div class="glass rounded-2xl p-5 card3d">
-        <div class="font-display text-3xl grad-cyan num-mono">~<span data-count="1930" data-format="ru"></span></div>
-        <div class="mt-1 text-xs text-slate-400">SMS/день — точка безубыточности</div>
-      </div>
-    </div>
-    <div class="hero-a mt-12 flex flex-wrap gap-4 justify-center">
-      <a href="#economics" class="pulse-ring px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:scale-105 transition-transform">
-        <i class="fas fa-calculator mr-2"></i>Интерактивная экономика
-      </a>
-      <a href="#ask" class="px-8 py-4 rounded-2xl glass hover:border-cyan-400/50 transition-colors font-semibold">
-        <i class="fas fa-hand-holding-dollar mr-2 text-cyan-300"></i>Запрос: 650 млн сум
-      </a>
-    </div>
-    <div class="hero-a mt-14 text-slate-500 text-sm animate-bounce"><i class="fas fa-chevron-down"></i> листайте</div>
-  </div>
-</section>
 
-<!-- ============ 2. PROBLEM ============ -->
-<section id="problem" data-nav="Проблема" class="relative py-28 overflow-hidden">
-  <div class="absolute inset-0">
-    <img src="/static/img/problem-street.jpg" alt="Улица в Узбекистане" class="w-full h-full object-cover opacity-20">
-    <div class="absolute inset-0 bg-gradient-to-b from-[#060a14] via-[#060a14]/80 to-[#060a14]"></div>
-  </div>
-  <div class="relative z-10 max-w-6xl mx-auto px-6">
-    <div class="reveal kpill mb-6"><i class="fas fa-triangle-exclamation"></i> Проблема</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">Телефон разрядился. Украден. Забыт.<br><span class="grad-text">А сообщить о себе — надо сейчас.</span></h2>
-    <p class="reveal mt-6 text-slate-300 max-w-3xl text-lg">Миллионы бытовых ситуаций каждый день: рабочий на смене без зарядки, студент без денег на балансе, приезжий без местной SIM. Единственное, что у человека есть — наличные и терминал Paynet на каждом углу.</p>
-    <div class="mt-12 grid md:grid-cols-3 gap-6">
-      <div class="reveal glass rounded-2xl p-7 card3d">
-        <div class="w-12 h-12 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 text-xl mb-4"><i class="fas fa-battery-empty"></i></div>
-        <h3 class="font-bold text-lg">Нет доступа к связи «здесь и сейчас»</h3>
-        <p class="mt-2 text-sm text-slate-400">Разряженный, утерянный, украденный телефон или нулевой баланс. Человек физически не может отправить сообщение — при том, что сеть вокруг работает.</p>
+    <div class="rv" style="margin-top:36px">
+      <div id="voxel-wrap">
+        <canvas id="voxel-canvas"></canvas>
+        <div class="xsmall" style="position:absolute; right:16px; bottom:12px; user-select:none">потяните, чтобы повернуть</div>
       </div>
-      <div class="reveal glass rounded-2xl p-7 card3d">
-        <div class="w-12 h-12 rounded-xl bg-cyan-500/15 flex items-center justify-center text-cyan-300 text-xl mb-4"><i class="fas fa-money-bill-wave"></i></div>
-        <h3 class="font-bold text-lg">Наличные — по-прежнему главный инструмент</h3>
-        <p class="mt-2 text-sm text-slate-400">Объём наличных в обращении в Узбекистане продолжает расти (+24% за год). Существенная часть населения решает бытовые задачи кэшем через терминалы.</p>
-      </div>
-      <div class="reveal glass rounded-2xl p-7 card3d">
-        <div class="w-12 h-12 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 text-xl mb-4"><i class="fas fa-ban"></i></div>
-        <h3 class="font-bold text-lg">Ни один сервис это не решает</h3>
-        <p class="mt-2 text-sm text-slate-400">Таксофоны исчезли. Попросить чужой телефон — неловко и небезопасно. Инфраструктура терминалов есть, но она умеет только принимать платежи — не передавать сообщения.</p>
-      </div>
-    </div>
-    <div class="reveal mt-8 glass-deep rounded-2xl p-6 border-l-4 border-amber-500/60">
-      <p class="text-sm text-slate-300"><i class="fas fa-scale-balanced text-amber-400 mr-2"></i><b>Честная оговорка для инвестора:</b> точной публичной статистики «сколько людей в день оказываются без связи у терминала» не существует. Мы валидируем спрос пилотом на 50–100 терминалах с целевой конверсией ≥ 2% — это ключевая гипотеза проекта, и мы прямо это называем.</p>
-    </div>
-  </div>
-</section>
 
-<!-- ============ 3. SOLUTION ============ -->
-<section id="solution" data-nav="Решение" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill kpill-cyan mb-6"><i class="fas fa-lightbulb"></i> Решение</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">Xabar: <span class="grad-cyan">SMS из терминала</span> за одну купюру</h2>
-    <div class="mt-14 grid lg:grid-cols-2 gap-12 items-center">
-      <!-- Terminal mockup -->
-      <div class="reveal flex justify-center">
-        <div class="floaty scanline glass-deep rounded-[2rem] p-6 w-full max-w-sm border border-cyan-400/20 shadow-[0_30px_80px_-20px_rgba(34,211,238,.25)]" style="transform:perspective(900px) rotateY(-6deg) rotateX(2deg)">
-          <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
-            <span class="font-display tracking-widest text-cyan-300">PAYNET</span>
-            <span><i class="fas fa-signal mr-1"></i>online</span>
-          </div>
-          <div class="rounded-xl bg-slate-950/80 border border-slate-700/50 p-5">
-            <div class="text-[10px] uppercase tracking-[.2em] text-amber-400 mb-2">Xabar · отправка SMS</div>
-            <div class="text-xs text-slate-500 mb-1">Номер получателя</div>
-            <div class="rounded-lg bg-slate-900 border border-cyan-400/30 px-3 py-2 font-mono text-cyan-200 text-sm h-9 flex items-center"><span id="typed-num"></span><span class="animate-pulse ml-0.5">▌</span></div>
-            <div class="text-xs text-slate-500 mt-3 mb-1">Шаблон сообщения</div>
-            <div class="rounded-lg bg-slate-900 border border-slate-700/60 px-3 py-2 text-slate-200 text-sm">«Я в порядке, перезвоню позже» <i class="fas fa-check text-emerald-400 ml-1"></i></div>
-            <div class="mt-4 flex items-center justify-between rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-2">
-              <span class="text-xs text-slate-300">Вставлено</span>
-              <span class="font-display text-amber-400">5 000 сум</span>
+      <div class="era-tabs" role="tablist">
+        <button class="era-tab active" data-era="0">
+          <div class="et-year">1889 — 1990-е</div>
+          <div class="et-name">Таксофон на углу</div>
+        </button>
+        <button class="era-tab" data-era="1">
+          <div class="et-year">1991 — 2010-е</div>
+          <div class="et-name">Мобильные пришли — будки остались</div>
+        </button>
+        <button class="era-tab" data-era="2">
+          <div class="et-year">2026 →</div>
+          <div class="et-name">Xabar: терминал вместо будки</div>
+        </button>
+      </div>
+
+      <div class="era-info">
+        <div class="era-panel active" data-era="0">
+          <div class="grid g3">
+            <div class="card">
+              <div class="stat-num">2,6 млн</div>
+              <div class="stat-cap">таксофонов работало в США на пике, конец 1990-х</div>
+              <div class="stat-src">Forbes, FCC</div>
             </div>
-            <div class="mt-2 grid grid-cols-2 gap-2 text-[11px]">
-              <div class="rounded-lg bg-slate-900/80 px-2.5 py-1.5"><span class="text-slate-500">SMS:</span> <span class="text-amber-300">2 000</span></div>
-              <div class="rounded-lg bg-slate-900/80 px-2.5 py-1.5"><span class="text-slate-500">На баланс:</span> <span class="text-cyan-300">3 000</span></div>
+            <div class="card">
+              <div class="stat-num">$3,5 млрд</div>
+              <div class="stat-cap">в год наговаривали американцы с таксофонов уже в 1989 году</div>
+              <div class="stat-src">AT&amp;T · Los Angeles Times, 1989</div>
             </div>
-            <button class="mt-4 w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold py-2.5 text-sm">Отправить <i class="fas fa-paper-plane ml-1"></i></button>
-          </div>
-        </div>
-      </div>
-      <!-- Steps -->
-      <div class="space-y-4">
-        <div class="reveal glass rounded-2xl p-5 flex gap-4 items-start card3d">
-          <div class="w-9 h-9 shrink-0 rounded-full bg-amber-500 text-slate-950 font-display font-bold flex items-center justify-center">1</div>
-          <div><b>Подходит к любому терминалу Paynet</b><p class="text-sm text-slate-400 mt-1">30 000+ точек: махалля, базар, вокзал, магазин у дома.</p></div>
-        </div>
-        <div class="reveal glass rounded-2xl p-5 flex gap-4 items-start card3d">
-          <div class="w-9 h-9 shrink-0 rounded-full bg-amber-500 text-slate-950 font-display font-bold flex items-center justify-center">2</div>
-          <div><b>Выбирает «Xabar — отправить SMS»</b><p class="text-sm text-slate-400 mt-1">Отдельная плитка в меню, крупные кнопки, узбекский / русский.</p></div>
-        </div>
-        <div class="reveal glass rounded-2xl p-5 flex gap-4 items-start card3d">
-          <div class="w-9 h-9 shrink-0 rounded-full bg-amber-500 text-slate-950 font-display font-bold flex items-center justify-center">3</div>
-          <div><b>Вводит номер и выбирает шаблон</b><p class="text-sm text-slate-400 mt-1">Готовые шаблоны («Я в порядке», «Встреть меня», «Перезвони на этот номер») — быстро и без свободного текста на старте → ниже риск фрода.</p></div>
-        </div>
-        <div class="reveal glass rounded-2xl p-5 flex gap-4 items-start card3d">
-          <div class="w-9 h-9 shrink-0 rounded-full bg-amber-500 text-slate-950 font-display font-bold flex items-center justify-center">4</div>
-          <div><b>Вставляет купюру от 2 000 сум</b><p class="text-sm text-slate-400 mt-1">2 000 — фиксированная стоимость услуги. Всё сверх — обычное пополнение баланса получателя. Сдача не нужна.</p></div>
-        </div>
-        <div class="reveal glass rounded-2xl p-5 flex gap-4 items-start card3d">
-          <div class="w-9 h-9 shrink-0 rounded-full bg-cyan-400 text-slate-950 font-display font-bold flex items-center justify-center">5</div>
-          <div><b>Получатель получает SMS за секунды</b><p class="text-sm text-slate-400 mt-1">С брендированной подписи Xabar + пометкой «отправлено из терминала Paynet №…» — доверие и защита от злоупотреблений.</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 4. MARKET ============ -->
-<section id="market" data-nav="Рынок" class="relative py-28 overflow-hidden">
-  <div class="absolute inset-0">
-    <img src="/static/img/network-map.jpg" alt="Сеть точек по Узбекистану" class="w-full h-full object-cover opacity-25">
-    <div class="absolute inset-0 bg-gradient-to-b from-[#060a14] via-[#060a14]/85 to-[#060a14]"></div>
-  </div>
-  <div class="relative z-10 max-w-6xl mx-auto px-6">
-    <div class="reveal kpill mb-6"><i class="fas fa-earth-asia"></i> Рынок · проверенные данные</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">Узбекистан: <span class="grad-amber-cyan">идеальная почва</span> для Xabar</h2>
-    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-text num-mono"><span data-count="36.3" data-decimals="1"></span> млн</div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">абонентов мобильной связи</div>
-        <div class="mt-1 text-xs text-slate-500">Мининфоком РУз, 2025 — проникновение > 96%</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-cyan num-mono"><span data-count="30" data-suffix=" 000+"></span></div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">точек приёма Paynet</div>
-        <div class="mt-1 text-xs text-slate-500">крупнейшая небанковская платёжная сеть страны</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-text num-mono"><span data-count="1.2" data-decimals="1"></span> трлн</div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">сум — выручка Paynet за год</div>
-        <div class="mt-1 text-xs text-slate-500">публичная отчётность; в 2023 Humo-сделка оценила бизнес ≈ $65M</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-cyan num-mono"><span data-count="445" data-suffix=" 000"></span></div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">платёжных терминалов в стране</div>
-        <div class="mt-1 text-xs text-slate-500">ЦБ РУз — вся терминальная инфраструктура растёт</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-text num-mono">+<span data-count="24"></span>%</div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">рост наличных в обращении за год</div>
-        <div class="mt-1 text-xs text-slate-500">ЦБ РУз — кэш-экономика не сжимается, а растёт</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 card3d">
-        <div class="font-display text-4xl grad-cyan num-mono">$<span data-count="74"></span> млрд</div>
-        <div class="mt-2 text-sm text-slate-300 font-semibold">глобальный рынок A2P SMS</div>
-        <div class="mt-1 text-xs text-slate-500">SMS как канал жив: бизнес-сообщения растут двузначными темпами</div>
-      </div>
-    </div>
-    <div class="mt-10 grid lg:grid-cols-2 gap-6">
-      <div class="reveal glass-deep rounded-2xl p-7 border-l-4 border-cyan-400/60">
-        <h3 class="font-bold text-lg text-cyan-200"><i class="fas fa-rocket mr-2"></i>Почему именно сейчас</h3>
-        <ul class="mt-3 space-y-2 text-sm text-slate-300">
-          <li><i class="fas fa-check text-cyan-300 mr-2"></i>Терминальная сеть уже построена и амортизирована — нам не нужен CAPEX на железо</li>
-          <li><i class="fas fa-check text-cyan-300 mr-2"></i>SMS-агрегаторы (Eskiz, Play Mobile) дают готовый API от 95 сум/SMS</li>
-          <li><i class="fas fa-check text-cyan-300 mr-2"></i>Paynet ищет новые источники комиссии с той же сети точек</li>
-          <li><i class="fas fa-check text-cyan-300 mr-2"></i>Ни одного прямого конкурента в нише «SMS за наличные из терминала»</li>
-        </ul>
-      </div>
-      <div class="reveal glass-deep rounded-2xl p-7 border-l-4 border-amber-500/60">
-        <h3 class="font-bold text-lg text-amber-200"><i class="fas fa-magnifying-glass-chart mr-2"></i>Что мы ещё не знаем (и проверим пилотом)</h3>
-        <ul class="mt-3 space-y-2 text-sm text-slate-300">
-          <li><i class="fas fa-circle-question text-amber-400 mr-2"></i>Реальная конверсия у экрана терминала (цель ≥ 2% от активных сессий)</li>
-          <li><i class="fas fa-circle-question text-amber-400 mr-2"></i>Эластичность цены: 2 000 vs 3 000 сум (A/B на пилоте)</li>
-          <li><i class="fas fa-circle-question text-amber-400 mr-2"></i>Итоговая комиссия Paynet — предмет переговоров (300–800 сум)</li>
-          <li><i class="fas fa-circle-question text-amber-400 mr-2"></i>Доля повторных пользователей и сценарии использования</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 5. PRICING ============ -->
-<section id="pricing" data-nav="Цена" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill kpill-cyan mb-6"><i class="fas fa-tags"></i> Ценообразование</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">2 000 сум — это <span class="grad-text">×21 к себестоимости</span>. И это честная цена.</h2>
-    <p class="reveal mt-5 text-slate-300 max-w-3xl">Человек платит не за байты SMS — он платит за мгновенный доступ к связи в момент, когда других вариантов нет. Как за бутылку воды в пустыне: себестоимость копеечная, ценность — критическая.</p>
-    <div class="mt-12 grid lg:grid-cols-3 gap-8 items-start">
-      <div class="reveal lg:col-span-2 glass rounded-2xl p-6">
-        <h3 class="font-bold mb-1">Сколько стоит «одно SMS» в разных каналах, сум <span class="text-xs font-normal text-slate-500">(логарифмическая шкала)</span></h3>
-        <div class="mt-4" style="height:340px"><canvas id="chart-sms"></canvas></div>
-      </div>
-      <div class="space-y-5">
-        <div class="reveal glass rounded-2xl p-6 card3d">
-          <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Себестоимость через Eskiz.uz</div>
-          <div class="font-display text-3xl grad-cyan num-mono">95 <span class="text-base">сум/SMS</span></div>
-          <p class="mt-2 text-xs text-slate-400">Публичный тариф агрегатора. У Play Mobile / оператора напрямую при объёмах — ещё ниже.</p>
-        </div>
-        <div class="reveal glass rounded-2xl p-6 card3d">
-          <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Аналог-якорь: премиум-SMS</div>
-          <div class="font-display text-3xl grad-text num-mono">до 2 450 <span class="text-base">сум</span></div>
-          <p class="mt-2 text-xs text-slate-400">Голосования, подписки и контент-сервисы в Узбекистане уже продают «SMS-действие» по 1 500–2 450 сум. Прецедент цены есть.</p>
-        </div>
-        <div class="reveal glass rounded-2xl p-6 card3d border border-amber-500/30">
-          <div class="text-xs uppercase tracking-widest text-amber-400 mb-1">Наш вывод</div>
-          <p class="text-sm text-slate-200">2 000 сум = одна купюра, ноль сдачи, понятная ценность. Рынок премиум-SMS доказал: за «SMS-услугу» платят на порядок больше себестоимости.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 6. REGULATION ============ -->
-<section id="regulation" data-nav="Право" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill mb-6"><i class="fas fa-scale-balanced"></i> Регуляторика · ключевая находка</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">Юридическая конструкция — <span class="grad-cyan">сердце проекта</span></h2>
-    <p class="reveal mt-5 text-slate-300 max-w-3xl">Платёжный агент <b>не может</b> просто взять и добавить наценку к пополнению баланса. Поэтому Xabar — это не «дорогое пополнение», а <b>отдельная информационная услуга</b>, оформленная по модели контент-провайдеров (как премиум-SMS у Play Mobile).</p>
-    <div class="mt-12 grid md:grid-cols-3 gap-6">
-      <div class="reveal glass rounded-2xl p-7 card3d border-t-4 border-rose-500/60">
-        <div class="text-rose-400 text-2xl mb-3"><i class="fas fa-xmark-circle"></i></div>
-        <h3 class="font-bold">Как НЕЛЬЗЯ</h3>
-        <p class="mt-2 text-sm text-slate-400">«Пополнение 2 000 сум, из которых мы тихо забираем 1 900» — нарушение правил платёжного агента, риск отзыва статуса и претензий оператора.</p>
-      </div>
-      <div class="reveal glass rounded-2xl p-7 card3d border-t-4 border-emerald-500/60">
-        <div class="text-emerald-400 text-2xl mb-3"><i class="fas fa-check-circle"></i></div>
-        <h3 class="font-bold">Как ПРАВИЛЬНО</h3>
-        <p class="mt-2 text-sm text-slate-400">На чеке и экране: «Услуга Xabar: отправка сообщения — 2 000 сум». Отдельный договор оказания информационных услуг, НДС 12% в цене, всё сверх 2 000 — обычное пополнение.</p>
-      </div>
-      <div class="reveal glass rounded-2xl p-7 card3d border-t-4 border-cyan-400/60">
-        <div class="text-cyan-300 text-2xl mb-3"><i class="fas fa-handshake"></i></div>
-        <h3 class="font-bold">Почему Paynet согласится</h3>
-        <p class="mt-2 text-sm text-slate-400">Новая комиссия (300–800 сум/SMS) с нулевым CAPEX на уже стоящих терминалах + рост трафика к терминалам. Для Paynet это чистая инкрементальная маржа.</p>
-      </div>
-    </div>
-    <div class="reveal mt-8 glass-deep rounded-2xl p-7">
-      <h3 class="font-bold text-lg mb-4"><i class="fas fa-shield-halved text-amber-400 mr-2"></i>Антифрод встроен в дизайн</h3>
-      <div class="grid md:grid-cols-2 gap-4 text-sm">
-        <div class="rounded-xl bg-slate-900/70 border border-slate-700/50 p-4">
-          <div class="text-[11px] uppercase tracking-widest text-slate-500 mb-2">SMS получателю выглядит так:</div>
-          <div class="font-mono text-cyan-200 text-sm leading-relaxed">XABAR: «Я в порядке, перезвоню позже». Отправлено из терминала Paynet №4821, Ташкент. Это сообщение оплачено наличными.</div>
-        </div>
-        <ul class="space-y-2 text-slate-300">
-          <li><i class="fas fa-check text-emerald-400 mr-2"></i>Только шаблоны на старте — невозможно отправить мошеннический текст</li>
-          <li><i class="fas fa-check text-emerald-400 mr-2"></i>Подпись с номером терминала — трассируемость каждой отправки</li>
-          <li><i class="fas fa-check text-emerald-400 mr-2"></i>Лимит отправок на один номер в сутки</li>
-          <li><i class="fas fa-check text-emerald-400 mr-2"></i>KPI: жалобы < 0,2% отправок</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 7. ECONOMICS ============ -->
-<section id="economics" data-nav="Экономика" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill kpill-cyan mb-6"><i class="fas fa-chart-line"></i> Юнит-экономика</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">Каждая купюра 2 000 сум <span class="grad-text">раскладывается так</span></h2>
-    <!-- Breakdown bar -->
-    <div class="reveal mt-10 glass rounded-2xl p-6">
-      <div class="flex flex-col sm:flex-row rounded-xl overflow-hidden text-center text-xs font-semibold">
-        <div class="bg-slate-700/80 py-4 px-2 sm:w-[10.7%]"><div class="num-mono text-sm">214</div>НДС 12%</div>
-        <div class="bg-rose-500/70 py-4 px-2 sm:w-[25%]"><div class="num-mono text-sm">500</div>комиссия Paynet (база)</div>
-        <div class="bg-orange-500/70 py-4 px-2 sm:w-[4.75%]"><div class="num-mono text-sm">95</div>SMS</div>
-        <div class="bg-amber-500/60 py-4 px-2 sm:w-[2.5%]"><div class="num-mono text-sm">50</div>ops</div>
-        <div class="bg-gradient-to-r from-emerald-500/80 to-cyan-500/80 py-4 px-2 sm:flex-1"><div class="num-mono text-sm">1 036</div>валовая маржа Xabar · 52%</div>
-      </div>
-      <p class="mt-3 text-xs text-slate-500">Формула: 2 000 / 1,12 (НДС) − комиссия Paynet − 95 (SMS, тариф Eskiz.uz) − 50 (эквайринг/ops) = <b class="text-emerald-300">1 036 сум</b> с каждой отправки в базовом сценарии.</p>
-    </div>
-    <div class="mt-8 grid lg:grid-cols-2 gap-8">
-      <div class="reveal glass rounded-2xl p-6">
-        <h3 class="font-bold mb-1">Маржа на 1 SMS при разной комиссии Paynet, сум</h3>
-        <div class="mt-4" style="height:280px"><canvas id="chart-margin"></canvas></div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6">
-        <h3 class="font-bold mb-1">EBITDA/мес vs объём, млн сум <span class="text-xs font-normal text-slate-500">(fix costs 60 млн/мес)</span></h3>
-        <div class="mt-4" style="height:280px"><canvas id="chart-ebitda"></canvas></div>
-      </div>
-    </div>
-    <!-- Calculator -->
-    <div class="reveal mt-10 glass-deep rounded-3xl p-8 border border-amber-500/25">
-      <h3 class="font-display text-xl grad-text mb-1">Интерактивный калькулятор инвестора</h3>
-      <p class="text-sm text-slate-400 mb-7">Подвигайте ползунки — модель пересчитается мгновенно. Проверьте наши цифры сами.</p>
-      <div class="grid lg:grid-cols-2 gap-10">
-        <div class="space-y-7">
-          <div>
-            <div class="flex justify-between text-sm mb-2"><span class="text-slate-300">Объём отправок, SMS/день</span><span id="v-vol" class="font-display text-amber-400 num-mono">3 000</span></div>
-            <input id="s-vol" type="range" min="500" max="15000" step="100" value="3000" class="w-full">
-          </div>
-          <div>
-            <div class="flex justify-between text-sm mb-2"><span class="text-slate-300">Цена услуги, сум</span><span id="v-price" class="font-display text-amber-400 num-mono">2 000</span></div>
-            <input id="s-price" type="range" min="1000" max="5000" step="100" value="2000" class="w-full">
-          </div>
-          <div>
-            <div class="flex justify-between text-sm mb-2"><span class="text-slate-300">Комиссия Paynet, сум/SMS</span><span id="v-fee" class="font-display text-amber-400 num-mono">500</span></div>
-            <input id="s-fee" type="range" min="200" max="1000" step="50" value="500" class="w-full">
-          </div>
-          <p class="text-[11px] text-slate-500">Константы модели: НДС 12% в цене · SMS 95 сум · ops 50 сум · fix costs 60 млн сум/мес · инвестиции 650 млн сум.</p>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-700/50 p-5">
-            <div class="text-[11px] uppercase tracking-widest text-slate-500">Маржа на 1 SMS</div>
-            <div id="r-margin" class="font-display text-2xl grad-cyan num-mono mt-1">—</div>
-          </div>
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-700/50 p-5">
-            <div class="text-[11px] uppercase tracking-widest text-slate-500">Выручка/мес</div>
-            <div id="r-rev" class="font-display text-2xl grad-cyan num-mono mt-1">—</div>
-          </div>
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-700/50 p-5">
-            <div class="text-[11px] uppercase tracking-widest text-slate-500">EBITDA/мес</div>
-            <div id="r-ebitda" class="font-display text-2xl num-mono mt-1">—</div>
-          </div>
-          <div class="rounded-2xl bg-slate-900/70 border border-slate-700/50 p-5">
-            <div class="text-[11px] uppercase tracking-widest text-slate-500">Окупаемость 650 млн</div>
-            <div id="r-payback" class="font-display text-2xl grad-text num-mono mt-1">—</div>
-          </div>
-          <div class="col-span-2 rounded-2xl bg-amber-500/10 border border-amber-500/30 p-5">
-            <div class="text-[11px] uppercase tracking-widest text-amber-400">Точка безубыточности</div>
-            <div id="r-be" class="font-display text-xl text-amber-200 num-mono mt-1">—</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 8. ROADMAP ============ -->
-<section id="roadmap" data-nav="План" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill mb-6"><i class="fas fa-route"></i> Дорожная карта</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight">12 месяцев: <span class="grad-cyan">от фактов до всей страны</span></h2>
-    <div class="mt-14 relative">
-      <div class="hidden md:block absolute left-0 right-0 top-7 h-0.5 bg-gradient-to-r from-amber-500/60 via-cyan-400/50 to-emerald-400/60"></div>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="reveal relative">
-          <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-display font-bold flex items-center justify-center text-lg relative z-10">0–3</div>
-          <div class="mt-4 glass rounded-2xl p-5 card3d h-full">
-            <div class="text-xs uppercase tracking-widest text-amber-400 mb-1">недели · Факты</div>
-            <ul class="text-sm text-slate-300 space-y-1.5">
-              <li>· Письмо-запрос в Paynet (комиссия, API)</li>
-              <li>· Договор с SMS-агрегатором</li>
-              <li>· Юридическое заключение по модели услуги</li>
-            </ul>
-          </div>
-        </div>
-        <div class="reveal relative">
-          <div class="w-14 h-14 rounded-2xl bg-orange-500 text-slate-950 font-display font-bold flex items-center justify-center text-lg relative z-10">4–10</div>
-          <div class="mt-4 glass rounded-2xl p-5 card3d h-full">
-            <div class="text-xs uppercase tracking-widest text-orange-400 mb-1">недели · MVP + пилот</div>
-            <ul class="text-sm text-slate-300 space-y-1.5">
-              <li>· Backend + экран в меню терминала</li>
-              <li>· Пилот: 50–100 терминалов в Ташкенте</li>
-              <li>· A/B цены, замер конверсии</li>
-            </ul>
-          </div>
-        </div>
-        <div class="reveal relative">
-          <div class="w-14 h-14 rounded-2xl bg-cyan-400 text-slate-950 font-display font-bold flex items-center justify-center text-lg relative z-10">3–6</div>
-          <div class="mt-4 glass rounded-2xl p-5 card3d h-full">
-            <div class="text-xs uppercase tracking-widest text-cyan-300 mb-1">месяцы · Масштаб</div>
-            <ul class="text-sm text-slate-300 space-y-1.5">
-              <li>· 1 000+ терминалов, вокзалы и базары</li>
-              <li>· Локальный маркетинг у точек</li>
-              <li>· Выход на безубыточность (~1 930 SMS/день)</li>
-            </ul>
-          </div>
-        </div>
-        <div class="reveal relative">
-          <div class="w-14 h-14 rounded-2xl bg-emerald-400 text-slate-950 font-display font-bold flex items-center justify-center text-lg relative z-10">7–12</div>
-          <div class="mt-4 glass rounded-2xl p-5 card3d h-full">
-            <div class="text-xs uppercase tracking-widest text-emerald-300 mb-1">месяцы · Страна</div>
-            <ul class="text-sm text-slate-300 space-y-1.5">
-              <li>· Вся сеть Paynet (30 000+ точек)</li>
-              <li>· Новые продукты: голосовое сообщение, перевод-уведомление</li>
-              <li>· Цель: 5 000–10 000 SMS/день</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-12 grid sm:grid-cols-3 gap-5">
-      <div class="reveal glass rounded-2xl p-6 text-center card3d">
-        <div class="font-display text-3xl grad-text num-mono">≥ <span data-count="2"></span>%</div>
-        <div class="mt-1 text-xs text-slate-400">конверсия активных сессий терминала в отправку — go/no-go пилота</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 text-center card3d">
-        <div class="font-display text-3xl grad-cyan num-mono">≥ <span data-count="95"></span>%</div>
-        <div class="mt-1 text-xs text-slate-400">доставляемость SMS — SLA с агрегатором</div>
-      </div>
-      <div class="reveal glass rounded-2xl p-6 text-center card3d">
-        <div class="font-display text-3xl grad-text num-mono">< <span data-count="0.2" data-decimals="1"></span>%</div>
-        <div class="mt-1 text-xs text-slate-400">жалоб на отправки — антифрод-порог</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 9. ASK ============ -->
-<section id="ask" data-nav="Запрос" class="relative py-28 overflow-hidden">
-  <div class="absolute inset-0">
-    <img src="/static/img/message-received.jpg" alt="Получение сообщения" class="w-full h-full object-cover opacity-20">
-    <div class="absolute inset-0 bg-gradient-to-b from-[#060a14] via-[#060a14]/85 to-[#060a14]"></div>
-  </div>
-  <div class="relative z-10 max-w-6xl mx-auto px-6">
-    <div class="reveal kpill mb-6"><i class="fas fa-hand-holding-dollar"></i> Инвестиционный запрос</div>
-    <h2 class="reveal font-display text-3xl sm:text-5xl font-700 leading-tight"><span class="grad-text">650 млн сум</span> <span class="text-slate-400 text-2xl sm:text-4xl">(~$51 000)</span> до подтверждённого пилота</h2>
-    <div class="mt-12 grid lg:grid-cols-2 gap-10 items-start">
-      <div class="reveal glass rounded-2xl p-6">
-        <h3 class="font-bold mb-1">Структура использования средств, млн сум</h3>
-        <div class="mt-4 flex justify-center" style="height:320px"><canvas id="chart-ask"></canvas></div>
-      </div>
-      <div class="space-y-5">
-        <div class="reveal glass rounded-2xl p-6 card3d">
-          <h3 class="font-bold text-lg"><i class="fas fa-stopwatch text-cyan-300 mr-2"></i>Сценарии окупаемости инвестиций</h3>
-          <div class="mt-4 space-y-3 text-sm">
-            <div class="flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3">
-              <span class="text-slate-300">Консервативный · 3 000 SMS/день</span>
-              <span class="font-display grad-cyan num-mono">~20 мес</span>
-            </div>
-            <div class="flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3">
-              <span class="text-slate-300">Базовый · 5 000 SMS/день</span>
-              <span class="font-display grad-text num-mono">~7 мес</span>
-            </div>
-            <div class="flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3">
-              <span class="text-slate-300">Оптимистичный · 10 000 SMS/день</span>
-              <span class="font-display text-emerald-300 num-mono">~2,6 мес</span>
+            <div class="card">
+              <div class="stat-num">2 коп.</div>
+              <div class="stat-cap">стоил звонок из будки в Ташкенте — автоматы стояли у каждого гастронома и вокзала</div>
+              <div class="stat-src">городская сеть СССР</div>
             </div>
           </div>
         </div>
-        <div class="reveal glass-deep rounded-2xl p-6 border-l-4 border-emerald-500/60">
-          <h3 class="font-bold text-emerald-200"><i class="fas fa-flag-checkered mr-2"></i>Условие сделки: go / no-go после пилота</h3>
-          <p class="mt-2 text-sm text-slate-300">Транш делится на 2 части. Вторая часть (масштабирование) — только если пилот на 50–100 терминалах показал конверсию ≥ 2%, доставляемость ≥ 95% и жалобы < 0,2%. Инвестор рискует лишь стартовой частью до фактической проверки спроса.</p>
+        <div class="era-panel" data-era="1">
+          <div class="grid g3">
+            <div class="card">
+              <div class="stat-num">36% → 71%</div>
+              <div class="stat-cap">домохозяйств США обзавелись мобильным с 1998 по 2005 год — а таксофонов в 2001-м всё ещё было 2,2 млн</div>
+              <div class="stat-src">U.S. Census Bureau · Forbes</div>
+            </div>
+            <div class="card" style="border-color:var(--clay)">
+              <div class="stat-num">$3 млн</div>
+              <div class="stat-cap">британская Solan вложила в «Ташкент Таксофони» в 2003 году — через 12 лет после прихода мобильной связи в Узбекистан</div>
+              <div class="stat-src">CNews, 28.10.2003</div>
+            </div>
+            <div class="card">
+              <div class="stat-num">$286 млн</div>
+              <div class="stat-cap">годовая выручка оставшихся ~100 тыс. таксофонов США даже в 2015 году</div>
+              <div class="stat-src">FCC, отчёт 2015</div>
+            </div>
+          </div>
         </div>
-        <div class="reveal glass rounded-2xl p-6 card3d border border-cyan-400/25">
-          <h3 class="font-bold text-cyan-200"><i class="fas fa-chess-queen mr-2"></i>Стратегическая ценность за пределами SMS</h3>
-          <p class="mt-2 text-sm text-slate-300">Xabar — это первый «коммуникационный» продукт на терминальной сети. Дальше: голосовые сообщения, уведомления о переводах, экстренные сервисы. Мы строим слой коммуникаций поверх крупнейшей кэш-инфраструктуры страны.</p>
+        <div class="era-panel" data-era="2">
+          <div class="grid g3">
+            <div class="card">
+              <div class="stat-num">30 000+</div>
+              <div class="stat-cap">точек Paynet уже стоят по всему Узбекистану — будку строить не нужно</div>
+              <div class="stat-src">Paynet</div>
+            </div>
+            <div class="card">
+              <div class="stat-num">0 сум</div>
+              <div class="stat-cap">капитальных затрат на «будку»: используем существующие терминалы и SMS-шлюз</div>
+              <div class="stat-src">модель Xabar</div>
+            </div>
+            <div class="card">
+              <div class="stat-num">2 000 сум</div>
+              <div class="stat-cap">одна купюра — и сообщение доставлено; всё, что сверху, падает на баланс получателя</div>
+              <div class="stat-src">продукт Xabar</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 10. SOURCES ============ -->
-<section id="sources" data-nav="Источники" class="relative py-28">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="reveal kpill kpill-cyan mb-6"><i class="fas fa-book-open"></i> Источники данных</div>
-    <h2 class="reveal font-display text-3xl sm:text-4xl font-700">Каждая цифра — <span class="grad-cyan">проверяема</span></h2>
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-      <a href="https://mitc.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Мининфоком РУз</div>
-        <div class="text-xs text-slate-500 mt-1">36,3 млн абонентов мобильной связи (2025)</div>
-      </a>
-      <a href="https://cbu.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Центральный банк РУз</div>
-        <div class="text-xs text-slate-500 mt-1">445 тыс. терминалов; наличные +24% г/г</div>
-      </a>
-      <a href="https://paynet.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Paynet</div>
-        <div class="text-xs text-slate-500 mt-1">30 000+ точек; выручка ~1,2 трлн сум/год</div>
-      </a>
-      <a href="https://eskiz.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Eskiz.uz</div>
-        <div class="text-xs text-slate-500 mt-1">публичный тариф SMS-рассылок от 95 сум/SMS</div>
-      </a>
-      <a href="https://playmobile.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Play Mobile</div>
-        <div class="text-xs text-slate-500 mt-1">модель премиум-SMS до 2 450 сум — ценовой якорь</div>
-      </a>
-      <a href="https://stat.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Агентство статистики РУз</div>
-        <div class="text-xs text-slate-500 mt-1">Ташкент 3,18 млн жителей; демография страны</div>
-      </a>
-      <a href="https://kun.uz" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Kun.uz / деловые СМИ</div>
-        <div class="text-xs text-slate-500 mt-1">сделка Humo—Paynet 2023, оценка ≈ $65 млн</div>
-      </a>
-      <a href="https://www.junipersearch.com" target="_blank" rel="noopener" class="reveal src-card glass rounded-xl p-4 block">
-        <div class="font-semibold text-slate-200"><i class="fas fa-link text-cyan-400 mr-2"></i>Juniper Research / отраслевые отчёты</div>
-        <div class="text-xs text-slate-500 mt-1">глобальный A2P SMS ≈ $74 млрд</div>
-      </a>
-      <div class="reveal src-card glass rounded-xl p-4 border border-amber-500/25">
-        <div class="font-semibold text-amber-300"><i class="fas fa-vial mr-2"></i>Собственная гипотеза</div>
-        <div class="text-xs text-slate-500 mt-1">конверсия ≥ 2% у экрана терминала — валидируется пилотом, не выдаётся за факт</div>
+<!-- ============ DEEP RESEARCH ============ -->
+<section id="research" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div class="eyebrow rv">Deep research · доходность таксофонов</div>
+    <h2 class="rv">Что на самом деле случилось с телефонными будками</h2>
+    <p class="lead rv" style="margin-top:18px; max-width:740px">
+      Мы подняли отчёты FCC, архивы Forbes, LA Times, CNews, данные «Ростелекома», BT и NTT —
+      чтобы честно ответить на вопрос: <em>сколько зарабатывали таксофоны, когда у всех уже были мобильные?</em>
+    </p>
+
+    <div class="rv" style="margin-top:40px">
+      <div class="card" style="padding:32px">
+        <h3 style="margin-bottom:6px">Выручка и парк таксофонов США, 1989–2015</h3>
+        <p class="xsmall" style="margin-bottom:18px">Единственный рынок с непрерывной публичной статистикой (FCC). Мобильная связь стала массовой ≈1998.</p>
+        <div class="chart-box" style="height:360px"><canvas id="chart-decline"></canvas></div>
       </div>
     </div>
-    <!-- CTA -->
-    <div class="reveal mt-16 glass-deep rounded-3xl p-10 text-center border border-amber-500/25">
-      <h3 class="font-display text-2xl sm:text-3xl font-700"><span class="grad-text">Одна купюра.</span> <span class="grad-cyan">Одно сообщение.</span> <span class="text-slate-200">Миллионы моментов, когда это спасает день.</span></h3>
-      <p class="mt-4 text-slate-400 max-w-2xl mx-auto text-sm">Мы просим 650 млн сум, чтобы за 10 недель доказать спрос цифрами пилота — и превратить 30 000 терминалов Paynet в самую большую сеть связи для людей без телефона.</p>
-      <div class="mt-8 flex flex-wrap gap-4 justify-center">
-        <a href="#economics" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:scale-105 transition-transform"><i class="fas fa-calculator mr-2"></i>Пересчитать модель</a>
-        <a href="#hero" class="px-8 py-4 rounded-2xl glass hover:border-cyan-400/50 transition-colors font-semibold"><i class="fas fa-arrow-up mr-2 text-cyan-300"></i>В начало</a>
+
+    <div class="grid g2 rv" style="margin-top:24px">
+      <div class="card">
+        <span class="tag tag-clay">Ключевой факт №1</span>
+        <h3 style="margin-top:14px">Индустрия умирала 20 лет — и всё это время платила</h3>
+        <p class="small muted" style="margin-top:10px">
+          Пик мобильного бума — 1998–2005. Но в 2001-м в США всё ещё работало 2,2 млн таксофонов,
+          а в 2015-м — оставшиеся 100 тысяч приносили <strong style="color:var(--ink)">$286 млн в год</strong>,
+          т.е. ≈$2 900 с одного аппарата. FCC прямо писала: «они по-прежнему прибыльны в местах,
+          где людям нужна связь без телефона».
+        </p>
+      </div>
+      <div class="card">
+        <span class="tag tag-clay">Ключевой факт №2</span>
+        <h3 style="margin-top:14px">В Ташкент инвестировали в будки, когда мобильные уже были</h3>
+        <p class="small muted" style="margin-top:10px">
+          В 2003 году — через 12 лет после запуска сотовой связи в Узбекистане — британская
+          Solan International купила 54% «Ташкент Таксофони» и вложила <strong style="color:var(--ink)">$3 млн</strong>,
+          планируя покрыть таксофонами все крупные города к 2007-му. Инвесторы того времени
+          видели то же, что видим мы: спрос на публичную связь не исчез с приходом мобильных.
+        </p>
+      </div>
+      <div class="card">
+        <span class="tag tag-olive">Ключевой факт №3</span>
+        <h3 style="margin-top:14px">Спрос возвращается в кризис</h3>
+        <p class="small muted" style="margin-top:10px">
+          Россия, 2020: трафик таксофонов вырос <strong style="color:var(--ink)">в 2,6 раза</strong> за год (Ростелеком).
+          Япония до сих пор по закону держит ~100 тыс. автоматов на случай землетрясений — в катастрофу
+          мобильная сеть падает первой. Великобритания: 5 млн звонков в год из будок, Ofcom в 2022-м
+          законодательно <em>запретил</em> убирать будки, нужные людям.
+        </p>
+      </div>
+      <div class="card">
+        <span class="tag tag-olive">Ключевой факт №4</span>
+        <h3 style="margin-top:14px">Умер носитель, а не потребность</h3>
+        <p class="small muted" style="margin-top:10px">
+          Будки убила не «ненужность», а экономика железа: аренда места, инкассация монет, вандализм,
+          обслуживание линии — при падающем трафике. У Xabar этих затрат нет вовсе:
+          терминалы Paynet уже стоят, уже инкассируются и уже подключены. Мы наследуем спрос — без груза железа.
+        </p>
+      </div>
+    </div>
+
+    <div class="rv" style="margin-top:44px">
+      <div class="pull">
+        «Таксофоны по-прежнему могут быть прибыльными — особенно там, где людям
+        нужно позвонить, а телефона нет».
+        <span class="src">— из отчёта FCC о доходах таксофонной индустрии, 2015 ($286 млн выручки при 100 тыс. аппаратов)</span>
+      </div>
+    </div>
+
+    <div class="rv" style="margin-top:40px">
+      <h3 style="margin-bottom:16px">Хронология: сколько индустрия зарабатывала после прихода мобильных</h3>
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-year">1989</div>
+          <div class="tl-text small">Американцы наговаривают <strong>$3,5 млрд/год</strong> с таксофонов (AT&amp;T). Пик близко.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1998–2001</div>
+          <div class="tl-text small">Мобильные уже у трети домохозяйств США — но парк таксофонов всё ещё <strong>2,2–2,6 млн</strong> аппаратов. Индустрия сокращается лишь на ~5% в год.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2003</div>
+          <div class="tl-text small">Ташкент: Solan инвестирует <strong>$3 млн</strong> в модернизацию таксофонной сети города. В Узбекистане на тот момент ~1 млн сотовых абонентов не набралось — а наличные были у всех.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2007</div>
+          <div class="tl-text small">В США ещё <strong>~1 млн</strong> работающих таксофонов — через 9 лет после начала мобильного бума.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2015</div>
+          <div class="tl-text small">Остаток парка (~100 тыс.) приносит <strong>$286 млн/год</strong> — около $240 в месяц с аппарата, почти без затрат на развитие.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2020–2022</div>
+          <div class="tl-text small">Пандемия: в России звонки с таксофонов растут <strong>в 2,6 раза</strong>. Ofcom (Великобритания) запрещает демонтаж нужных будок. Япония держит парк по закону — ради катастроф.</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<footer class="py-10 text-center text-xs text-slate-600 border-t border-slate-800/60">
-  <span class="font-display tracking-[.3em] text-slate-500">XABAR × PAYNET</span> · Инвесторская презентация · 2026 · Собрано на проверенных данных рынка Узбекистана
+<!-- ============ INSIGHT ============ -->
+<section id="insight" class="dark">
+  <div class="wrap-narrow">
+    <div class="eyebrow rv" style="color:#E0956F">Вывод из исследования</div>
+    <h2 class="rv">Публичная связь пережила мобильный телефон.<br>Проиграло только железо.</h2>
+    <div class="rv" style="margin-top:30px; display:grid; gap:16px">
+      <div class="card" style="padding:22px 26px">
+        <p class="small"><strong style="color:#E0956F">1.</strong>&ensp;Спрос «позвонить без своего телефона» приносил миллиарды долларов ещё <em>двадцать лет</em> после массового прихода мобильных — это медленно тающий, но реальный денежный поток, а не ностальгия.</p>
+      </div>
+      <div class="card" style="padding:22px 26px">
+        <p class="small"><strong style="color:#E0956F">2.</strong>&ensp;Убыточным его сделало железо: аренда, инкассация, вандализм, медные линии. Услуга была прибыльной — инфраструктура нет.</p>
+      </div>
+      <div class="card" style="padding:22px 26px">
+        <p class="small"><strong style="color:#E0956F">3.</strong>&ensp;В Узбекистане носитель для этой услуги уже построен и окупается <em>другим</em> бизнесом: 30 000+ терминалов Paynet принимают наличные каждый день. Мы добавляем услугу связи на чужое, уже прибыльное железо.</p>
+      </div>
+      <div class="card" style="padding:22px 26px">
+        <p class="small"><strong style="color:#E0956F">4.</strong>&ensp;Xabar — это таксофон, у которого отняли всё, что его убивало, и оставили всё, что приносило деньги: наличные, доступность на каждом углу, мгновенную связь.</p>
+      </div>
+    </div>
+    <p class="rv" style="margin-top:34px; font-family:'Source Serif 4',serif; font-size:22px; line-height:1.5; color:#FAF9F5">
+      Мы не изобретаем новую привычку. Мы возвращаем старую — <span style="color:#E0956F">без затрат, которые её похоронили.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============ PRODUCT ============ -->
+<section id="product">
+  <div class="wrap">
+    <p class="eyebrow rv">Продукт</p>
+    <h2 class="rv">Как работает Xabar</h2>
+    <p class="lead rv" style="max-width:680px">Человек без телефона подходит к любому из 30 000+ терминалов Paynet, вставляет купюру — и его сообщение доставлено. Всё, что выше 2 000 сум, пополняет баланс получателя.</p>
+
+    <div class="grid g3" style="margin-top:44px">
+      <div class="card rv">
+        <div class="step-n">1</div>
+        <h3>Выбор услуги</h3>
+        <p>На экране терминала Paynet — знакомый интерфейс. Пункт «Xabar — отправить SMS» рядом с оплатой телефона.</p>
+      </div>
+      <div class="card rv">
+        <div class="step-n">2</div>
+        <h3>Номер получателя</h3>
+        <p>Отправитель вводит номер. Никакой регистрации, никакого приложения, никакого своего телефона.</p>
+      </div>
+      <div class="card rv">
+        <div class="step-n">3</div>
+        <h3>Текст сообщения</h3>
+        <p>Короткий текст с экранной клавиатуры или готовый шаблон: «Перезвони мне на …», «Я на месте», «Встречай».</p>
+      </div>
+      <div class="card rv">
+        <div class="step-n">4</div>
+        <h3>Купюра 2 000 сум</h3>
+        <p>Терминал принимает наличные — как он делает это миллионы раз в день по всей стране. 2 000 сум = 1 сообщение.</p>
+      </div>
+      <div class="card rv">
+        <div class="step-n">5</div>
+        <h3>Сдача — балансом</h3>
+        <p>Вставил 5 000? 2 000 — за SMS, 3 000 — на баланс телефона получателя. Сдача не «сгорает», она становится подарком.</p>
+      </div>
+      <div class="card card-beige rv">
+        <div class="step-n" style="background:var(--clay); color:#fff">✓</div>
+        <h3>Доставлено</h3>
+        <p>SMS уходит через лицензированного агрегатора Eskiz с альфа-именем отправителя. Получатель видит текст и пополнение.</p>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:26px">
+      <div class="card rv">
+        <p class="eyebrow" style="margin-bottom:12px">Для кого</p>
+        <p>Родственники в кишлаках без смартфона у бабушек и дедушек. Рабочие, у которых сел или потерялся телефон. Дети без своих номеров. Мигранты у автовокзалов. Любой, кому нужно <em>срочно передать слово</em>, а телефона под рукой нет.</p>
+      </div>
+      <div class="card rv">
+        <p class="eyebrow" style="margin-bottom:12px">Почему Paynet</p>
+        <p>30 000+ терминалов уже стоят там, где ходят люди: базары, махалли, автовокзалы, магазины. Оборот сети — триллионы сум наличными в год. Нам не нужно строить ни одной «будки» — инфраструктура уже окуплена.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECONOMICS ============ -->
+<section id="economics" class="bg-alt">
+  <div class="wrap">
+    <p class="eyebrow rv">Юнит-экономика</p>
+    <h2 class="rv">Экономика одного сообщения</h2>
+    <p class="lead rv" style="max-width:680px">Цена 2 000 сум. Считаем честно: НДС, комиссия Paynet, SMS-агрегатор, операционные расходы.</p>
+
+    <table class="brk rv" style="margin-top:40px">
+      <thead>
+        <tr><th>Статья</th><th style="text-align:right">Сум</th><th>Комментарий</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Цена для отправителя</td><td style="text-align:right"><span class="mono">2 000</span></td><td>одна купюра, ноль трения</td></tr>
+        <tr><td>НДС 12%</td><td style="text-align:right"><span class="mono">−214</span></td><td>2 000 − 2 000/1,12</td></tr>
+        <tr><td>Комиссия Paynet (базовый сценарий)</td><td style="text-align:right"><span class="mono">−440</span></td><td>предмет переговоров: 300–600</td></tr>
+        <tr><td>SMS-агрегатор Eskiz</td><td style="text-align:right"><span class="mono">−95</span></td><td>публичный тариф</td></tr>
+        <tr><td>Операционные расходы</td><td style="text-align:right"><span class="mono">−50</span></td><td>поддержка, мониторинг, резерв</td></tr>
+        <tr class="total"><td>Маржа с одного SMS</td><td style="text-align:right"><span class="mono">≈ 1 200</span></td><td>60% от цены</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="rv" style="margin-top:56px">Посчитайте сами</h3>
+    <p class="rv" style="max-width:620px">Три ползунка — объём, цена, комиссия Paynet. Постоянные расходы: 60 млн сум/мес (команда, серверы, юр. сопровождение).</p>
+
+    <div class="grid g2" style="margin-top:28px; align-items:start">
+      <div class="card rv">
+        <div class="calc-row">
+          <label for="s-vol">SMS в день</label>
+          <span class="calc-val mono" id="v-vol">5 000</span>
+        </div>
+        <input type="range" id="s-vol" min="500" max="30000" step="500" value="5000">
+        <div class="calc-row" style="margin-top:22px">
+          <label for="s-price">Цена SMS, сум</label>
+          <span class="calc-val mono" id="v-price">2 000</span>
+        </div>
+        <input type="range" id="s-price" min="1000" max="5000" step="100" value="2000">
+        <div class="calc-row" style="margin-top:22px">
+          <label for="s-fee">Комиссия Paynet, сум</label>
+          <span class="calc-val mono" id="v-fee">440</span>
+        </div>
+        <input type="range" id="s-fee" min="200" max="800" step="20" value="440">
+      </div>
+      <div class="card card-beige rv">
+        <div class="calc-out">
+          <div class="calc-row"><span>Маржа на SMS</span><span class="mono" id="r-margin">1 201 сум</span></div>
+          <div class="calc-row"><span>Выручка в месяц</span><span class="mono" id="r-rev">300 млн</span></div>
+          <div class="calc-row"><span>EBITDA в месяц</span><span class="mono" id="r-ebitda">+120 млн</span></div>
+          <div class="calc-row"><span>Окупаемость 650 млн</span><span class="mono" id="r-payback">5,4 мес</span></div>
+          <div class="calc-row" style="border-top:1px solid var(--line); padding-top:14px; margin-top:6px">
+            <span>Точка безубыточности</span><span class="mono" id="r-be">~1 930 SMS/день</span>
+          </div>
+        </div>
+        <p style="font-size:13.5px; color:var(--muted); margin-top:18px">1 930 SMS в день на 30 000 терминалов — это <strong>одно сообщение на 15 терминалов в день</strong>. Порог, который сеть проходит незаметно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ASK ============ -->
+<section id="ask">
+  <div class="wrap">
+    <p class="eyebrow rv">Раунд</p>
+    <h2 class="rv">Просим 650 млн сум</h2>
+    <p class="lead rv" style="max-width:680px">≈ 50 000 USD. Двумя траншами, со стоп-критериями. Деньги — на интеграцию, пилот и 12 месяцев работы, не на «маркетинговые эксперименты».</p>
+
+    <div class="grid g4" style="margin-top:44px">
+      <div class="card rv">
+        <div class="stat-num mono">230 млн</div>
+        <div class="stat-cap">Интеграция с Paynet: API, экраны терминалов, биллинг, безопасность</div>
+      </div>
+      <div class="card rv">
+        <div class="stat-num mono">180 млн</div>
+        <div class="stat-cap">Команда 12 месяцев: разработка, поддержка, аналитика</div>
+      </div>
+      <div class="card rv">
+        <div class="stat-num mono">140 млн</div>
+        <div class="stat-cap">Пилот в Ташкенте: 1 000 терминалов, материалы на точках, обучение</div>
+      </div>
+      <div class="card rv">
+        <div class="stat-num mono">100 млн</div>
+        <div class="stat-cap">Резерв и юридическое сопровождение (лицензии, персональные данные)</div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:26px">
+      <div class="card rv">
+        <p class="eyebrow" style="margin-bottom:10px">Консервативный</p>
+        <div class="stat-num mono" style="font-size:30px">~20 мес</div>
+        <div class="stat-cap">3 000 SMS/день. Медленный старт, окупаемость за счёт маржи 60%</div>
+      </div>
+      <div class="card card-beige rv">
+        <p class="eyebrow" style="margin-bottom:10px">Базовый</p>
+        <div class="stat-num mono" style="font-size:30px">~7 мес</div>
+        <div class="stat-cap">5 000 SMS/день — 1 SMS на 6 терминалов. EBITDA +120 млн/мес</div>
+      </div>
+      <div class="card rv">
+        <p class="eyebrow" style="margin-bottom:10px">Оптимистичный</p>
+        <div class="stat-num mono" style="font-size:30px">~2,6 мес</div>
+        <div class="stat-cap">10 000 SMS/день после подключения регионов и шаблонов</div>
+      </div>
+    </div>
+
+    <div class="card rv" style="margin-top:26px">
+      <h3 style="margin-bottom:14px">Go / No-Go после первого транша (350 млн)</h3>
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <div class="stat-num mono" style="font-size:26px">≥ 2%</div>
+          <div class="stat-cap">конверсия из показа экрана Xabar в оплату на пилотных терминалах</div>
+        </div>
+        <div>
+          <div class="stat-num mono" style="font-size:26px">≥ 95%</div>
+          <div class="stat-cap">доставляемость SMS в течение 60 секунд</div>
+        </div>
+        <div>
+          <div class="stat-num mono" style="font-size:26px">&lt; 0,2%</div>
+          <div class="stat-cap">жалоб от объёма транзакций</div>
+        </div>
+      </div>
+      <p style="font-size:14.5px; color:var(--muted); margin-top:18px">Не проходим пороги за 4 месяца пилота — второй транш не запрашиваем, остаток возвращается. Инвестор рискует 350 млн, а не 650.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section id="sources" class="bg-alt">
+  <div class="wrap-narrow">
+    <p class="eyebrow rv">Источники</p>
+    <h2 class="rv">Данные, на которых построен вывод</h2>
+    <div class="src-list rv" style="margin-top:32px">
+      <p><strong>Таксофоны против мобильных</strong></p>
+      <p><a class="src-link" href="https://www.latimes.com/archives/la-xpm-1989-08-27-fi-1017-story.html" target="_blank">LA Times, 1989 — рынок звонков с таксофонов США ≈ $3,5 млрд/год (данные AT&T)</a></p>
+      <p><a class="src-link" href="https://www.forbes.com/2001/07/publicphones.html" target="_blank">Forbes, 2001 — 2,2 млн таксофонов в США спустя годы после массовых мобильных</a></p>
+      <p><a class="src-link" href="https://docs.fcc.gov/public/attachments/DOC-341273A1.pdf" target="_blank">FCC — ~100 тыс. таксофонов, $286 млн выручки в 2015; «могут оставаться прибыльными»</a></p>
+      <p><a class="src-link" href="https://www.cnews.ru/news/line/tashkentskie_taksofony_kupili_britantsy" target="_blank">CNews, 28.10.2003 — Solan International покупает 54% «Ташкент Таксофони», инвестирует $3 млн в расширение сети — через 12 лет после запуска мобильной связи в Узбекистане</a></p>
+      <p><a class="src-link" href="https://www.comnews.ru/content/212752" target="_blank">ComNews / Ростелеком, 2020 — трафик 148 тыс. российских таксофонов вырос в 2,6 раза</a></p>
+      <p><a class="src-link" href="https://www.theguardian.com/business/2022/nov/01/phone-boxes-uk-ofcom-rules" target="_blank">The Guardian / Ofcom, 2022 — 5 млн звонков в год из телефонных будок; Ofcom запретил демонтаж нужных будок</a></p>
+      <p><a class="src-link" href="https://profit.kz/news/2151/Istoriya-sotovoj-svyazi-v-Uzbekistane/" target="_blank">Profit.kz — история мобильной связи Узбекистана: Uzdunrobita с 1991, 1 млн абонентов к 2005</a></p>
+      <p style="margin-top:22px"><strong>Рынок Узбекистана и себестоимость</strong></p>
+      <p><a class="src-link" href="https://mitc.uz" target="_blank">Мининфоком РУз — 36,3 млн мобильных абонентов</a></p>
+      <p><a class="src-link" href="https://paynet.uz" target="_blank">Paynet — 30 000+ точек, оборот 1,2+ трлн сум</a></p>
+      <p><a class="src-link" href="https://cbu.uz" target="_blank">ЦБ РУз — 445 тыс. платёжных терминалов, наличный оборот +24% г/г</a></p>
+      <p><a class="src-link" href="https://eskiz.uz" target="_blank">Eskiz.uz — тариф SMS-агрегатора 95 сум</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; align-items:baseline">
+    <div>
+      <span style="font-family:'Source Serif 4',serif; font-size:19px; font-weight:600">Xabar</span>
+      <span style="color:var(--muted); font-size:14px; margin-left:10px">связь без телефона · Ташкент, 2026</span>
+    </div>
+    <div style="color:var(--muted); font-size:13.5px">Инвестиционная презентация · все расчёты — в ценах июля 2026</div>
+  </div>
 </footer>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  gsap.registerPlugin(ScrollTrigger);
-  const ruFmt = new Intl.NumberFormat('ru-RU');
+/* ============================================================
+   Xabar — Claude-style presentation scripts
+   1) GSAP reveal animations
+   2) Minecraft voxel scene (Three.js) — evolution of communication
+   3) Chart.js — payphone decline research chart
+   4) Unit-economics calculator
+   ============================================================ */
 
-  /* ---------- Three.js particle network + coins ---------- */
-  (function(){
-    const canvas = document.getElementById('bg3d');
-    if (!canvas || !window.THREE) return;
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, 1, .1, 100);
-    camera.position.z = 9;
-
-    const N = 420, pos = new Float32Array(N*3), pts = [];
-    for (let i=0;i<N;i++){
-      const x=(Math.random()-.5)*16, y=(Math.random()-.5)*10, z=(Math.random()-.5)*7;
-      pos.set([x,y,z], i*3); pts.push({x,y,z, vx:(Math.random()-.5)*.004, vy:(Math.random()-.5)*.004});
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color:0x38bdf8, size:.05, transparent:true, opacity:.7 })));
-
-    const lineGeo = new THREE.BufferGeometry();
-    const maxLines = 900;
-    const lPos = new Float32Array(maxLines*6);
-    lineGeo.setAttribute('position', new THREE.BufferAttribute(lPos,3));
-    const lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({ color:0x22d3ee, transparent:true, opacity:.14 }));
-    scene.add(lines);
-
-    const amb = new THREE.AmbientLight(0xffffff,.6); scene.add(amb);
-    const dl = new THREE.DirectionalLight(0xfbbf24,1.2); dl.position.set(4,5,6); scene.add(dl);
-    const mkTorus = (col,x,y,z,s)=>{ const t=new THREE.Mesh(new THREE.TorusGeometry(.55*s,.2*s,24,60), new THREE.MeshStandardMaterial({ color:col, metalness:.85, roughness:.25, emissive:col, emissiveIntensity:.12 })); t.position.set(x,y,z); scene.add(t); return t; };
-    const coin1 = mkTorus(0xf59e0b, 3.4, 1.2, 2, 1);
-    const coin2 = mkTorus(0x22d3ee, -4, -.6, 1.4, .75);
-
-    let mx=0,my=0;
-    addEventListener('mousemove', e=>{ mx=(e.clientX/innerWidth-.5); my=(e.clientY/innerHeight-.5); }, {passive:true});
-
-    function size(){ const w=canvas.clientWidth||innerWidth, h=canvas.clientHeight||innerHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
-    size(); addEventListener('resize', size);
-
-    (function tick(t){
-      requestAnimationFrame(tick);
-      const p = geo.attributes.position.array;
-      for (let i=0;i<N;i++){
-        const o=pts[i]; o.x+=o.vx; o.y+=o.vy;
-        if (o.x>8||o.x<-8) o.vx*=-1; if (o.y>5||o.y<-5) o.vy*=-1;
-        p[i*3]=o.x; p[i*3+1]=o.y;
-      }
-      geo.attributes.position.needsUpdate = true;
-      let li=0;
-      for (let i=0;i<N && li<maxLines;i++) for (let j=i+1;j<N && li<maxLines;j++){
-        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
-        if (dx*dx+dy*dy < 2.1){ lPos.set([pts[i].x,pts[i].y,pts[i].z, pts[j].x,pts[j].y,pts[j].z], li*6); li++; }
-      }
-      lineGeo.setDrawRange(0, li*2); lineGeo.attributes.position.needsUpdate = true;
-      coin1.rotation.x = t*.0005; coin1.rotation.y = t*.0008;
-      coin2.rotation.x = -t*.0006; coin2.rotation.y = t*.0007;
-      camera.position.x += (mx*1.4 - camera.position.x)*.04;
-      camera.position.y += (-my*.9 - camera.position.y)*.04;
-      camera.lookAt(0,0,0);
-      renderer.render(scene,camera);
-    })(0);
-  })();
-
-  /* ---------- Hero intro ---------- */
-  gsap.fromTo('.hero-a', {opacity:0, y:36}, {opacity:1, y:0, duration:.9, stagger:.12, ease:'power3.out', delay:.15});
-
-  /* ---------- Reveal on scroll ---------- */
-  document.querySelectorAll('.reveal').forEach(el=>{
-    gsap.to(el, { opacity:1, y:0, duration:.85, ease:'power3.out',
-      scrollTrigger:{ trigger:el, start:'top 86%', once:true } });
+/* ---------- 1. Reveals ---------- */
+gsap.registerPlugin(ScrollTrigger);
+document.querySelectorAll('.rv').forEach(function(el){
+  gsap.fromTo(el, {opacity:0, y:26}, {
+    opacity:1, y:0, duration:0.75, ease:'power2.out',
+    scrollTrigger:{trigger:el, start:'top 88%', once:true}
   });
-
-  /* ---------- Progress bar ---------- */
-  const pbar = document.getElementById('progressbar');
-  addEventListener('scroll', ()=>{
-    const h = document.documentElement;
-    pbar.style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
-  }, {passive:true});
-
-  /* ---------- Nav rail ---------- */
-  const rail = document.getElementById('navrail');
-  const secs = [...document.querySelectorAll('section[data-nav]')];
-  secs.forEach(s=>{
-    const a = document.createElement('a');
-    a.href = '#'+s.id; a.title = s.dataset.nav;
-    a.className = 'navdot'; a.dataset.for = s.id;
-    rail.appendChild(a);
-  });
-  const io = new IntersectionObserver(es=>{
-    es.forEach(e=>{ if (e.isIntersecting){
-      rail.querySelectorAll('.navdot').forEach(d=>d.classList.toggle('active', d.dataset.for===e.target.id));
-    }});
-  }, { rootMargin:'-45% 0px -45% 0px' });
-  secs.forEach(s=>io.observe(s));
-
-  /* ---------- Count-up ---------- */
-  document.querySelectorAll('[data-count]').forEach(el=>{
-    const end = parseFloat(el.dataset.count), dec = parseInt(el.dataset.decimals||'0');
-    const pre = el.dataset.prefix||'', suf = el.dataset.suffix||'';
-    const obj = { v:0 };
-    gsap.to(obj, { v:end, duration:1.8, ease:'power2.out',
-      scrollTrigger:{ trigger:el, start:'top 90%', once:true },
-      onUpdate(){ 
-        const val = dec ? obj.v.toFixed(dec).replace('.',',') : ruFmt.format(Math.round(obj.v));
-        el.textContent = pre + val + suf;
-      }});
-  });
-
-  /* ---------- Typing effect ---------- */
-  (function(){
-    const el = document.getElementById('typed-num'); if(!el) return;
-    const txt = '+998 90 123 45 67'; let i=0, del=false;
-    (function step(){
-      el.textContent = txt.slice(0, i);
-      if (!del){ i++; if (i>txt.length){ del=true; return setTimeout(step, 2200); } }
-      else { i--; if (i===0){ del=false; return setTimeout(step, 600); } }
-      setTimeout(step, del?28:85);
-    })();
-  })();
-
-  /* ---------- Charts ---------- */
-  Chart.defaults.color = '#94a3b8';
-  Chart.defaults.font.family = 'Manrope';
-  Chart.defaults.borderColor = 'rgba(148,163,184,.12)';
-
-  new Chart(document.getElementById('chart-sms'), {
-    type:'bar',
-    data:{ labels:['SMS в пакете оператора','Розничное SMS (тариф)','Себестоимость Eskiz.uz','A2P бизнес-SMS','XABAR — 2 000 сум','Премиум-SMS (до)'],
-      datasets:[{ data:[8.4,84,95,175,2000,2450],
-        backgroundColor:['#334155','#475569','#22d3ee','#38bdf8','#f59e0b','#fb923c'], borderRadius:8 }]},
-    options:{ indexAxis:'y', maintainAspectRatio:false, plugins:{ legend:{display:false},
-      tooltip:{ callbacks:{ label:c=>' '+ruFmt.format(c.raw)+' сум' } }},
-      scales:{ x:{ type:'logarithmic', min:5, max:4000, ticks:{ callback:v=>[10,100,1000,2000].includes(v)?ruFmt.format(v):null } }, y:{ grid:{display:false} } } }
-  });
-
-  new Chart(document.getElementById('chart-margin'), {
-    type:'bar',
-    data:{ labels:['Комиссия 300','Комиссия 500 (база)','Комиссия 800'],
-      datasets:[{ label:'Маржа, сум/SMS', data:[1236,1036,636],
-        backgroundColor:['rgba(34,211,238,.75)','rgba(245,158,11,.85)','rgba(251,113,133,.7)'], borderRadius:10 }]},
-    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false},
-      tooltip:{ callbacks:{ label:c=>' '+ruFmt.format(c.raw)+' сум маржи' } }},
-      scales:{ y:{ beginAtZero:true } } }
-  });
-
-  new Chart(document.getElementById('chart-ebitda'), {
-    type:'line',
-    data:{ labels:['1 000','1 930 (BE)','3 000','5 000','10 000'],
-      datasets:[{ label:'EBITDA, млн сум/мес', data:[-29,0,33,95,251],
-        borderColor:'#f59e0b', borderWidth:3, fill:true, tension:.35, pointRadius:5,
-        pointBackgroundColor:['#fb7185','#facc15','#22d3ee','#22d3ee','#34d399'],
-        backgroundColor:(ctx)=>{ const g=ctx.chart.ctx.createLinearGradient(0,0,0,280); g.addColorStop(0,'rgba(245,158,11,.28)'); g.addColorStop(1,'rgba(245,158,11,0)'); return g; } }]},
-    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false},
-      tooltip:{ callbacks:{ label:c=>' '+c.raw+' млн сум/мес' } }},
-      scales:{ x:{ title:{display:true, text:'SMS/день'} }, y:{ grid:{ color:ctx=>ctx.tick.value===0?'rgba(250,204,21,.5)':'rgba(148,163,184,.12)' } } } }
-  });
-
-  new Chart(document.getElementById('chart-ask'), {
-    type:'doughnut',
-    data:{ labels:['Команда (200)','Backend и софт терминала (120)','Маркетинг у точек (120)','Интеграция Paynet (80)','Резерв (70)','Юристы и лицензии (40)','SMS-трафик пилота (20)'],
-      datasets:[{ data:[200,120,120,80,70,40,20],
-        backgroundColor:['#f59e0b','#fb923c','#22d3ee','#38bdf8','#64748b','#a78bfa','#34d399'],
-        borderColor:'#0b1020', borderWidth:3 }]},
-    options:{ maintainAspectRatio:false, cutout:'62%',
-      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, padding:10, font:{size:11} } },
-        tooltip:{ callbacks:{ label:c=>' '+c.label.replace(/\s*\(\d+\)/,'')+': '+c.raw+' млн сум' } } } }
-  });
-
-  /* ---------- Calculator ---------- */
-  (function(){
-    const FIX=60_000_000, SMS=95, OPS=50, INVEST=650_000_000;
-    const $=id=>document.getElementById(id);
-    const sv=$('s-vol'), sp=$('s-price'), sf=$('s-fee');
-    function calc(){
-      const vol=+sv.value, price=+sp.value, fee=+sf.value;
-      $('v-vol').textContent = ruFmt.format(vol);
-      $('v-price').textContent = ruFmt.format(price);
-      $('v-fee').textContent = ruFmt.format(fee);
-      const margin = price/1.12 - fee - SMS - OPS;
-      const rev = vol*30*price, ebitda = vol*30*margin - FIX;
-      $('r-margin').textContent = ruFmt.format(Math.round(margin))+' сум';
-      $('r-rev').textContent = (rev/1e6).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' млн';
-      const eEl = $('r-ebitda');
-      eEl.textContent = (ebitda/1e6>=0?'+':'')+(ebitda/1e6).toFixed(1).replace('.',',')+' млн';
-      eEl.className = 'font-display text-2xl num-mono mt-1 '+(ebitda>=0?'text-emerald-300':'text-rose-400');
-      $('r-payback').textContent = ebitda>0 ? (INVEST/ebitda).toFixed(1).replace('.',',')+' мес' : '—';
-      const be = margin>0 ? Math.ceil(FIX/margin/30) : Infinity;
-      $('r-be').textContent = isFinite(be) ? ruFmt.format(be)+' SMS/день' : 'модель убыточна при этих параметрах';
-    }
-    [sv,sp,sf].forEach(s=>s.addEventListener('input', calc));
-    calc();
-  })();
-
-  /* ---------- 3D card tilt ---------- */
-  if (matchMedia('(hover:hover)').matches){
-    document.querySelectorAll('.card3d').forEach(card=>{
-      card.addEventListener('mousemove', e=>{
-        const r = card.getBoundingClientRect();
-        const rx = ((e.clientY-r.top)/r.height-.5)*-7, ry = ((e.clientX-r.left)/r.width-.5)*7;
-        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
-      });
-      card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
-    });
-  }
 });
+
+/* ---------- 2. Voxel scene ---------- */
+(function(){
+  var canvas = document.getElementById('voxel-canvas');
+  var wrap = document.getElementById('voxel-wrap');
+  if(!canvas || !wrap || typeof THREE === 'undefined') return;
+
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 300);
+  camera.position.set(15, 11, 19);
+  camera.lookAt(0, 3.2, 0);
+
+  scene.add(new THREE.AmbientLight(0xfff6e8, 0.85));
+  var sun = new THREE.DirectionalLight(0xffffff, 1.0);
+  sun.position.set(12, 20, 9);
+  scene.add(sun);
+  var fill = new THREE.DirectionalLight(0xd7e3f5, 0.3);
+  fill.position.set(-9, 7, -7);
+  scene.add(fill);
+
+  var root = new THREE.Group();
+  scene.add(root);
+
+  var geo = new THREE.BoxGeometry(1, 1, 1);
+  var matCache = {};
+  function M(hex, emissive){
+    var key = hex + '|' + (emissive || 0);
+    if(!matCache[key]){
+      matCache[key] = new THREE.MeshLambertMaterial({color:hex});
+      if(emissive) matCache[key].emissive = new THREE.Color(emissive);
+    }
+    return matCache[key];
+  }
+  /* voxel helper: x,z is center of footprint, y is bottom */
+  function V(g, x, y, z, color, sx, sy, sz, emissive){
+    sx = sx || 1; sy = sy || 1; sz = sz || 1;
+    var mesh = new THREE.Mesh(geo, M(color, emissive));
+    mesh.scale.set(sx, sy, sz);
+    mesh.position.set(x, y + sy / 2, z);
+    g.add(mesh);
+    return mesh;
+  }
+
+  /* checkerboard ground 12x12 */
+  function ground(g, c1, c2){
+    for(var gx = -6; gx < 6; gx++){
+      for(var gz = -6; gz < 6; gz++){
+        V(g, gx + 0.5, -1, gz + 0.5, ((gx + gz) % 2 === 0) ? c1 : c2, 1, 1, 1);
+      }
+    }
+  }
+
+  /* simple voxel person */
+  function person(g, x, y, z, shirt, skin){
+    var p = new THREE.Group();
+    V(p, 0, 0, 0, 0x3B3B3B, 0.85, 0.9, 0.5);      /* legs */
+    V(p, 0, 0.9, 0, shirt, 0.95, 1.1, 0.55);      /* torso */
+    V(p, 0, 2.0, 0, skin, 0.7, 0.7, 0.6);         /* head */
+    V(p, 0, 2.7, 0, 0x35281E, 0.75, 0.25, 0.65);  /* hair */
+    p.position.set(x, y, z);
+    g.add(p);
+    return p;
+  }
+
+  /* ---- Era 0: Soviet phone booth ---- */
+  function buildEra0(){
+    var g = new THREE.Group();
+    ground(g, 0x8FBF6B, 0x83B360);
+    for(var i = -6; i < 6; i++){ V(g, i + 0.5, 0, 4.5, 0xBDB6A6, 1, 0.2, 1); V(g, i + 0.5, 0, 5.5, 0xB1AA9A, 1, 0.2, 1); }
+    var R = 0xC0392B, RD = 0xA93226, GLASS = 0xBFDFEA;
+    [-1.5, 1.5].forEach(function(px){ [-1.5, 1.5].forEach(function(pz){
+      V(g, px, 0, pz, R, 0.6, 5, 0.6);
+    });});
+    V(g, 0, 1, -1.5, GLASS, 2.4, 3, 0.15);
+    V(g, -1.5, 1, 0, GLASS, 0.15, 3, 2.4);
+    V(g, 1.5, 1, 0, GLASS, 0.15, 3, 2.4);
+    V(g, 0, 0, -1.5, RD, 2.4, 1, 0.3);
+    V(g, -1.5, 0, 0, RD, 0.3, 1, 2.4);
+    V(g, 1.5, 0, 0, RD, 0.3, 1, 2.4);
+    V(g, 0, 5, 0, RD, 3.6, 0.6, 3.6);
+    V(g, 0, 5.6, 0, R, 3.0, 0.4, 3.0);
+    V(g, 0, 4.1, -1.62, 0xF5E9C8, 2.6, 0.7, 0.12); /* sign */
+    V(g, 0.6, 2.2, 0.9, 0x2C2C2C, 0.7, 1.2, 0.4);  /* phone unit */
+    V(g, 0.6, 2.5, 0.62, 0x111111, 0.35, 0.7, 0.2);/* handset */
+    person(g, -3.5, 0.2, 2.5, 0x5D7A9A, 0xC89A6B);
+    person(g, -5, 0.2, 3.2, 0x8A6D4F, 0xC89A6B);
+    V(g, 4.5, 0, -3.5, 0x8B5A2B, 0.8, 2.4, 0.8);
+    V(g, 4.5, 2.4, -3.5, 0x5F9E4E, 2.6, 2, 2.6);
+    V(g, 4.5, 4.4, -3.5, 0x6BAF5B, 1.8, 1.2, 1.8);
+    var coin = V(g, -3.2, 4.6, 1.5, 0xE0B14C, 0.9, 0.18, 0.9, 0x6b4d10);
+    g.userData.spin = [coin];
+    return g;
+  }
+
+  /* ---- Era 1: 2003 — booth still earning NEXT TO a cell tower ---- */
+  function buildEra1(){
+    var g = new THREE.Group();
+    ground(g, 0xA9B49A, 0x9EA98F);
+    for(var i = -6; i < 6; i++){ for(var j = 2; j < 6; j++){ V(g, i + 0.5, 0, j + 0.5, (i + j) % 2 ? 0x77746C : 0x807D75, 1, 0.2, 1); } }
+    var R = 0xC0392B;
+    [-1, 1].forEach(function(px){ [-1, 1].forEach(function(pz){ V(g, -3.5 + px, 0, 1 + pz, R, 0.5, 4, 0.5); });});
+    V(g, -3.5, 0.8, 0.05, 0xBFDFEA, 1.7, 2.2, 0.12);
+    V(g, -3.5, 4, 1, 0xA93226, 2.8, 0.5, 2.8);
+    V(g, -3.5, 3.2, 0.02, 0xF5E9C8, 1.8, 0.5, 0.1);
+    V(g, -3.2, 1.6, 1.6, 0x2C2C2C, 0.5, 1, 0.3);
+    /* cell tower */
+    var GR = 0x9AA2AB, DG = 0x7E8790;
+    V(g, 4, 0, -2, DG, 2.2, 0.6, 2.2);
+    for(var t = 0; t < 9; t++){
+      var s = 1.1 - t * 0.06;
+      V(g, 4, 0.6 + t, -2, (t % 2 ? GR : DG), s, 1, s);
+    }
+    V(g, 4, 9.6, -2, 0xE8E8E8, 0.4, 1.6, 0.4);
+    V(g, 3.3, 8.6, -2, 0xF2F2F2, 0.25, 1.4, 0.7);
+    V(g, 4.7, 8.6, -2, 0xF2F2F2, 0.25, 1.4, 0.7);
+    V(g, 4, 8.6, -1.3, 0xF2F2F2, 0.7, 1.4, 0.25);
+    var beacon = V(g, 4, 10.4, -2, 0xFF5340, 0.35, 0.35, 0.35, 0xFF2200);
+    var s1 = V(g, 4, 11.2, -2, 0xC96442, 1.2, 0.1, 1.2, 0x8a3c22);
+    var s2 = V(g, 4, 12.0, -2, 0xC96442, 2.0, 0.1, 2.0, 0x8a3c22);
+    s1.material = s1.material.clone(); s1.material.transparent = true; s1.material.opacity = 0.75;
+    s2.material = s2.material.clone(); s2.material.transparent = true; s2.material.opacity = 0.45;
+    person(g, 1, 0.2, 3, 0x4A6FA5, 0xC89A6B);
+    V(g, 1.55, 2.1, 3, 0x222222, 0.18, 0.5, 0.3); /* mobile at ear */
+    person(g, -3.5, 0.2, 3.2, 0x7A5C43, 0xB98A5E);
+    var money = V(g, -3.5, 5.4, 1, 0xE0B14C, 0.8, 0.8, 0.2, 0x6b4d10);
+    g.userData.spin = [money, beacon];
+    return g;
+  }
+
+  /* ---- Era 2: today — Paynet terminal (Xabar) ---- */
+  function buildEra2(){
+    var g = new THREE.Group();
+    ground(g, 0xD9CDB4, 0xCFC2A8);
+    for(var i = -6; i < 6; i++){ V(g, i + 0.5, 0, -5.5, (i % 2 ? 0xEFE9DB : 0xE9E2D2), 1, 7, 1); }
+    var NB = 0x2E4C8A, NB2 = 0x243C6E, OR = 0xE98A2B;
+    V(g, 0, 0, 0, NB2, 2.6, 1, 1.6);
+    V(g, 0, 1, 0, NB, 2.4, 3.4, 1.4);
+    V(g, 0, 4.4, 0, NB2, 2.6, 0.5, 1.6);
+    V(g, 0, 4.9, 0, OR, 2.2, 0.7, 1.2);
+    var screen = V(g, 0, 2.4, 0.78, 0xFFF6E0, 1.8, 1.6, 0.1, 0xC96442);
+    screen.material = screen.material.clone();
+    V(g, 0, 1.5, 0.78, 0xD8D8D8, 1.6, 0.6, 0.08);
+    V(g, 0.55, 1.05, 0.78, 0x111111, 0.8, 0.18, 0.08);
+    var note = V(g, 0.55, 1.0, 1.25, 0x7FAE6C, 0.7, 0.06, 0.5, 0x2d4d22);
+    person(g, 0.6, 0.2, 2.6, 0x996F4E, 0xC89A6B);
+    person(g, -4.2, 0.2, 2.2, 0x5D7A9A, 0xB98A5E);
+    V(g, -3.7, 2.1, 2.2, 0x222222, 0.18, 0.5, 0.3);
+    /* floating SMS envelope */
+    var env = new THREE.Group();
+    V(env, 0, 0, 0, 0xFAF9F5, 1.3, 0.85, 0.15);
+    V(env, 0, 0.45, 0, 0xC96442, 1.3, 0.18, 0.16);
+    V(env, -0.35, 0.18, 0.02, 0xC96442, 0.5, 0.14, 0.16);
+    V(env, 0.35, 0.18, 0.02, 0xC96442, 0.5, 0.14, 0.16);
+    env.position.set(-1.8, 4.8, 1.6);
+    g.add(env);
+    g.userData.spin = [env];
+    g.userData.pulse = screen;
+    g.userData.note = note;
+    return g;
+  }
+
+  var eras = [buildEra0(), buildEra1(), buildEra2()];
+  eras.forEach(function(e, i){
+    e.visible = (i === 0);
+    e.scale.setScalar(i === 0 ? 1 : 0.001);
+    root.add(e);
+  });
+  var current = 0;
+
+  /* drag to rotate */
+  var dragging = false, lastX = 0, targetRotY = 0.35;
+  root.rotation.y = targetRotY;
+  wrap.style.cursor = 'grab';
+  wrap.addEventListener('pointerdown', function(e){ dragging = true; lastX = e.clientX; wrap.style.cursor = 'grabbing'; });
+  window.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    targetRotY += (e.clientX - lastX) * 0.008;
+    lastX = e.clientX;
+  });
+  window.addEventListener('pointerup', function(){ dragging = false; wrap.style.cursor = 'grab'; });
+
+  window.setVoxelEra = function(idx){
+    if(idx === current) return;
+    var prev = eras[current], next = eras[idx];
+    current = idx;
+    gsap.to(prev.scale, {x:0.001, y:0.001, z:0.001, duration:0.4, ease:'power2.in',
+      onComplete:function(){ prev.visible = false; }});
+    next.visible = true;
+    gsap.fromTo(next.scale, {x:0.001, y:0.001, z:0.001},
+      {x:1, y:1, z:1, duration:0.65, delay:0.3, ease:'back.out(1.4)'});
+    targetRotY += 0.9;
+  };
+
+  function resize(){
+    var w = wrap.clientWidth, h = wrap.clientHeight || 520;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  var clock = new THREE.Clock();
+  function tick(){
+    requestAnimationFrame(tick);
+    var t = clock.getElapsedTime();
+    if(!dragging) targetRotY += 0.0012;
+    root.rotation.y += (targetRotY - root.rotation.y) * 0.08;
+    var e = eras[current];
+    if(e.userData.spin) e.userData.spin.forEach(function(o){ o.rotation.y = t * 1.4; });
+    if(e.userData.pulse) e.userData.pulse.emissiveIntensity !== undefined;
+    if(e.userData.pulse) e.userData.pulse.material.emissiveIntensity = 0.7 + Math.sin(t * 3) * 0.3;
+    if(e.userData.note) e.userData.note.position.z = 1.25 - ((t * 0.4) % 1) * 0.45;
+    renderer.render(scene, camera);
+  }
+  tick();
+})();
+
+/* ---------- era tabs ---------- */
+document.querySelectorAll('.era-tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var idx = parseInt(btn.dataset.era, 10);
+    document.querySelectorAll('.era-tab').forEach(function(b){ b.classList.toggle('active', b === btn); });
+    document.querySelectorAll('.era-panel').forEach(function(p, i){ p.classList.toggle('active', i === idx); });
+    if(window.setVoxelEra) window.setVoxelEra(idx);
+  });
+});
+
+/* ---------- 3. Research chart ---------- */
+(function(){
+  var el = document.getElementById('chart-decline');
+  if(!el || typeof Chart === 'undefined') return;
+  var ink = '#1F1E1B', muted = '#6E6A5E', line = '#E5E2D9', clay = '#C96442', olive = '#7D8A5C';
+  new Chart(el, {
+    type: 'bar',
+    data: {
+      labels: ['1989', '1995', '1999', '2001', '2007', '2015'],
+      datasets: [
+        {
+          label: 'Таксофоны в США, млн шт.',
+          data: [1.8, 2.4, 2.6, 2.2, 1.0, 0.1],
+          backgroundColor: 'rgba(125,138,92,0.55)',
+          borderColor: olive,
+          borderWidth: 1.5,
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Выручка рынка, $ млрд/год',
+          data: [3.5, null, null, null, null, 0.286],
+          spanGaps: true,
+          borderColor: clay,
+          backgroundColor: clay,
+          borderDash: [6, 5],
+          pointRadius: 6,
+          pointBackgroundColor: clay,
+          tension: 0,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: ink, font: { family: 'Inter', size: 13 }, usePointStyle: true, padding: 18 } },
+        tooltip: {
+          backgroundColor: '#22211E', titleColor: '#FAF9F5', bodyColor: '#D6D2C6',
+          padding: 12, cornerRadius: 8,
+          callbacks: {
+            label: function(ctx){
+              if(ctx.datasetIndex === 1) return ' Выручка: $' + (ctx.parsed.y >= 1 ? ctx.parsed.y + ' млрд' : (ctx.parsed.y * 1000) + ' млн');
+              return ' Парк: ' + (ctx.parsed.y >= 1 ? ctx.parsed.y + ' млн' : (ctx.parsed.y * 1000) + ' тыс.');
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: muted, font: { family: 'JetBrains Mono', size: 12 } } },
+        y: {
+          position: 'left', min: 0, max: 3,
+          grid: { color: line }, ticks: { color: olive, font: { family: 'JetBrains Mono', size: 11 } },
+          title: { display: true, text: 'млн таксофонов', color: olive, font: { family: 'Inter', size: 12 } }
+        },
+        y1: {
+          position: 'right', min: 0, max: 4,
+          grid: { drawOnChartArea: false }, ticks: { color: clay, font: { family: 'JetBrains Mono', size: 11 } },
+          title: { display: true, text: '$ млрд выручки', color: clay, font: { family: 'Inter', size: 12 } }
+        }
+      }
+    }
+  });
+})();
+
+/* ---------- 4. Calculator ---------- */
+(function(){
+  var sVol = document.getElementById('s-vol'),
+      sPrice = document.getElementById('s-price'),
+      sFee = document.getElementById('s-fee');
+  if(!sVol) return;
+  var fmt = function(n){ return Math.round(n).toLocaleString('ru-RU'); };
+  var FIX = 60000000, ASK = 650000000, DAYS = 30, SMS_COST = 95, OPS = 50;
+
+  function calc(){
+    var vol = +sVol.value, price = +sPrice.value, fee = +sFee.value;
+    document.getElementById('v-vol').textContent = fmt(vol);
+    document.getElementById('v-price').textContent = fmt(price);
+    document.getElementById('v-fee').textContent = fmt(fee);
+
+    var margin = price / 1.12 - fee - SMS_COST - OPS;
+    var revM = vol * DAYS * price;
+    var ebitda = vol * DAYS * margin - FIX;
+    var be = margin > 0 ? Math.ceil(FIX / DAYS / margin) : Infinity;
+
+    document.getElementById('r-margin').textContent = fmt(margin) + ' сум';
+    document.getElementById('r-rev').textContent = fmt(revM / 1000000) + ' млн';
+    var eb = document.getElementById('r-ebitda');
+    eb.textContent = (ebitda >= 0 ? '+' : '−') + fmt(Math.abs(ebitda) / 1000000) + ' млн';
+    eb.style.color = ebitda >= 0 ? '#5B7842' : '#B0442B';
+    document.getElementById('r-payback').textContent =
+      ebitda > 0 ? (ASK / ebitda).toFixed(1).replace('.', ',') + ' мес' : '—';
+    document.getElementById('r-be').textContent =
+      margin > 0 ? '~' + fmt(be) + ' SMS/день' : 'маржа отрицательна';
+  }
+  [sVol, sPrice, sFee].forEach(function(s){ s.addEventListener('input', calc); });
+  calc();
+})();
 </script>
 </body>
 </html>
