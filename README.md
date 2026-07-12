@@ -1,21 +1,57 @@
-```txt
-npm install
-npm run dev
+# Xabar × Paynet — Инвесторская презентация
+
+## Обзор проекта
+- **Название**: Xabar × Paynet — Investor Analytical Deck (веб-версия)
+- **Цель**: интерактивная одностраничная презентация для инвесторов о сервисе Xabar — отправка SMS из платёжных терминалов Paynet за наличные (2 000 сум за услугу, остальное — на баланс получателя)
+- **Основано на**: 15-слайдовой аналитической колоде + собственное deep-research по рынку Узбекистана с проверяемыми источниками
+
+## URLs
+- **Sandbox preview**: https://3000-irscc4007yqan8o7kwgmn-c81df28e.sandbox.novita.ai
+- **Production**: не задеплоено (ожидается выбор пути деплоя: свой Cloudflare-аккаунт или Genspark-hosted)
+
+## Функциональность (реализовано)
+- 10 секций single-page scroll: Hero → Проблема → Решение → Рынок → Цена → Право → Экономика → План → Запрос → Источники
+- Three.js 3D-фон: сеть частиц (420 точек с линиями) + два вращающихся металлических тора, параллакс от мыши
+- GSAP + ScrollTrigger: intro-анимация hero, reveal-анимации секций, count-up цифр
+- 4 графика Chart.js: цены SMS (лог-шкала), маржа по комиссии Paynet, EBITDA vs объём, структура ask (doughnut)
+- Интерактивный калькулятор инвестора (3 слайдера: объём / цена / комиссия Paynet → маржа, выручка, EBITDA, окупаемость, точка безубыточности)
+- Анимированный мокап терминала с эффектом набора номера
+- Навигационный rail (точки справа), прогресс-бар скролла, 3D-tilt карточек
+- 4 AI-сгенерированных атмосферных фото (hero-терминал, улица, карта сети, получение сообщения)
+
+## Ключевые цифры модели
+- Цена услуги: 2 000 сум (НДС 12% внутри) · себестоимость SMS: 95 сум (Eskiz.uz) · ops: 50 сум
+- Маржа: 2000/1,12 − комиссия Paynet − 95 − 50 = **1 036 сум** (при комиссии 500)
+- Fix costs: 60 млн сум/мес · безубыточность ≈ **1 930 SMS/день**
+- Ask: **650 млн сум (~$51 000)**: команда 200, backend 120, маркетинг 120, интеграция 80, резерв 70, юристы 40, SMS 20
+
+## Архитектура
+- **Tech Stack**: Hono + Vite + Cloudflare Pages · Tailwind (CDN) · Three.js · GSAP · Chart.js
+- **Данные**: статический контент, БД не требуется
+- **Маршруты**: `GET /` — презентация; `/static/img/*` — изображения
+
+## Структура
+```
+webapp/
+├── src/index.tsx            # Hono: отдаёт presentation.html (?raw import)
+├── src/presentation.html    # Вся презентация (HTML+CSS+JS, ~62 КБ)
+├── public/static/img/       # 4 сжатых JPEG (hero, problem, network, message)
+├── ecosystem.config.cjs     # PM2 (wrangler pages dev, порт 3000)
+└── wrangler.jsonc
 ```
 
-```txt
-npm run deploy
+## Локальный запуск
+```bash
+npm run build
+pm2 start ecosystem.config.cjs
+curl http://localhost:3000
 ```
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+## Не реализовано / следующие шаги
+- Продакшен-деплой на Cloudflare Pages (нужно выбрать путь: свой аккаунт или Genspark-hosted)
+- Возможные улучшения: PDF-экспорт, версия на узбекском языке, режим «докладчика»
 
-```txt
-npm run cf-typegen
-```
-
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
-
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+## Статус
+- **Платформа**: Cloudflare Pages (готово к деплою)
+- **Статус**: ✅ работает в sandbox
+- **Обновлено**: 2026-07-12
