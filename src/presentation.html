@@ -102,6 +102,22 @@ h3{font-family:var(--serif);font-weight:600;font-size:21px;line-height:1.3;lette
 .src{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-top:12px;display:block}
 .src::before{content:"— ";color:var(--clay)}
 
+/* ---------- svg ornaments & diagrams ---------- */
+.orn{display:block;width:128px;height:14px;margin-top:20px;overflow:visible}
+.orn path{fill:none;stroke:var(--clay);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:180;stroke-dashoffset:180}
+.orn.go path{animation:orn-draw 1.4s ease .3s forwards}
+@keyframes orn-draw{to{stroke-dashoffset:0}}
+.ai-flow{display:block;width:100%;max-width:760px;margin:52px auto 0;overflow:visible}
+.ai-flow text{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em}
+.ai-flow .fbox{fill:none;stroke:#4A463C;stroke-width:1.5}
+.ai-flow .fdia{fill:rgba(216,179,106,.07);stroke:#D8B36A;stroke-width:1.8;animation:dia-pulse 3.2s ease-in-out infinite}
+@keyframes dia-pulse{0%,100%{stroke-opacity:.55}50%{stroke-opacity:1}}
+.ai-flow .fline{fill:none;stroke:#6B665A;stroke-width:1.6;stroke-dasharray:7 7;animation:dash-run 1.1s linear infinite}
+.ai-flow .fline.alert{stroke:#B95E42;animation-duration:1.6s}
+@keyframes dash-run{to{stroke-dashoffset:-14}}
+.vic{width:17px;height:17px;flex:0 0 17px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.card-d:hover .vic{transform:rotate(-10deg) scale(1.25)}
+
 /* ---------- hero ---------- */
 #top{padding:170px 0 96px;position:relative}
 #top .accent{color:var(--clay);font-style:italic;font-weight:600}
@@ -250,7 +266,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <a href="#economics">Экономика</a>
       <a href="#plan">План</a>
     </nav>
-    <a class="hcta" href="#ask">650 млн сум</a>
+    <a class="hcta" href="#ask">360 млн сум</a>
   </div>
   <div id="progress"></div>
 </header>
@@ -262,6 +278,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <div>
         <p class="sec-kicker rv">Инвесторская записка · Ташкент · 2026</p>
         <h1 class="rv" style="margin-top:22px">Это не пополнение баланса. Это <span class="accent">телефон</span> — для того, у&nbsp;кого его нет.</h1>
+        <svg class="orn rv" viewBox="0 0 128 14" aria-hidden="true"><path d="M2 8 Q 12 1, 22 8 T 42 8 T 62 8 T 82 8 T 102 8 T 122 8"/></svg>
       </div>
       <div style="padding-top:14px">
         <p class="lead rv">Каждый день десятки тысяч людей в Ташкенте оказываются в одной и той же точке: телефон забыт, разряжен или украден — а сказать одно слово нужно <em>прямо сейчас</em>. Сто лет эту работу делала будка на углу. Мы возвращаем её — внутри терминала Paynet, который уже стоит в 400 метрах от любого прохожего.</p>
@@ -618,6 +635,23 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       </div>
     </div>
 
+    <svg class="ai-flow rv" viewBox="0 0 760 168" role="img" aria-label="Схема: терминал → AI-фильтр → SMS; криминал — сигнал в органы">
+      <rect class="fbox" x="8" y="46" width="172" height="46" rx="9"/>
+      <text x="94" y="74" text-anchor="middle" fill="#CFCABC">терминал Paynet</text>
+      <path class="fline" d="M184 69 H 268"/>
+      <path d="M268 69 l -8 -4.5 v 9 z" fill="#6B665A"/>
+      <polygon class="fdia" points="352,18 448,69 352,120 256,69"/>
+      <text x="352" y="64" text-anchor="middle" fill="#D8B36A">AI-фильтр</text>
+      <text x="352" y="84" text-anchor="middle" fill="#8A8577" style="font-size:11px">читает смысл, не слова</text>
+      <path class="fline" d="M452 69 H 556"/>
+      <path d="M556 69 l -8 -4.5 v 9 z" fill="#6B665A"/>
+      <rect class="fbox" x="560" y="46" width="192" height="46" rx="9" style="stroke:rgba(110,125,78,.6)"/>
+      <text x="656" y="74" text-anchor="middle" fill="#A9BA84">SMS за 4 секунды</text>
+      <path class="fline alert" d="M352 122 V 146"/>
+      <path d="M352 152 l -4.5 -8 h 9 z" fill="#B95E42"/>
+      <text x="366" y="163" text-anchor="middle" fill="#E08A66" style="font-size:11.5px">признаки преступления — сигнал в органы</text>
+    </svg>
+
     <div class="rule-lb rv" style="margin:56px 0 34px"><span style="background:var(--dark);color:#8A8577">что это даёт</span></div>
     <div class="g4">
       <div class="card-l rv" style="border-left-color:#4A463C">
@@ -634,22 +668,33 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       </div>
       <div class="card-l rv" style="border-left-color:#4A463C">
         <div class="stat" style="color:#D8B36A;font-size:21px">Понятный CAPEX</div>
-        <div class="cap" style="color:#8A8577">Заметная часть инвестиций идёт в вычислительное оборудование для LLM — актив, который дорожает день ото дня и остаётся на балансе компании, а не растворяется в операционке.</div>
+        <div class="cap" style="color:#8A8577">Треть инвестиций — вычислительное оборудование, актив на балансе компании. Один такой сервер обрабатывает больше миллиона сообщений в сутки, потребляя электричества примерно на 15 тысяч сум в день.</div>
       </div>
     </div>
 
     <div class="g3 rv" style="margin-top:44px">
       <div class="card-d" style="border-color:#3A372F">
-        <div class="tag tag-o" style="background:rgba(110,125,78,.15);border-color:rgba(110,125,78,.4);color:#A9BA84">пропускает</div>
+        <div class="tag tag-o" style="background:rgba(110,125,78,.15);border-color:rgba(110,125,78,.4);color:#A9BA84;display:inline-flex;align-items:center;gap:7px"><svg class="vic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5 l 2.8 2.8 L 16 9.5"/></svg>пропускает</div>
         <p class="small" style="margin-top:12px;color:#CFCABC">«Я без телефона, встреча в силе, буду к 15:00» — обычное человеческое сообщение уходит как есть, за 4 секунды.</p>
       </div>
       <div class="card-d" style="border-color:#3A372F">
-        <div class="tag tag-g" style="background:rgba(185,138,46,.14);border-color:rgba(185,138,46,.35);color:#D8B36A">перефразирует + предупреждает</div>
+        <div class="tag tag-g" style="background:rgba(185,138,46,.14);border-color:rgba(185,138,46,.35);color:#D8B36A;display:inline-flex;align-items:center;gap:7px"><svg class="vic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 l 1.2-4.2 L 15.5 5.5 a 2.1 2.1 0 0 1 3 3 L 8.2 18.8 Z"/></svg>перефразирует + предупреждает</div>
         <p class="small" style="margin-top:12px;color:#CFCABC">«Скинь срочно 500 тысяч на карту, потом объясню» — получатель увидит нейтральную формулировку и пометку: «Отправитель просит деньги. Перезвоните и проверьте лично».</p>
       </div>
       <div class="card-d" style="border-color:#3A372F">
-        <div class="tag tag-c" style="background:rgba(194,86,47,.15);border-color:rgba(194,86,47,.4);color:#E08A66">блокирует</div>
-        <p class="small" style="margin-top:12px;color:#CFCABC">Угрозы, вымогательство, фишинговые сценарии «безопасного счёта» — не уходят вовсе. Терминал вернёт купюру и объяснит причину.</p>
+        <div class="tag tag-c" style="background:rgba(194,86,47,.15);border-color:rgba(194,86,47,.4);color:#E08A66;display:inline-flex;align-items:center;gap:7px"><svg class="vic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 L 20 6 v 5.5 c 0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10 V 6 Z"/><path d="M9.3 9.8 l 5.4 5.4 M14.7 9.8 l -5.4 5.4"/></svg>блокирует</div>
+        <p class="small" style="margin-top:12px;color:#CFCABC">Угрозы, вымогательство, фишинговые сценарии «безопасного счёта» — не уходят вовсе. А при явных признаках преступления мы немедленно передаём данные в правоохранительные органы.</p>
+      </div>
+    </div>
+
+    <div class="split rv" style="margin-top:56px">
+      <div class="q" style="margin:0">
+        <p style="color:#F5F2E9;font-size:clamp(17px,1.9vw,20px)">«А почему не облачный API — DeepSeek, OpenAI? Это же дешевле».</p>
+        <cite style="color:#8A8577">— вопрос, который мы задали себе первыми</cite>
+      </div>
+      <div class="prose" style="color:#CFCABC;font-size:15.5px">
+        <p>Дешевле — правда: по публичным тарифам модерация одного SMS в облаке стоила бы 1–2 сума против ~3 сум электричества на своём сервере. Но текст сообщения вместе с номером получателя — персональные данные граждан Узбекистана, а закон «О персональных данных» (ЗРУ-547) требует обрабатывать их на серверах внутри страны и жёстко ограничивает передачу за рубеж. Отправлять личную переписку в зарубежный дата-центр — юридический риск, несовместимый с партнёрством с Paynet.</p>
+        <p style="margin-top:14px">И главное: облачный API возвращает уязвимость №1 — нас снова можно выключить, на этот раз чужим рубильником. Собственное оборудование стоит этих денег: оно покупает нам законность, независимость и место в цепочке.</p>
       </div>
     </div>
   </div>
@@ -756,14 +801,14 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
         <input type="range" id="s-price" min="1000" max="5000" step="100" value="2000">
         <div class="crow" style="margin-top:26px"><label class="small" for="s-fee"><strong>Комиссия Paynet, сум</strong></label><span class="cval" id="v-fee">500</span></div>
         <input type="range" id="s-fee" min="300" max="800" step="50" value="500">
-        <p class="xs mut" style="margin-top:22px">Константы: НДС 12% · Eskiz 95 сум · опер. резерв 50 сум · FIX 60 млн/мес · инвестиция 650 млн сум.</p>
+        <p class="xs mut" style="margin-top:22px">Константы: НДС 12% · Eskiz 95 сум · опер. резерв 50 сум · FIX 60 млн/мес · инвестиция 360 млн сум.</p>
       </div>
       <div class="card rv cout">
         <div class="crow"><span class="small mut">Маржа с одного SMS</span><span id="o-margin">1 141 сум</span></div>
         <div class="crow"><span class="small mut">Выручка в месяц</span><span id="o-rev">300 млн</span></div>
         <div class="crow"><span class="small mut">EBITDA в месяц</span><span id="o-ebitda">111,2 млн</span></div>
         <div class="crow"><span class="small mut">Комиссия Paynet в месяц</span><span id="o-paynet">75 млн</span></div>
-        <div class="crow"><span class="small mut">Окупаемость 650 млн</span><span id="o-payback" style="color:var(--clay)">5,8 мес</span></div>
+        <div class="crow"><span class="small mut">Окупаемость 360 млн</span><span id="o-payback" style="color:var(--clay)">3,5 мес</span></div>
         <p class="xs mut" id="o-note" style="margin-top:16px">При 5 000 SMS/день проект возвращает инвестицию за полгода.</p>
       </div>
     </div>
@@ -866,26 +911,26 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <div class="sec-no">10</div>
       <div>
         <div class="sec-kicker">Предложение инвестору</div>
-        <h2 style="margin-top:8px">650 млн сум. Двумя траншами. С правом остановки</h2>
+        <h2 style="margin-top:8px">360 млн сум за 12% компании. Двумя траншами. С правом остановки</h2>
       </div>
     </div>
 
     <div class="split" style="margin-top:48px">
       <div class="rv">
-        <div class="bignum">650<sup>млн сум</sup></div>
-        <p class="small mut" style="margin-top:10px">≈ $51 000 — полный бюджет до конца пилота включительно</p>
+        <div class="bignum">360<sup>млн сум</sup></div>
+        <p class="small mut" style="margin-top:10px">≈ $28 000 — полный бюджет до конца пилота включительно. Оценка раунда — 30 млн сум за 1% акций: раунд закрывает 12%.</p>
         <table class="ledger" style="margin-top:26px">
           <tbody>
-            <tr><td>GPU-оборудование для LLM</td><td class="num">200</td><td class="cm">серверы AI-фильтра — актив на балансе, который дорожает</td></tr>
-            <tr><td>Разработка и интеграция</td><td class="num">180</td><td class="cm">backend, экран терминала, дообучение модели</td></tr>
-            <tr><td>Команда на 14 недель</td><td class="num">130</td><td class="cm">инженеры, ML, поддержка пилота</td></tr>
-            <tr><td>Маркетинг пилота</td><td class="num">80</td><td class="cm">заставки на экранах терминалов, стикеры</td></tr>
-            <tr><td>Юристы и резерв</td><td class="num">60</td><td class="cm">из них 40 — регуляторная схема</td></tr>
+            <tr><td>Два GPU-сервера для LLM</td><td class="num">100</td><td class="cm">основной + резервный; каждый держит в сотни раз больше нашего трафика</td></tr>
+            <tr><td>Разработка и интеграция</td><td class="num">90</td><td class="cm">backend, экран терминала, взнос Paynet за подключение (~3 млн)</td></tr>
+            <tr><td>Команда на 14 недель</td><td class="num">90</td><td class="cm">инженеры, ML, поддержка пилота</td></tr>
+            <tr><td>Маркетинг пилота</td><td class="num">40</td><td class="cm">заставки на экранах терминалов, стикеры</td></tr>
+            <tr><td>Юристы и резерв</td><td class="num">40</td><td class="cm">из них 25 — регуляторная схема</td></tr>
           </tbody>
         </table>
         <div class="g2" style="margin-top:22px;gap:14px">
-          <div class="card-l"><div class="stat" style="font-size:21px">350 млн</div><div class="cap">транш I — контракты и разработка</div></div>
-          <div class="card-l"><div class="stat" style="font-size:21px">300 млн</div><div class="cap">транш II — только после успешного теста на 5 терминалах</div></div>
+          <div class="card-l"><div class="stat" style="font-size:21px">200 млн</div><div class="cap">транш I — оборудование, взнос Paynet, разработка</div></div>
+          <div class="card-l"><div class="stat" style="font-size:21px">160 млн</div><div class="cap">транш II — только после успешного теста на 5 терминалах</div></div>
         </div>
       </div>
       <div class="rv">
@@ -893,21 +938,21 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
         <div class="fnote">
           <div class="fnote-n" style="color:var(--mut)">3К</div>
           <div>
-            <h3>Консервативный — 17 месяцев</h3>
-            <p class="small mut">3 000 SMS/день · EBITDA 37,7 млн/мес. Пессимистичная версия того же сценария (комиссия 800, цена 2 000) — окупаемость 10–11 месяцев за счёт пересмотра FIX.</p>
+            <h3>Консервативный — 9–10 месяцев</h3>
+            <p class="small mut">3 000 SMS/день · EBITDA 37,7 млн/мес. Даже пессимистичная версия того же сценария (комиссия Paynet 800 вместо 500) остаётся в пределах полутора лет.</p>
           </div>
         </div>
         <div class="fnote" style="background:var(--olive-soft);border-radius:12px;padding-left:16px;padding-right:16px;border-bottom:none;margin:6px 0">
           <div class="fnote-n" style="color:var(--olive)">5К</div>
           <div>
-            <h3>Базовый — 6–7 месяцев</h3>
+            <h3>Базовый — 3–4 месяца</h3>
             <p class="small mut">5 000 SMS/день · EBITDA 102,9 млн/мес · 1,23 млрд сум прибыли в год. Это 5% дневных пополнений Ташкента — цель пилота.</p>
           </div>
         </div>
         <div class="fnote">
           <div class="fnote-n" style="color:var(--clay)">10К</div>
           <div>
-            <h3>Амбициозный — 2–3 месяца</h3>
+            <h3>Амбициозный — до 2 месяцев</h3>
             <p class="small mut">10 000 SMS/день · EBITDA 265,7 млн/мес — уровень, достижимый после раскатки на всю сеть 28 000 терминалов.</p>
           </div>
         </div>
@@ -940,7 +985,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       </div>
     </div>
     <div class="rv" style="margin-top:52px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-      <a class="btn" href="#ask" style="background:#D8B36A;color:#211F1B">Условия раунда — 650 млн сум</a>
+      <a class="btn" href="#ask" style="background:#D8B36A;color:#211F1B">Условия раунда — 360 млн сум</a>
       <span class="mono" style="font-size:12px;color:#6E6A5D;letter-spacing:.06em">— И МЫ ВОЗВРАЩАЕМ ЭРУ ПУБЛИЧНОЙ СВЯЗИ</span>
     </div>
   </div>
@@ -975,6 +1020,13 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <p><b>Операционные данные</b></p>
       <p>Eskiz.uz — тариф 95 сум/SMS, DLR ~4 сек (основной агрегатор)</p>
       <p>Play Mobile — тариф 168 сум/SMS (резервный канал)</p>
+      <p><b>Оборудование и AI</b></p>
+      <p>Age.uz, Glotr.uz, OLX.uz (Ташкент) — розничные цены GPU-карт флагманского класса: 29–38 млн сум</p>
+      <p>Публичные бенчмарки vLLM — одна такая карта обрабатывает ~13,6 запросов/сек, более миллиона сообщений в сутки для компактных языковых моделей</p>
+      <p>ПКМ РУз — электроэнергия для юрлиц ~1 000 сум/кВт·ч → сервер под нагрузкой — порядка 15 тыс. сум/день</p>
+      <p>DeepSeek API Docs — публичные тарифы облачных LLM: $0,14–0,44 за млн входных токенов (≈ 1–2 сум на сообщение)</p>
+      <p>ЗРУ-547 «О персональных данных» (lex.uz) — локализация обработки данных граждан РУз, ограничения трансграничной передачи (ст. 15)</p>
+      <p>Spot.uz, Gazeta.uz (2026) — комиссия Paynet для мерчантов 0,65% (единый QR); условия подключения поставщиков — публичная оферта Paynet</p>
     </div>
   </div>
 </section>
@@ -1005,7 +1057,8 @@ addEventListener('scroll', () => {
 gsap.utils.toArray('.rv').forEach(el => {
   gsap.fromTo(el, {opacity:0, y:26}, {
     opacity:1, y:0, duration:.85, ease:'power2.out',
-    scrollTrigger:{trigger:el, start:'top 88%', once:true}
+    scrollTrigger:{trigger:el, start:'top 88%', once:true,
+      onEnter:function(){ if (el.classList.contains('orn')) el.classList.add('go'); }}
   });
 });
 
@@ -1335,7 +1388,7 @@ gsap.utils.toArray('.rv').forEach(el => {
     data: {
       labels: years,
       datasets: [
-        { type:'bar', label:'Парк таксофонов, млн шт.', data:park, backgroundColor:'#E3DBC8', borderColor:'#C9BFA4', borderWidth:1, borderRadius:5, yAxisID:'y' },
+        { type:'bar', label:'Парк таксофонов, млн шт.', data:park, backgroundColor:'rgba(201,191,164,.42)', borderColor:'rgba(158,148,120,.55)', borderWidth:1, borderRadius:5, yAxisID:'y' },
         { type:'line', label:'Выручка индустрии, $ млрд', data:rev, borderColor:'#C2562F', backgroundColor:'#C2562F', borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#FAF9F5', pointBorderWidth:2, tension:.35, yAxisID:'y1' }
       ]
     },
@@ -1364,7 +1417,7 @@ gsap.utils.toArray('.rv').forEach(el => {
   if (!sVol) return;
   const fmt = function(n){ return n.toLocaleString('ru-RU'); };
   const mln = function(n){ return (n/1e6).toLocaleString('ru-RU', {maximumFractionDigits:1}) + ' млн'; };
-  const FIX = 60e6, INV = 650e6, ESKIZ = 95, OPS = 50;
+  const FIX = 60e6, INV = 360e6, ESKIZ = 95, OPS = 50;
 
   function setFill(el){
     const pct = (el.value - el.min) / (el.max - el.min) * 100;
