@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xabar Quest — пиксельная новелла</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--pn:#2E9C4F;--pnD:#1E7A3A;--gold:#D8B36A;--ink:#101418;--paper:#F3EFE4}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:#0B0E14;font-family:'Press Start 2P',monospace;color:#EAE6D8;overflow:hidden;user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#frame{position:relative;width:min(100vw,177.7vh);height:min(100vh,56.25vw);background:#000;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,.8)}
+#stage{position:absolute;inset:0}
+#stage svg{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+/* CRT */
+#crt{position:absolute;inset:0;pointer-events:none;z-index:40;background:repeating-linear-gradient(0deg,rgba(0,0,0,.13) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+#vig{position:absolute;inset:0;pointer-events:none;z-index:39;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.42) 100%)}
+/* HUD */
+#hud{position:absolute;top:2.6%;left:3%;right:3%;display:flex;align-items:center;gap:10px;z-index:30}
+.hcell{font-size:clamp(6px,.85vw,10px);padding:.6em .9em;border:2px solid #3A4254;color:#7B879E;background:rgba(11,14,20,.72);letter-spacing:.06em}
+.hcell.on{border-color:var(--pn);color:#9FE3B4;background:rgba(20,50,32,.82);box-shadow:0 0 10px rgba(46,156,79,.35)}
+.hcell.done{border-color:#5A6478;color:#B9C2D4}
+#hud .sp{flex:1}
+#btn-mute{cursor:pointer;font-size:clamp(8px,1.1vw,13px);background:rgba(11,14,20,.72);border:2px solid #3A4254;color:#EAE6D8;padding:.45em .7em}
+#btn-mute:hover{border-color:var(--gold)}
+/* caption strip */
+#cap{position:absolute;top:11%;left:50%;transform:translateX(-50%);z-index:28;font-size:clamp(7px,1vw,12px);color:#0F1512;background:var(--gold);padding:.7em 1.4em;letter-spacing:.08em;box-shadow:0 4px 0 rgba(0,0,0,.35);opacity:0;transition:opacity .4s}
+#cap.show{opacity:1}
+/* dialogue — как на референсах: тёмная плашка, зелёная полоса имени */
+#dlg{position:absolute;left:50%;bottom:3.5%;transform:translateX(-50%);width:92%;z-index:32;background:rgba(12,16,13,.92);border:3px solid #E8E4D6;border-radius:14px;padding:0 0 1.2em;box-shadow:0 10px 40px rgba(0,0,0,.6);opacity:0;transition:opacity .3s}
+#dlg.show{opacity:1}
+#dname{display:inline-block;background:linear-gradient(180deg,var(--pn),var(--pnD));color:#F2FFF5;font-size:clamp(8px,1.05vw,13px);letter-spacing:.14em;padding:.7em 1.3em;border-radius:10px 0 12px 0;margin-bottom:.8em}
+#dtext{font-size:clamp(9px,1.25vw,16px);line-height:1.9;padding:0 1.6em;min-height:3.6em;color:#F2EFE4}
+#dtext .cur{display:inline-block;width:.55em;height:1em;background:var(--gold);vertical-align:-.15em;animation:blink .8s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+#dhint{position:absolute;right:1.6em;bottom:.9em;font-size:clamp(6px,.8vw,9px);color:#7B879E;animation:blink 1.2s steps(1) infinite}
+/* choices — зелёные пилюли как на референсах */
+#choices{display:flex;gap:1.4em;justify-content:center;padding:1em 1.6em 0;flex-wrap:wrap}
+.pxbtn{cursor:pointer;font-family:inherit;font-size:clamp(8px,1.05vw,13px);color:#F2FFF5;background:linear-gradient(180deg,#37A85A,#1E7A3A);border:2px solid #BFE8CB;border-radius:999px;padding:1em 2.2em;letter-spacing:.05em;box-shadow:0 4px 0 #0E3A1D,0 6px 14px rgba(0,0,0,.45);transition:transform .12s,box-shadow .12s}
+.pxbtn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #0E3A1D,0 10px 18px rgba(0,0,0,.5)}
+.pxbtn:active{transform:translateY(2px);box-shadow:0 2px 0 #0E3A1D}
+.pxbtn.alt{background:linear-gradient(180deg,#E3BE74,#B98A2E);border-color:#F4E3BC;color:#241B08;box-shadow:0 4px 0 #6E5218,0 6px 14px rgba(0,0,0,.45)}
+.pxbtn.alt:hover{box-shadow:0 6px 0 #6E5218,0 10px 18px rgba(0,0,0,.5)}
+/* quest complete banner */
+#qbanner{position:absolute;top:3.5%;right:3%;z-index:33;font-size:clamp(8px,1.05vw,13px);color:#241B08;background:linear-gradient(180deg,#EFD9A0,#C89A44);border:2px solid #F7EBCB;border-radius:8px;padding:.9em 1.6em;letter-spacing:.16em;box-shadow:0 5px 0 #6E5218,0 8px 20px rgba(0,0,0,.5);display:none;transform:rotate(2deg)}
+#qbanner.show{display:block;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{0%{transform:scale(.4) rotate(14deg);opacity:0}100%{transform:scale(1) rotate(2deg);opacity:1}}
+/* ending panel */
+#endp{position:absolute;inset:0;z-index:36;display:none;align-items:center;justify-content:center;background:rgba(6,8,12,.55)}
+#endp.show{display:flex}
+.endcard{background:rgba(12,16,13,.95);border:3px solid var(--gold);border-radius:16px;padding:3em 3em 2.4em;max-width:74%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.endcard h2{font-size:clamp(11px,1.6vw,20px);color:var(--gold);letter-spacing:.1em;line-height:1.7;margin-bottom:1.2em}
+.endcard p{font-size:clamp(8px,1vw,13px);line-height:2.1;color:#D8D4C6;margin-bottom:.9em}
+.endcard .moral{color:#8FA0B8;font-size:clamp(7px,.9vw,11px)}
+.endbtns{display:flex;gap:1.2em;justify-content:center;margin-top:1.8em;flex-wrap:wrap}
+a.pxbtn{text-decoration:none;display:inline-block}
+/* start screen */
+#start{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2em;background:radial-gradient(ellipse at 50% 30%,#17202E,#0B0E14 75%)}
+#start h1{font-size:clamp(16px,3vw,38px);color:var(--pn);text-shadow:4px 4px 0 #0E3A1D,0 0 30px rgba(46,156,79,.4);letter-spacing:.06em}
+#start .sub{font-size:clamp(8px,1.1vw,13px);color:#9AA6BC;line-height:2;text-align:center;max-width:70%}
+#start .hint{font-size:clamp(6px,.8vw,9px);color:#5A6478}
+/* confetti */
+.cf{position:absolute;width:10px;height:10px;z-index:35;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+/* sprite animations */
+.bob{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.wave-arm{transform-origin:100% 20%;animation:wv 1.1s ease-in-out infinite}
+@keyframes wv{50%{transform:rotate(-14deg)}}
+.shake-head{transform-origin:50% 90%;animation:shk 1.4s ease-in-out infinite}
+@keyframes shk{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.point-arm{transform-origin:0% 30%;animation:pt 1.8s ease-in-out infinite}
+@keyframes pt{50%{transform:rotate(4deg) translateY(-2px)}}
+.scr-glow{animation:sg 2.2s ease-in-out infinite}
+@keyframes sg{50%{opacity:.55}}
+.sway{transform-origin:50% 100%;animation:sw 4s ease-in-out infinite}
+@keyframes sw{50%{transform:rotate(1.6deg)}}
+.blinky{animation:blink 1.1s steps(1) infinite}
+</style>
+</head>
+<body>
+<div id="game"><div id="frame">
+  <div id="stage"></div>
+  <div id="hud">
+    <div class="hcell" data-k="1">КАДР 1</div><div class="hcell" data-k="2">КАДР 2</div>
+    <div class="hcell" data-k="3">КАДР 3</div><div class="hcell" data-k="4">КАДР 4</div>
+    <div class="hcell" data-k="5">КАДР 5</div><div class="hcell" data-k="6">КАДР 6</div>
+    <div class="sp"></div><button id="btn-mute">🔊</button>
+  </div>
+  <div id="cap"></div>
+  <div id="qbanner">QUEST COMPLETE</div>
+  <div id="dlg"><span id="dname">GERO</span><div id="dtext"></div><span id="dhint">▼ клик — дальше</span><div id="choices"></div></div>
+  <div id="endp"></div>
+  <div id="start">
+    <h1>XABAR QUEST</h1>
+    <div class="sub">Ты забыл телефон дома, а сообщение нужно отправить срочно.<br>Пиксельная новелла · 6 кадров · 2 финала · озвучка в браузере</div>
+    <button class="pxbtn alt" id="btn-start">▶ НАЧАТЬ ИГРУ</button>
+    <div class="hint">звук и голос включатся после первого клика</div>
+  </div>
+  <div id="vig"></div><div id="crt"></div>
+</div></div>
+<script>
+/* ================== СЦЕНАРИЙ (схема Ozodbek, кадры 1–6) ================== */
+const SPEAKERS={
+  GERO:{name:'GERO',pitch:1.0,rate:1.05},
+  PROHOJIY:{name:'PROHOJIY',pitch:1.4,rate:1.1},
+  VLADELETS:{name:'VLADELETS',pitch:0.68,rate:0.94},
+  AVTOR:{name:'· · ·',pitch:0.9,rate:1.0}
+};
+const SCENES={
+kadr1:{k:1,bg:'home',cap:'Телефон забыт дома',
+ lines:[{sp:'GERO',mood:'search',t:'Блин… телефон остался дома. А сообщение нужно отправить прямо сейчас.'}],
+ choices:[{t:'Попросить прохожего',go:'kadr2'},{t:'Искать магазин',go:'kadr3'}]},
+kadr2:{k:2,bg:'street',cap:'Прохожий отказал',
+ lines:[{sp:'GERO',mood:'ask',t:'Извините, можно на минуту ваш телефон? Нужно срочно отправить сообщение.'},
+        {sp:'PROHOJIY',mood:'deny',t:'Нет, извини, не могу.'}],
+ choices:[{t:'Попросить ещё раз',go:'kadr2r'},{t:'Искать магазин',go:'kadr3'}]},
+kadr2r:{k:2,bg:'street',cap:'Случайные люди — ненадёжный путь',
+ lines:[{sp:'GERO',mood:'ask',t:'Пожалуйста, буквально одно сообщение…'},
+        {sp:'PROHOJIY',mood:'deny',t:'Извини, спешу.'},
+        {sp:'AVTOR',mood:'',t:'Похоже, так вопрос не решить. Нужен другой путь.'}],
+ choices:[{t:'Попросить ещё раз',go:'kadr2r'},{t:'Искать магазин',go:'kadr3'}]},
+kadr3:{k:3,bg:'shop',cap:'Рядом магазин и Paynet',
+ lines:[{sp:'GERO',mood:'think',t:'Так… магазин. И рядом терминал Paynet. Может, здесь получится решить вопрос быстрее.'}],
+ choices:[{t:'Попросить владельца',go:'kadr4'},{t:'Подойти к Paynet',go:'kadr5'}]},
+kadr4:{k:4,bg:'owner',cap:'Владелец сомневается',
+ lines:[{sp:'GERO',mood:'ask',t:'Здравствуйте, можно на минуту одолжить телефон? Мне нужно срочно отправить важное сообщение.'},
+        {sp:'VLADELETS',mood:'cross',t:'Сейчас всем дай телефон — и останешься без него. Неудобно.'},
+        {sp:'GERO',mood:'ask',t:'Понимаю… Просто ситуация срочная.'}],
+ choices:[{t:'Убедить ещё раз',go:'endA'},{t:'Использовать Xabar',go:'kadr5',alt:1}]},
+kadr5:{k:5,bg:'menu',cap:'На экране найден Xabar',
+ lines:[{sp:'GERO',mood:'point',t:'Подожди… тут есть Xabar. Значит, можно отправить сообщение прямо через терминал.'}],
+ choices:[{t:'Выбрать Xabar',go:'kadr6',alt:1},{t:'Вернуться к владельцу',go:'kadr4'}]},
+kadr6:{k:6,bg:'form',cap:'2 000 сум → SMS своими словами',
+ lines:[{sp:'GERO',mood:'point',t:'Номер отправителя… номер получателя… текст готов. Осталось внести 2 000 сум и отправить.'}],
+ choices:[{t:'Отправить SMS',go:'endB',alt:1},{t:'Изменить текст',go:'kadr6e'}]},
+kadr6e:{k:6,bg:'form',cap:'2 000 сум → SMS своими словами',
+ lines:[{sp:'GERO',mood:'point',t:'Так… поправлю пару слов. Теперь точно готово.'}],
+ choices:[{t:'Отправить SMS',go:'endB',alt:1},{t:'Изменить текст',go:'kadr6e'}]},
+endA:{k:4,bg:'owner',ending:'A',cap:'Последняя попытка договориться',
+ lines:[{sp:'VLADELETS',mood:'give',t:'Ладно, давай быстро. Только недолго.'},
+        {sp:'GERO',mood:'happy',t:'Спасибо, выручили.'}]},
+endB:{k:6,bg:'final',ending:'B',cap:'2 000 сум — сообщение отправлено',
+ lines:[{sp:'GERO',mood:'happy',t:'Готово. Сообщение ушло.'}]}
+};
+const START='kadr1';
+</script>
+<script>
+/* ================== ПИКСЕЛЬ-АРТ ================== */
+/* px: рисуем прямоугольниками 1 юнит = 1 svg-юнит */
+function px(cells,fill){return '<g fill="'+fill+'">'+cells.map(c=>'<rect x="'+c[0]+'" y="'+c[1]+'" width="'+(c[2]||1)+'" height="'+(c[3]||1)+'"/>').join('')+'</g>'}
+
+/* -------- ГЕРОЙ (тёмные волосы, песочная tie-dye футболка как на фото) -------- */
+function heroSVG(mood){
+  const skin='#D9A878',hair='#22190F',shirt='#C9B98A',shirt2='#B5A272',pants='#4A4A52',shoe='#26221E';
+  let armL,armR,head='',extra='',cls='bob';
+  head=px([[10,0,10,3],[9,1,12,4],[9,5,12,1]],hair)+px([[10,4,10,6]],skin)
+      +px([[12,7,2,1],[18,7,2,1]],'#1B1410');
+  if(mood==='search'){ // щупает карманы
+    armL=px([[7,12,3,6],[8,18,3,3]],shirt)+px([[8,21,3,2]],skin);
+    armR=px([[22,12,3,6],[21,18,3,3]],shirt)+px([[21,21,3,2]],skin);
+    extra=px([[13,9,1,1]],'#1B1410'); // хмурый рот
+  }else if(mood==='ask'){ // рука протянута вперёд
+    armL=px([[7,12,3,9]],shirt)+px([[7,21,3,2]],skin);
+    armR='<g class="wave-arm">'+px([[22,12,8,3]],shirt)+px([[30,12,3,3]],skin)+'</g>';
+    extra=px([[14,9,3,1]],'#1B1410');
+  }else if(mood==='think'){
+    armL=px([[7,12,3,9]],shirt)+px([[7,21,3,2]],skin);
+    armR=px([[22,12,3,5],[20,8,3,3]],shirt)+px([[19,7,3,3]],skin); // рука у подбородка
+    extra=px([[14,9,2,1]],'#1B1410');
+  }else if(mood==='point'){ // указывает на экран
+    armL=px([[7,12,3,9]],shirt)+px([[7,21,3,2]],skin);
+    armR='<g class="point-arm">'+px([[22,10,9,3]],shirt)+px([[31,10,4,2]],skin)+'</g>';
+    extra=px([[14,9,3,1]],'#1B1410');
+  }else{ // happy
+    armL='<g class="wave-arm">'+px([[7,6,3,7]],shirt)+px([[7,3,3,3]],skin)+'</g>';
+    armR=px([[22,12,3,9]],shirt)+px([[22,21,3,2]],skin);
+    extra=px([[13,9,4,1],[12,8,1,1],[17,8,1,1]],'#5A2F1B'); // улыбка
+  }
+  return '<g class="'+cls+'">'+head+extra
+    +px([[10,10,10,12]],shirt)+px([[11,12,2,2],[16,14,3,2],[12,17,2,2],[17,11,2,1]],'#AD9A66')
+    +armL+armR
+    +px([[10,22,10,8]],pants)+px([[14,22,2,8]],'#3E3E46')
+    +px([[9,30,5,2],[16,30,5,2]],shoe)+'</g>';
+}
+/* -------- ПРОХОЖИЙ (чёрная футболка, ладонь «стоп») -------- */
+function passerSVG(){
+  const skin='#C99B6E',hair='#171310',shirt='#23252B',pants='#3A3F4C';
+  return '<g class="bob" style="animation-delay:.4s">'
+    +px([[10,0,10,3],[9,1,12,4],[9,5,12,1]],hair)+px([[10,4,10,6]],skin)
+    +px([[12,7,2,1],[18,7,2,1]],'#141110')+px([[13,9,4,1]],'#141110')
+    +px([[10,10,10,12]],shirt)
+    +px([[22,12,3,9]],shirt)+px([[22,21,3,2]],skin)
+    +'<g class="shake-head">'+px([[3,4,4,5]],skin)+px([[3,9,4,4],[7,10,3,3]],shirt)+'</g>' /* поднятая ладонь */
+    +px([[10,22,10,8]],pants)+px([[9,30,5,2],[16,30,5,2]],'#1E1B18')+'</g>';
+}
+/* -------- ВЛАДЕЛЕЦ (серое поло, скрещённые руки / даёт телефон) -------- */
+function ownerSVG(mood){
+  const skin='#C2915F',hair='#101010',shirt='#8E959E',shirt2='#767D87',pants='#33383F';
+  let arms, mouth=px([[13,9,4,1]],'#161210');
+  if(mood==='give'){
+    arms=px([[7,12,3,9]],shirt)+px([[7,21,3,2]],skin)
+        +'<g class="point-arm">'+px([[22,11,8,3]],shirt)+px([[30,11,3,3]],skin)
+        +px([[32,9,3,5]],'#12161C')+px([[32.6,9.6,1.8,3]],'#3D77C9')+'</g>';
+    mouth=px([[13,9,4,1],[12,8,1,1]],'#5A2F1B');
+  }else{ // cross — руки скрещены
+    arms=px([[8,13,14,3]],shirt2)+px([[8,16,4,2],[18,16,4,2]],skin);
+  }
+  return '<g class="bob" style="animation-delay:.7s">'
+    +px([[10,0,10,2],[9,1,12,3]],hair)+px([[10,3,10,7]],skin)
+    +px([[12,6,2,1],[18,6,2,1]],'#141110')+px([[11,8,3,1],[17,8,3,1]],'#101010')+mouth /* брови */
+    +px([[10,10,10,12]],shirt)+px([[14,10,2,3]],'#F0F0EC')
+    +arms
+    +px([[10,22,10,9]],pants)+px([[9,31,5,2],[16,31,5,2]],'#1B1916')+'</g>';
+}
+function spriteAt(inner,x,y,s){return '<g transform="translate('+x+','+y+') scale('+s+')">'+inner+'</g>'}
+
+/* ================== ФОНЫ (по референс-фото) ================== */
+const SKY='<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FBCD9"/><stop offset="1" stop-color="#C9DCC9"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8C87E"/><stop offset="1" stop-color="#9C7838"/></linearGradient></defs>';
+function tree(x,s){return '<g class="sway" transform="translate('+x+',0) scale('+(s||1)+')">'+px([[14,86,6,36]],'#5C4630')+px([[0,34,34,30],[5,20,25,18],[9,10,17,14]],'#3E7A44')+px([[4,38,10,8],[20,26,9,7],[12,14,8,6]],'#57A05C')+'</g>'}
+function paynetTerm(x,y,s,glow){ /* зелёный терминал QULAY PUL */
+  return '<g transform="translate('+x+','+y+') scale('+(s||1)+')">'
+  +px([[0,0,46,86]],'#2E9C4F')+px([[2,2,42,82]],'#3DB562')
+  +px([[5,6,36,7]],'#EDEAE0')+'<text x="23" y="11.4" font-size="4.6" font-family="monospace" font-weight="bold" fill="#5B6B5E" text-anchor="middle" letter-spacing="1">QULAY PUL</text>'
+  +px([[6,16,34,26]],'#10151B')+'<rect x="7.5" y="17.5" width="31" height="23" fill="#DFF3E6"'+(glow?' class="scr-glow"':'')+'/>'
+  +px([[6,46,34,9]],'#EDEAE0')+px([[9,48,6,5],[17,48,6,5],[25,48,6,5]],'#C9D2CC')
+  +px([[10,58,26,5]],'#1B222B')+px([[12,59.5,22,2]],'#0A0E12') /* купюроприёмник */
+  +px([[10,66,12,6]],'#EDEAE0')+px([[26,66,10,6]],'#EDEAE0')
+  +'</g>';
+}
+function kapital(x,y,s){ /* жёлтая будка KAPITALBANK */
+  return '<g transform="translate('+x+','+y+') scale('+(s||1)+')">'
+  +px([[0,0,54,92]],'#E8C11C')+px([[3,3,48,86]],'#F2CF35')
+  +px([[3,3,48,10]],'#15130E')+'<text x="27" y="10" font-size="4.4" font-family="monospace" font-weight="bold" fill="#F2CF35" text-anchor="middle">KAPITALBANK</text>'
+  +px([[8,18,38,30]],'#FDF6DF')+'<text x="27" y="28" font-size="4.6" font-family="monospace" font-weight="bold" fill="#171410" text-anchor="middle">сумах</text><text x="27" y="36" font-size="3.6" font-family="monospace" fill="#8A6D12" text-anchor="middle">наличные</text><text x="27" y="42" font-size="3.6" font-family="monospace" fill="#8A6D12" text-anchor="middle">без комиссии</text>'
+  +px([[10,54,34,26]],'#E4D9B4')+'</g>';
+}
+function road(){return px([[0,150,320,30]],'#59595E')+px([[0,150,320,2]],'#8A8A90')+px([[6,160,20,3],[46,160,20,3],[86,160,20,3],[126,160,20,3],[166,160,20,3],[206,160,20,3],[246,160,20,3],[286,160,20,3]],'#D9D9CE')}
+function car(x,c){return '<g transform="translate('+x+',140)">'+px([[0,4,34,8]],c)+px([[6,0,20,6]],c)+px([[8,1,7,4],[17,1,7,4]],'#BFD8E4')+px([[4,10,6,5],[24,10,6,5]],'#17161A')+'</g>'}
+
+const BG={
+home(){ /* прихожая: тёмная дверь, домофон, шкаф */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'
+  +px([[0,0,320,180]],'#B9B3A6')+px([[0,0,320,180]],'#C7C1B3')
+  +px([[0,0,320,8],[0,172,320,8]],'#A39D8F')
+  /* дверь */
+  +px([[96,18,86,150]],'#5A4632')+px([[100,22,78,146]],'#2A2119')
+  +px([[106,30,30,56],[142,30,30,56],[106,94,30,60],[142,94,30,60]],'#3A2E21')
+  +px([[168,86,8,6]],'#C9B98A')+px([[166,96,12,3]],'#8A8478') /* ручка+замок */
+  /* домофон слева */
+  +px([[30,44,22,34]],'#E8E4DA')+px([[33,48,16,10]],'#B9C2C6')+px([[34,62,4,3],[41,62,4,3],[34,68,4,3],[41,68,4,3]],'#8A8478')
+  /* шкаф справа */
+  +px([[238,10,70,74]],'#E8E4DA')+px([[242,14,29,30],[275,14,29,30],[242,48,62,32]],'#D2CDC0')
+  +px([[238,120,70,60]],'#8A8070')
+  /* пол */
+  +px([[0,158,320,22]],'#9C8A6E')+px([[0,158,320,2]],'#B5A484')
+  +spriteAt(heroSVG('search'),130,62,2.9)
+  +'</svg>';
+},
+street(){ /* улица: деревья, дорога, киоск — герой и прохожий */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'+SKY
+  +px([[0,0,320,180]],'#9DBFD4')+'<rect width="320" height="180" fill="url(#sky)" opacity=".7"/>'
+  /* дома вдали */
+  +px([[190,52,70,70]],'#C9BFA6')+px([[196,58,10,10],[212,58,10,10],[228,58,10,10],[196,74,10,10],[212,74,10,10],[228,74,10,10]],'#7E92A0')
+  +px([[262,60,52,62]],'#B7AD96')
+  /* киоск с навесом */
+  +px([[236,96,44,40]],'#6E7D4E')+px([[232,90,52,8]],'#4E5A38')+px([[240,102,36,20]],'#2A2E24')+px([[242,104,10,8],[254,104,10,8],[266,104,10,8]],'#C9B98A')
+  +road()+car(20,'#D8D8DC')+car(250,'#22242A')
+  +px([[0,122,320,30]],'#7C9B6A')+px([[0,122,320,2]],'#93B37E') /* газон */
+  +tree(60,1.05)+tree(150,.8)+tree(268,.6)
+  /* светофор */
+  +px([[16,70,3,52]],'#3A3F44')+px([[12,58,11,16]],'#22262B')+px([[15,61,5,3]],'#D14B36')+px([[15,66,5,3]],'#D8B36A')+px([[15,70.5,5,3]],'#3DB562')
+  +px([[0,152,320,28]],'#8A8A90')
+  +spriteAt(heroSVG('ask'),70,70,2.7)
+  +'<g transform="translate(196,64) scale(2.95) translate(30,0) scale(-1,1)">'+passerSVG()+'</g>'
+  +'</svg>';
+},
+shop(){ /* герой смотрит: зелёный Paynet + жёлтый Kapitalbank */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'+SKY
+  +'<rect width="320" height="180" fill="url(#sky)"/>'
+  +px([[0,58,320,94]],'#7C9B6A')+tree(120,1.1)+tree(20,.7)
+  +px([[240,30,80,122]],'#C9BFA6')+px([[248,40,14,14],[270,40,14,14],[292,40,14,14]],'#7E92A0')
+  +road().replace('150','152')
+  +px([[0,140,320,40]],'#9C9CA2')+px([[0,140,320,2]],'#C2C2BC') /* тротуар */
+  /* витрина слева */
+  +px([[0,26,60,116]],'#8A6E4E')+px([[4,32,52,70]],'#2E2620')+px([[7,36,20,14],[31,36,22,14],[7,54,46,20],[7,78,46,20]],'#C9B98A')
+  +paynetTerm(120,58,1.02,true)
+  +kapital(186,50,1.02)
+  +spriteAt(heroSVG('think'),52,72,2.7)
+  +'</svg>';
+},
+owner(){ /* владелец у входа в магазин, герой напротив, терминалы позади */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'+SKY
+  +'<rect width="320" height="180" fill="url(#sky)"/>'
+  +px([[0,50,320,102]],'#7C9B6A')+tree(226,.85)
+  +road()+car(262,'#D8D8DC')
+  +px([[0,140,320,40]],'#9C9CA2')
+  /* магазин: полки со снеками */
+  +px([[0,10,96,152]],'#6E5A40')+px([[5,16,86,120]],'#332A20')
+  +px([[9,22,22,14],[35,22,22,14],[61,22,22,14],[9,42,22,14],[35,42,22,14],[61,42,22,14],[9,62,22,14],[35,62,22,14],[61,62,22,14]],'#C2562F')
+  +px([[12,25,7,8],[38,25,7,8],[64,25,7,8],[24,45,7,8],[50,45,7,8],[12,65,7,8],[38,65,7,8]],'#D8B36A')
+  +px([[9,84,74,26]],'#4E6E8A')+px([[13,88,10,18],[27,88,10,18],[41,88,10,18],[55,88,10,18],[69,88,10,18]],'#B9D8E8') /* холодильник */
+  +paynetTerm(158,60,.9,false)+kapital(212,52,.9)
+  +'<g transform="translate(96,58) scale(2.85)">'+ownerSVG(window.__ownerMood||'cross')+'</g>'
+  +spriteAt(heroSVG('ask'),210,120,1.9)
+  +'</svg>';
+},
+menu(){ /* крупный экран терминала: сетка сервисов, Xabar подсвечен */
+  let icons='';
+  const grid=[['#C2562F','Uyali'],['#2E9C4F','XABAR'],['#4E6E8A','Pul'],['#7A5AB5','Uzonline'],['#D8B36A','Energiya'],['#3A8A9C','Internet'],['#B5486E','Karta'],['#5A8A3A','Davlat'],['#8A6E4E','ATTO'],['#4E5A8A','VISA'],['#9C6E3A','Taxi'],['#3A6E5A','Suv']];
+  grid.forEach((g,i)=>{const cx=76+(i%4)*46, cy=42+Math.floor(i/4)*38, hot=g[1]==='XABAR';
+    icons+='<g'+(hot?' class="scr-glow"':'')+'>'+px([[cx,cy,38,28]],hot?'#DFF3E6':'#F2F1EA')
+    +(hot?px([[cx-1.5,cy-1.5,41,31]],'none')+'<rect x="'+(cx-1.5)+'" y="'+(cy-1.5)+'" width="41" height="31" fill="none" stroke="#2E9C4F" stroke-width="2.4"/>':'')
+    +px([[cx+14,cy+5,10,10]],g[0])
+    +'<text x="'+(cx+19)+'" y="'+(cy+23)+'" font-size="5" font-family="monospace" font-weight="bold" fill="'+(hot?'#1E7A3A':'#5A5A54')+'" text-anchor="middle">'+g[1]+'</text></g>';});
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'
+  +px([[0,0,320,180]],'#1E7A3A')+px([[8,4,250,172]],'#2E9C4F')
+  +px([[20,12,226,156]],'#F7F6F0')+px([[20,12,226,12]],'#2E9C4F')
+  +'<text x="34" y="20.6" font-size="6" font-family="monospace" font-weight="bold" fill="#EFFFF2">paynet</text>'
+  +'<text x="226" y="20.6" font-size="4.6" font-family="monospace" fill="#C9F2D4" text-anchor="end">Рус ▾</text>'
+  +px([[24,28,44,136]],'#E4F0E6')+px([[27,32,38,10],[27,46,38,10],[27,60,38,10],[27,74,38,10],[27,88,38,10]],'#C9E0CC')
+  +icons
+  /* рука героя указывает на Xabar */
+  +'<g class="point-arm">'+px([[258,44,40,10]],'#C9B98A')+px([[248,46,12,6]],'#D9A878')+'</g>'
+  +px([[262,20,58,160]],'#C9B98A')+px([[262,20,58,26]],'#22190F')+px([[268,34,10,3],[288,34,10,3]],'#1B1410') /* плечо/затылок героя в кадре */
+  +'</svg>';
+},
+form(){ /* экран Xabar: отправитель, получатель, текст, 2000 сум, купюра */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'
+  +px([[0,0,320,180]],'#1E7A3A')+px([[8,4,240,172]],'#2E9C4F')
+  +px([[20,12,216,150]],'#F7F6F0')+px([[20,12,216,12]],'#2E9C4F')
+  +'<text x="30" y="20.6" font-size="5.6" font-family="monospace" font-weight="bold" fill="#EFFFF2">Xabar · SMS xabar jo\u2019natish</text>'
+  +px([[30,32,120,12]],'#EDF5EE')+'<text x="34" y="36.6" font-size="3.6" font-family="monospace" fill="#7A8A7C">Yuboruvchi raqami</text><text x="34" y="42" font-size="4.6" font-family="monospace" fill="#1B241C">+998 91 234 56 7</text><rect x="146" y="38" width="1.6" height="5" fill="#2E9C4F" class="blinky"/>'
+  +px([[30,50,120,12]],'#EDF5EE')+'<text x="34" y="54.6" font-size="3.6" font-family="monospace" fill="#7A8A7C">Qabul qiluvchi raqami</text><text x="34" y="60" font-size="4.6" font-family="monospace" fill="#1B241C">+998 90 123 45 67</text>'
+  +px([[30,68,120,34]],'#EDF5EE')+'<text x="34" y="73" font-size="3.6" font-family="monospace" fill="#7A8A7C">Xabar matni</text><text x="34" y="80" font-size="4.4" font-family="monospace" fill="#1B241C">Salom, hammasi yaxshi!</text><text x="34" y="87" font-size="4.4" font-family="monospace" fill="#1B241C">SMS juda tez yetib</text><text x="34" y="94" font-size="4.4" font-family="monospace" fill="#1B241C">boradi. Kutib ol!</text>'
+  +'<text x="30" y="114" font-size="4.6" font-family="monospace" font-weight="bold" fill="#1E7A3A">Yuborish narxi: 2 000 so\u2019m</text>'
+  +px([[30,122,74,14]],'#2E9C4F')+'<text x="67" y="131" font-size="5" font-family="monospace" font-weight="bold" fill="#F2FFF5" text-anchor="middle">◄◄ Jo\u2019natish</text>'
+  +px([[160,32,52,40]],'#E4F0E6')+px([[168,40,36,10]],'#C9E0CC')+'<text x="186" y="60" font-size="4" font-family="monospace" fill="#5A6E5C" text-anchor="middle">SMS</text>'
+  /* купюроприёмник + купюра 2000 */
+  +px([[156,120,60,16]],'#1B222B')+px([[160,124,52,4]],'#0A0E12')
+  +'<g class="bob">'+px([[176,104,26,14]],'#C9D8B0')+px([[178,106,22,10]],'#B7CC96')+'<text x="189" y="113" font-size="4.4" font-family="monospace" font-weight="bold" fill="#3E5A2E" text-anchor="middle">2000</text></g>'
+  /* герой сбоку */
+  +px([[252,26,68,154]],'#C9B98A')+px([[252,26,68,28]],'#22190F')+px([[258,42,10,3],[280,42,10,3]],'#1B1410')
+  +'<g class="point-arm">'+px([[214,64,40,9]],'#C9B98A')+px([[204,66,12,5]],'#D9A878')+'</g>'
+  +'</svg>';
+},
+final(){ /* герой с чеком у терминала, золотой свет */
+  return '<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">'+SKY
+  +'<rect width="320" height="180" fill="url(#gold)" opacity=".9"/>'
+  +px([[0,60,320,92]],'#8A7C4E')+tree(30,.9)+tree(250,.7)
+  +px([[0,140,320,40]],'#A89468')
+  +paynetTerm(170,44,1.25,true)
+  +kapital(246,40,1.05)
+  /* конверт улетает */
+  +'<g class="bob">'+px([[120,26,22,14]],'#F2F1EA')+'<path d="M120 26 L131 35 L142 26" stroke="#2E9C4F" stroke-width="2" fill="none"/></g>'
+  +px([[104,38,8,2],[98,32,6,2],[108,20,6,2]],'#F7EBCB')
+  +spriteAt(heroSVG('happy'),78,62,3.0)
+  /* чек в руке */
+  +px([[142,84,12,26]],'#F7F6F0')+px([[144,88,8,2],[144,92,8,2],[144,96,8,2],[144,100,5,2]],'#8A8A80')
+  +'</svg>';
+}
+};
+
+/* ================== АУДИО ================== */
+let AC=null,muted=false,voiceOn=true;
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();return AC}
+function tone(f,d,type,vol,when){if(muted)return;const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.value=f;g.gain.value=vol||.06;g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+(when||0)+d);o.connect(g);g.connect(a.destination);o.start(a.currentTime+(when||0));o.stop(a.currentTime+(when||0)+d)}
+const SFX={
+ blip(){tone(440+Math.random()*220,.04,'square',.03)},
+ click(){tone(660,.06,'square',.05);tone(880,.05,'square',.04,.05)},
+ deny(){tone(220,.14,'sawtooth',.06);tone(174,.2,'sawtooth',.06,.12)},
+ discover(){[523,659,784].forEach((f,i)=>tone(f,.12,'triangle',.06,i*.09))},
+ coin(){tone(988,.07,'square',.06);tone(1319,.16,'square',.06,.07)},
+ send(){[392,523,659,784,1047].forEach((f,i)=>tone(f,.1,'triangle',.06,i*.07))},
+ win(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,.14,'triangle',.07,i*.11))},
+ meh(){tone(392,.16,'triangle',.06);tone(330,.24,'triangle',.06,.14)},
+ step(){tone(160,.05,'square',.04)}
+};
+let ruVoice=null;
+function pickVoice(){const vs=speechSynthesis.getVoices();ruVoice=vs.find(v=>/ru/i.test(v.lang))||null}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function speak(spKey,text){
+  if(muted||!voiceOn||!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const sp=SPEAKERS[spKey]||SPEAKERS.AVTOR;
+  const u=new SpeechSynthesisUtterance(text.replace(/…/g,'.'));
+  u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;u.pitch=sp.pitch;u.rate=sp.rate;u.volume=.9;
+  speechSynthesis.speak(u);
+}
+
+/* ================== ДВИЖОК ================== */
+const $=id=>document.getElementById(id);
+let cur=null,li=0,typing=false,typeTimer=null,visited={};
+function setHUD(k){document.querySelectorAll('.hcell').forEach(c=>{const n=+c.dataset.k;c.classList.toggle('on',n===k);c.classList.toggle('done',visited[n]&&n!==k)});visited[k]=1}
+function renderStage(sc){$('stage').innerHTML=BG[sc.bg]()}
+function showCap(t){const c=$('cap');c.textContent=t;c.classList.add('show')}
+function typeLine(){
+  const L=cur.lines[li],sp=SPEAKERS[L.sp]||SPEAKERS.AVTOR;
+  $('dname').textContent=sp.name;
+  $('choices').innerHTML='';$('dhint').style.display='block';
+  const el=$('dtext');el.innerHTML='<span class="cur"></span>';
+  window.__ownerMood=(L.sp==='VLADELETS'&&L.mood==='give')?'give':'cross';
+  if(cur.bg==='owner')renderStage(cur);
+  if(L.mood==='deny')SFX.deny();
+  speak(L.sp,L.t);
+  let i=0;typing=true;
+  typeTimer=setInterval(()=>{
+    i++;if(i%4===0)SFX.blip();
+    el.innerHTML=L.t.slice(0,i)+'<span class="cur"></span>';
+    if(i>=L.t.length){clearInterval(typeTimer);typing=false;
+      if(li>=cur.lines.length-1)showChoices();}
+  },26);
+}
+function skipType(){clearInterval(typeTimer);typing=false;const L=cur.lines[li];$('dtext').innerHTML=L.t+'<span class="cur"></span>';if(li>=cur.lines.length-1)showChoices()}
+function showChoices(){
+  $('dhint').style.display='none';
+  if(cur.ending){setTimeout(()=>showEnding(cur.ending),700);return}
+  const box=$('choices');box.innerHTML='';
+  cur.choices.forEach(ch=>{
+    const b=document.createElement('button');b.className='pxbtn'+(ch.alt?' alt':'');b.textContent=ch.t;
+    b.onclick=e=>{e.stopPropagation();SFX.click();go(ch.go)};box.appendChild(b);
+  });
+}
+function go(key){
+  speechSynthesis&&speechSynthesis.cancel();
+  cur=SCENES[key];li=0;
+  setHUD(cur.k);renderStage(cur);showCap(cur.cap);
+  $('endp').classList.remove('show');$('qbanner').classList.remove('show');$('qbanner').style.display='none';
+  $('dlg').classList.add('show');
+  if(key==='kadr3'||key==='kadr5')SFX.discover();
+  if(key==='kadr6'||key==='kadr6e')SFX.coin();
+  SFX.step();
+  typeLine();
+}
+function confetti(){
+  const cols=['#D8B36A','#2E9C4F','#C2562F','#F2F1EA','#4E6E8A'];
+  for(let i=0;i<70;i++){const d=document.createElement('div');d.className='cf';
+    d.style.left=Math.random()*100+'%';d.style.top='-4%';
+    d.style.background=cols[i%cols.length];
+    d.style.animationDuration=(2.2+Math.random()*2.4)+'s';
+    d.style.animationDelay=(Math.random()*1.2)+'s';
+    $('frame').appendChild(d);setTimeout(()=>d.remove(),5500)}
+}
+function showEnding(which){
+  $('dlg').classList.remove('show');
+  const p=$('endp');
+  if(which==='B'){
+    SFX.send();setTimeout(()=>SFX.win(),700);
+    const qb=$('qbanner');qb.style.display='block';qb.classList.add('show');
+    confetti();
+    speak('AVTOR','Купюра две тысячи сум — и SMS отправлен. Одно движение. Ноль регистраций. Ноль приложений.');
+    p.innerHTML='<div class="endcard"><h2>ГЛАВНЫЙ ФИНАЛ · SMS ОТПРАВЛЕН</h2>'
+      +'<p>Купюра 2 000 сум — и SMS отправлен.<br>Одно движение. Ноль регистраций. Ноль приложений.</p>'
+      +'<p class="moral">Герой решил проблему сам — без просьб к другим людям.</p>'
+      +'<div class="endbtns"><button class="pxbtn alt" onclick="restart()">Начать заново</button>'
+      +'<a class="pxbtn" href="/#story">← на сайт Xabar</a></div></div>';
+  }else{
+    SFX.meh();
+    speak('AVTOR','Сообщение отправлено. Но пришлось уговаривать.');
+    p.innerHTML='<div class="endcard"><h2>АЛЬТЕРНАТИВНЫЙ ФИНАЛ · ДАЛИ ТЕЛЕФОН</h2>'
+      +'<p>Сообщение отправлено. Но пришлось уговаривать.</p>'
+      +'<p class="moral">Рабочий путь — но он зависит от настроения другого человека.<br>Есть способ надёжнее…</p>'
+      +'<div class="endbtns"><button class="pxbtn" onclick="restart()">Начать заново</button>'
+      +'<button class="pxbtn alt" onclick="go(\'kadr5\')">Попробовать Xabar</button></div></div>';
+  }
+  setTimeout(()=>p.classList.add('show'),which==='B'?900:400);
+}
+function restart(){visited={};window.__ownerMood='cross';$('endp').classList.remove('show');$('qbanner').classList.remove('show');$('qbanner').style.display='none';SFX.coin();go(START)}
+/* клики по кадру: пропуск печати / следующая реплика */
+$('frame').addEventListener('click',e=>{
+  if(e.target.closest('.pxbtn')||e.target.closest('#btn-mute')||e.target.closest('#start'))return;
+  if(!cur)return;
+  if(typing){skipType();return}
+  if(li<cur.lines.length-1){li++;typeLine()}
+});
+$('btn-start').onclick=()=>{ac();$('start').style.display='none';go(START)};
+$('btn-mute').onclick=function(e){e.stopPropagation();muted=!muted;this.textContent=muted?'🔇':'🔊';if(muted&&'speechSynthesis' in window)speechSynthesis.cancel()};
+/* фон за стартовым экраном */
+renderStage(SCENES.kadr1);
+</script>
+</body>
+</html>
