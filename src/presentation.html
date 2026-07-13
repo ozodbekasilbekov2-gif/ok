@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="/static/game/quest.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -380,24 +381,61 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <cite>— запрос, на который у города нет ответа с тех пор, как исчез последний таксофон</cite>
     </div>
 
-    <!-- game invite -->
-    <a class="game-card rv" href="/game">
-      <svg class="gc-px" viewBox="0 0 64 64" aria-hidden="true">
-        <rect width="64" height="64" rx="8" fill="#141A2E"/>
-        <g fill="#5B7BD9"><rect x="26" y="14" width="12" height="10"/><rect x="24" y="24" width="16" height="14"/></g>
-        <g fill="#EAD9A8"><rect x="28" y="16" width="8" height="6"/></g>
-        <g fill="#1F1B16"><rect x="29" y="18" width="2" height="2"/><rect x="33" y="18" width="2" height="2"/></g>
-        <g fill="#3E9C5C"><rect x="14" y="40" width="10" height="14"/><rect x="16" y="36" width="6" height="4"/></g>
-        <g fill="#B9E3C4"><rect x="16" y="42" width="6" height="5"/></g>
-        <g fill="#D8B36A"><rect x="42" y="40" width="10" height="2"/><rect x="44" y="36" width="8" height="2"/><rect x="46" y="32" width="6" height="2"/></g>
-      </svg>
-      <div class="gc-body">
-        <div class="tag tag-c">интерактив · 3 минуты</div>
-        <h3 style="margin-top:12px">Проживите эту историю сами — Xabar Quest</h3>
-        <p class="small mut" style="margin-top:8px">Мини-игра: вы — Бахтиёр без телефона на улицах Ташкента. Пиксельная новелла с озвучкой прямо в браузере. Два финала — попробуйте найти терминал Xabar.</p>
+    <!-- Embedded photographic visual novel -->
+    <section class="xq-shell rv" id="xabar-quest" aria-labelledby="xq-title">
+      <header class="xq-heading">
+        <div class="xq-heading-copy">
+          <div class="xq-kicker">интерактивная история · 2 минуты</div>
+          <h3 id="xq-title">Проживите проблему до решения</h3>
+          <p class="small mut">Фотореалистичная мини-новелла прямо внутри презентации. Каждый выбор меняет маршрут героя.</p>
+        </div>
+        <div class="xq-live">живой прототип</div>
+      </header>
+
+      <div class="xq-frame" tabindex="0" aria-label="Интерактивная игра Xabar Quest">
+        <div class="xq-scene" aria-live="polite">
+          <img class="xq-photo" data-photo="a" alt="Сцена из истории Xabar">
+          <img class="xq-photo" data-photo="b" alt="Сцена из истории Xabar">
+        </div>
+
+        <div class="xq-topbar">
+          <div class="xq-brand">
+            <span class="xq-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m7 8 5 4 5-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+            Xabar Quest
+          </div>
+          <div class="xq-progress" aria-label="Прогресс: 6 кадров">
+            <i class="xq-step"></i><i class="xq-step"></i><i class="xq-step"></i><i class="xq-step"></i><i class="xq-step"></i><i class="xq-step"></i>
+          </div>
+          <div class="xq-controls">
+            <button class="xq-icon-btn" type="button" data-xq-restart aria-label="Начать заново"><svg viewBox="0 0 24 24"><path d="M5 8V4m0 0h4M5 4l3 3a7 7 0 1 1-2 7"/></svg></button>
+            <button class="xq-icon-btn" type="button" data-xq-sound aria-label="Выключить звук">
+              <svg data-sound-on viewBox="0 0 24 24"><path d="M5 10v4h3l4 3V7l-4 3H5Zm10-1a4 4 0 0 1 0 6m2-8a7 7 0 0 1 0 10"/></svg>
+              <svg data-sound-off viewBox="0 0 24 24" style="display:none"><path d="M5 10v4h3l4 3V7l-4 3H5Zm10 0 5 5m0-5-5 5"/></svg>
+            </button>
+            <button class="xq-icon-btn" type="button" data-xq-fullscreen aria-label="Открыть на весь экран"><svg viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M9 20H4v-5m11 5h5v-5"/></svg></button>
+          </div>
+        </div>
+
+        <div class="xq-caption"></div>
+        <div class="xq-dialog" role="group" aria-label="Диалог">
+          <div class="xq-speaker">GERO</div>
+          <div class="xq-text"></div>
+          <div class="xq-choices"></div>
+          <span class="xq-continue">клик — продолжить</span>
+        </div>
+        <div class="xq-end"></div>
+
+        <div class="xq-cover">
+          <article class="xq-cover-card">
+            <div class="xq-cover-logo" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 10h32v22H19L8 40V10Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m14 17 10 8 10-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+            <h4>Xabar Quest</h4>
+            <p>Телефон остался дома. Сообщение нужно отправить сейчас. Найдите путь, который не зависит от чужого телефона.</p>
+            <button class="xq-start" type="button" data-xq-start><svg viewBox="0 0 16 16"><path d="m4 2 10 6L4 14V2Z"/></svg>Начать историю</button>
+          </article>
+        </div>
       </div>
-      <span class="gc-go">▶ ИГРАТЬ</span>
-    </a>
+      <div class="xq-note"><span>Фото пользователя используются как полноценные игровые сцены.</span><span>Звук можно отключить · есть полноэкранный режим</span></div>
+    </section>
   </div>
 </section>
 
@@ -1475,5 +1513,6 @@ gsap.utils.toArray('.rv').forEach(el => {
   calc();
 })();
 </script>
+<script src="/static/game/quest.js"></script>
 </body>
 </html>
