@@ -114,6 +114,16 @@ h3{font-family:var(--serif);font-weight:600;font-size:21px;line-height:1.3;lette
 .stamp::before{content:"";position:absolute;inset:5px;border:1.5px dashed currentColor;border-radius:50%}
 .vic{width:17px;height:17px;flex:0 0 17px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .card-d:hover .vic{transform:rotate(-10deg) scale(1.25)}
+/* иллюстративные виньетки эпох (оригинальные SVG-сцены) */
+.step-vign{display:block;width:100%;height:auto;aspect-ratio:400/300;border-radius:9px;margin-bottom:16px;border:1px solid var(--line);background:var(--bg2);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.step:hover .step-vign{transform:translateY(-3px) rotate(-.6deg);box-shadow:0 14px 26px -14px rgba(31,30,27,.3)}
+/* купюра 2 000 сум */
+.xb-note-fig{display:block;width:min(320px,100%);height:auto;margin:0 0 22px;filter:drop-shadow(0 10px 22px rgba(85,97,59,.22));transform:rotate(-2.5deg);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.xb-note-fig:hover{transform:rotate(0deg) scale(1.03)}
+/* вращающееся кольцо-печать с текстом по окружности */
+.xb-ring{width:118px;height:118px;color:var(--clay);animation:xbSpin 28s linear infinite;filter:drop-shadow(0 5px 10px rgba(31,30,27,.14));flex:none}
+@keyframes xbSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.xb-ring{animation:none}}
 
 /* ---------- game invite card ---------- */
 .game-card{margin-top:56px;display:flex;align-items:center;gap:28px;padding:26px 30px;border:1px solid var(--line2);border-radius:14px;background:var(--bg);text-decoration:none;color:inherit;transition:.25s;position:relative;overflow:hidden}
@@ -261,6 +271,210 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
 </head>
 <body>
 
+<!-- ============ Xabar SVG sprite (оригинальные иллюстрации в тёплой редакционной палитре) ============ -->
+<svg aria-hidden="true" style="display:none">
+  <defs>
+    <linearGradient id="xbg-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6EEDC"/><stop offset="1" stop-color="#EAD9B8"/></linearGradient>
+    <linearGradient id="xbg-eve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1E3CC"/><stop offset="1" stop-color="#E2CBA4"/></linearGradient>
+
+    <symbol id="xb-env" viewBox="0 0 24 24">
+      <rect x="2.2" y="4.6" width="19.6" height="14.8" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.9"/>
+      <path d="m3.4 6.4 8.6 6.4 8.6-6.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- ЭПОХА I · таксофонная будка -->
+    <symbol id="xb-v-booth" viewBox="0 0 400 300">
+      <rect width="400" height="300" fill="url(#xbg-sky)"/>
+      <circle cx="318" cy="64" r="32" fill="#E8B45C" opacity=".9"/>
+      <circle cx="318" cy="64" r="45" fill="none" stroke="#DCA54E" stroke-width="2" opacity=".45"/>
+      <g fill="#D9C8A4">
+        <rect x="16" y="148" width="54" height="74" rx="3"/>
+        <rect x="82" y="128" width="42" height="94" rx="3"/>
+        <rect x="298" y="138" width="66" height="84" rx="3"/>
+      </g>
+      <g fill="#CBB68C">
+        <rect x="25" y="157" width="10" height="12"/><rect x="45" y="157" width="10" height="12"/>
+        <rect x="90" y="137" width="9" height="11"/><rect x="106" y="137" width="9" height="11"/>
+        <rect x="308" y="148" width="11" height="12"/><rect x="330" y="148" width="11" height="12"/>
+      </g>
+      <rect y="220" width="400" height="80" fill="#8A9668"/>
+      <rect y="220" width="400" height="9" fill="#77855A"/>
+      <g transform="translate(150,82)">
+        <rect width="88" height="160" rx="9" fill="#C2562F"/>
+        <rect x="14" y="-8" width="60" height="18" rx="5" fill="#8F3A18"/>
+        <rect x="22" y="-2" width="44" height="5" rx="2.5" fill="#F4E8CF" opacity=".9"/>
+        <rect x="8" y="24" width="72" height="88" rx="5" fill="#F4E8CF"/>
+        <rect x="8" y="24" width="72" height="88" rx="5" fill="none" stroke="#A8461F" stroke-width="3"/>
+        <line x1="44" y1="24" x2="44" y2="112" stroke="#A8461F" stroke-width="3"/>
+        <rect x="52" y="42" width="17" height="28" rx="3.5" fill="#3A342B"/>
+        <path d="M52 74q-9 9 0 17" stroke="#3A342B" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <rect x="8" y="126" width="72" height="6" rx="3" fill="#8F3A18" opacity=".6"/>
+      </g>
+      <g transform="translate(280,156)">
+        <circle r="11" fill="#E8B88E"/>
+        <path d="M-11 -3a11 11 0 0 1 22 0v-4a11 8 0 0 0-22 0z" fill="#3A342B"/>
+        <rect x="-13" y="9" width="26" height="36" rx="9" fill="#6E7D4E"/>
+        <rect x="-11" y="45" width="9" height="28" rx="4" fill="#4A4740"/>
+        <rect x="3" y="45" width="9" height="28" rx="4" fill="#4A4740"/>
+      </g>
+      <circle cx="110" cy="252" r="10" fill="#E3C983" stroke="#B98A2E" stroke-width="2.5"/>
+      <path d="M58 56c5-6 11-6 15 0c4-6 10-6 15 0" stroke="#8A6A3A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- ЭПОХА II · чужая трубка у прилавка -->
+    <symbol id="xb-v-borrow" viewBox="0 0 400 300">
+      <rect width="400" height="300" fill="url(#xbg-eve)"/>
+      <circle cx="70" cy="58" r="26" fill="#E8B45C" opacity=".85"/>
+      <rect x="108" y="46" width="244" height="16" rx="4" fill="#A8461F"/>
+      <g transform="translate(108,62)">
+        <circle cx="15.25" r="15.25" fill="#C2562F"/><circle cx="45.75" r="15.25" fill="#F4E8CF"/>
+        <circle cx="76.25" r="15.25" fill="#C2562F"/><circle cx="106.75" r="15.25" fill="#F4E8CF"/>
+        <circle cx="137.25" r="15.25" fill="#C2562F"/><circle cx="167.75" r="15.25" fill="#F4E8CF"/>
+        <circle cx="198.25" r="15.25" fill="#C2562F"/><circle cx="228.75" r="15.25" fill="#F4E8CF"/>
+      </g>
+      <rect x="130" y="96" width="200" height="82" rx="5" fill="#F4E8CF" stroke="#D3C4A0" stroke-width="2"/>
+      <g stroke="#D3C4A0" stroke-width="6" stroke-linecap="round">
+        <path d="M150 118h56M150 140h38M290 118h24"/>
+      </g>
+      <rect y="230" width="400" height="70" fill="#9A8A62"/>
+      <rect x="118" y="178" width="224" height="58" rx="6" fill="#7A5A3A"/>
+      <rect x="118" y="178" width="224" height="10" rx="5" fill="#8F6D48"/>
+      <g transform="translate(292,132)">
+        <circle r="12" fill="#E0AC80"/>
+        <path d="M-12 -3a12 12 0 0 1 24 0v-4a12 8 0 0 0-24 0z" fill="#4A4034"/>
+        <rect x="-15" y="10" width="30" height="40" rx="10" fill="#B98A2E"/>
+        <rect x="-38" y="16" width="26" height="10" rx="5" fill="#B98A2E"/>
+        <circle cx="-42" cy="21" r="6" fill="#E0AC80"/>
+      </g>
+      <g transform="translate(70,150)">
+        <circle r="12" fill="#E8B88E"/>
+        <path d="M-12 -3a12 12 0 0 1 24 0v-4a12 8 0 0 0-24 0z" fill="#3A342B"/>
+        <rect x="-15" y="10" width="30" height="44" rx="10" fill="#6E7D4E"/>
+        <rect x="13" y="16" width="30" height="10" rx="5" fill="#6E7D4E"/>
+        <circle cx="47" cy="21" r="6" fill="#E8B88E"/>
+        <rect x="-13" y="54" width="10" height="32" rx="4" fill="#4A4740"/>
+        <rect x="4" y="54" width="10" height="32" rx="4" fill="#4A4740"/>
+      </g>
+      <g transform="translate(178,118) rotate(-8)">
+        <rect x="-9" y="-16" width="18" height="32" rx="4" fill="#3A342B"/>
+        <rect x="-6" y="-12" width="12" height="20" rx="2" fill="#9BD3B0"/>
+      </g>
+      <path d="M150 66c4-5 9-5 12 0c3-5 8-5 12 0" stroke="#8A6A3A" stroke-width="2.5" fill="none" stroke-linecap="round" transform="translate(180,-18)"/>
+    </symbol>
+
+    <!-- ЭПОХА III · отказ незнакомца -->
+    <symbol id="xb-v-stranger" viewBox="0 0 400 300">
+      <rect width="400" height="300" fill="url(#xbg-sky)"/>
+      <circle cx="330" cy="58" r="28" fill="#E8B45C" opacity=".85"/>
+      <g fill="#D9C8A4">
+        <rect x="24" y="120" width="70" height="106" rx="4"/>
+        <rect x="110" y="96" width="54" height="130" rx="4"/>
+        <rect x="296" y="112" width="76" height="114" rx="4"/>
+      </g>
+      <g fill="#CBB68C">
+        <rect x="34" y="132" width="12" height="14"/><rect x="58" y="132" width="12" height="14"/>
+        <rect x="34" y="158" width="12" height="14"/><rect x="58" y="158" width="12" height="14"/>
+        <rect x="120" y="108" width="11" height="13"/><rect x="140" y="108" width="11" height="13"/>
+        <rect x="306" y="124" width="13" height="14"/><rect x="330" y="124" width="13" height="14"/>
+      </g>
+      <rect y="226" width="400" height="74" fill="#B9AD8C"/>
+      <rect y="226" width="400" height="9" fill="#A79B7A"/>
+      <g transform="translate(150,160)">
+        <circle r="13" fill="#E8B88E"/>
+        <path d="M-13 -3a13 13 0 0 1 26 0v-5a13 8 0 0 0-26 0z" fill="#3A342B"/>
+        <rect x="-16" y="11" width="32" height="46" rx="11" fill="#6E7D4E"/>
+        <rect x="14" y="18" width="32" height="11" rx="5.5" fill="#6E7D4E"/>
+        <circle cx="50" cy="23" r="7" fill="#E8B88E"/>
+        <rect x="-14" y="57" width="11" height="34" rx="5" fill="#4A4740"/>
+        <rect x="4" y="57" width="11" height="34" rx="5" fill="#4A4740"/>
+      </g>
+      <g transform="translate(268,152)">
+        <circle r="13" fill="#E0AC80"/>
+        <path d="M-13 -3a13 13 0 0 1 26 0v-5a13 8 0 0 0-26 0z" fill="#4A4034"/>
+        <rect x="-16" y="11" width="32" height="48" rx="11" fill="#A8461F"/>
+        <rect x="-44" y="-6" width="12" height="34" rx="6" fill="#A8461F" transform="rotate(18 -38 11)"/>
+        <circle cx="-46" cy="-10" r="8.5" fill="#E0AC80"/>
+        <g stroke="#E0AC80" stroke-width="3" stroke-linecap="round">
+          <path d="M-51 -17v-4M-46 -19v-4M-41 -17v-4"/>
+        </g>
+        <rect x="-14" y="59" width="11" height="34" rx="5" fill="#3A342B"/>
+        <rect x="4" y="59" width="11" height="34" rx="5" fill="#3A342B"/>
+        <rect x="8" y="26" width="13" height="22" rx="3" fill="#3A342B" transform="rotate(-12 14 37)"/>
+      </g>
+      <g transform="translate(206,96)">
+        <rect x="-34" y="-22" width="68" height="34" rx="12" fill="#FBF7EA" stroke="#D3C4A0" stroke-width="2"/>
+        <path d="M-8 12l-6 12 16-12z" fill="#FBF7EA" stroke="#D3C4A0" stroke-width="2"/>
+        <g fill="#A8461F"><circle cx="-14" cy="-5" r="4"/><circle cx="0" cy="-5" r="4"/><circle cx="14" cy="-5" r="4"/></g>
+      </g>
+    </symbol>
+
+    <!-- СЕГОДНЯ · терминал Paynet отправляет SMS -->
+    <symbol id="xb-v-terminal" viewBox="0 0 400 300">
+      <rect width="400" height="300" fill="url(#xbg-eve)"/>
+      <circle cx="76" cy="56" r="30" fill="#E8B45C" opacity=".9"/>
+      <circle cx="76" cy="56" r="42" fill="none" stroke="#DCA54E" stroke-width="2" opacity=".45"/>
+      <g fill="#D9C8A4">
+        <rect x="20" y="130" width="60" height="94" rx="4"/>
+        <rect x="300" y="140" width="72" height="84" rx="4"/>
+      </g>
+      <g fill="#CBB68C"><rect x="30" y="142" width="11" height="13"/><rect x="52" y="142" width="11" height="13"/><rect x="312" y="152" width="12" height="13"/><rect x="336" y="152" width="12" height="13"/></g>
+      <rect y="224" width="400" height="76" fill="#8A9668"/>
+      <rect y="224" width="400" height="9" fill="#77855A"/>
+      <g transform="translate(158,74)">
+        <rect x="-6" y="150" width="96" height="14" rx="4" fill="#3E4A2E"/>
+        <rect width="84" height="152" rx="10" fill="#4C5A38"/>
+        <rect x="6" y="-12" width="72" height="20" rx="6" fill="#3E4A2E"/>
+        <rect x="16" y="-6" width="52" height="6" rx="3" fill="#E3C983"/>
+        <rect x="8" y="16" width="68" height="66" rx="6" fill="#F4E8CF"/>
+        <g transform="translate(42,44)" color="#C2562F"><use href="#xb-env" width="34" height="34" x="-17" y="-17"/></g>
+        <rect x="16" y="66" width="52" height="9" rx="4.5" fill="#8A9668"/>
+        <g fill="#3E4A2E">
+          <rect x="10" y="94" width="20" height="13" rx="3.5"/><rect x="33" y="94" width="20" height="13" rx="3.5"/><rect x="56" y="94" width="18" height="13" rx="3.5"/>
+        </g>
+        <rect x="10" y="114" width="64" height="9" rx="4.5" fill="#E3C983"/>
+      </g>
+      <g transform="translate(120,158)">
+        <circle r="12" fill="#E8B88E"/>
+        <path d="M-12 -3a12 12 0 0 1 24 0v-4a12 8 0 0 0-24 0z" fill="#3A342B"/>
+        <rect x="-15" y="10" width="30" height="44" rx="10" fill="#6E7D4E"/>
+        <rect x="12" y="12" width="30" height="10" rx="5" fill="#6E7D4E" transform="rotate(-14 12 17)"/>
+        <circle cx="42" cy="6" r="6" fill="#E8B88E"/>
+        <rect x="-13" y="54" width="10" height="32" rx="4" fill="#4A4740"/>
+        <rect x="4" y="54" width="10" height="32" rx="4" fill="#4A4740"/>
+      </g>
+      <path d="M258 96 C 292 74, 322 58, 352 44" fill="none" stroke="#A8461F" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round" opacity=".7"/>
+      <g transform="translate(300,66) rotate(12)" color="#C2562F"><use href="#xb-env" width="40" height="40" x="-20" y="-20"/></g>
+      <g stroke="#C2562F" stroke-width="2.5" stroke-linecap="round" opacity=".65">
+        <path d="M268 92l-12 6M272 104l-10 5"/>
+      </g>
+      <g transform="translate(354,38)">
+        <circle r="12" fill="#6E7D4E"/>
+        <path d="M-5 0l4 4 7-8" fill="none" stroke="#F4E8CF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </symbol>
+
+    <!-- купюра 2 000 сум (стилизация) -->
+    <symbol id="xb-note" viewBox="0 0 360 168">
+      <rect x="3" y="3" width="354" height="162" rx="11" fill="#EEF0E2" stroke="#9DAB79" stroke-width="2.5"/>
+      <rect x="12" y="12" width="336" height="144" rx="7" fill="none" stroke="#6E7D4E" stroke-width="1.2" stroke-dasharray="3 5" opacity=".55"/>
+      <g fill="none" stroke="#8A9668" opacity=".5">
+        <circle cx="76" cy="84" r="46"/><circle cx="76" cy="84" r="36"/><circle cx="76" cy="84" r="26"/>
+      </g>
+      <path d="M76 54c14 0 24 11 24 26v24H52V80c0-15 10-26 24-26z" fill="none" stroke="#55613B" stroke-width="2.5"/>
+      <path d="M76 62c9 0 16 8 16 18v16H60V80c0-10 7-18 16-18z" fill="#C9D3AC"/>
+      <rect x="52" y="104" width="48" height="6" rx="3" fill="#55613B"/>
+      <g fill="none" stroke="#9DAB79" stroke-width="1.4" opacity=".7">
+        <path d="M140 24v120M148 24v120"/>
+      </g>
+      <text x="242" y="96" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="52" fill="#55613B" letter-spacing="1">2 000</text>
+      <text x="242" y="122" text-anchor="middle" font-family="monospace" font-size="13" letter-spacing="6" fill="#7A8757">СУМ</text>
+      <text x="30" y="34" font-family="monospace" font-weight="700" font-size="14" fill="#7A8757">2000</text>
+      <text x="330" y="150" text-anchor="end" font-family="monospace" font-weight="700" font-size="14" fill="#7A8757">2000</text>
+      <g fill="#B98A2E" opacity=".8"><circle cx="318" cy="30" r="3"/><circle cx="330" cy="30" r="3"/><circle cx="324" cy="40" r="3"/></g>
+    </symbol>
+  </defs>
+</svg>
+
 <header>
   <div class="wrap hnav">
     <a class="brand" href="#top"><span class="bmark">X</span>Xabar <span class="x">× Paynet</span></a>
@@ -355,21 +569,25 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
     <div class="rule-lb rv" style="margin:64px 0 40px"><span>как менялся способ сказать восемь слов</span></div>
     <div class="steps rv">
       <div class="step">
+        <svg class="step-vign" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#xb-v-booth"/></svg>
         <div class="step-when">≈ 1995</div>
         <h3>Таксофон</h3>
         <p class="small mut" style="margin-top:8px">Дошёл до будки у метро, опустил жетон, сказал сам. Достоинство сохранено, вопрос закрыт за минуту.</p>
       </div>
       <div class="step">
+        <svg class="step-vign" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#xb-v-borrow"/></svg>
         <div class="step-when">≈ 2005</div>
         <h3>Чужая трубка</h3>
         <p class="small mut" style="margin-top:8px">Одолжил телефон у продавца, краснея и извиняясь. Способ работает — но за счёт самоуважения.</p>
       </div>
       <div class="step">
+        <svg class="step-vign" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#xb-v-stranger"/></svg>
         <div class="step-when">≈ 2015</div>
         <h3>Просьба к незнакомцу</h3>
         <p class="small mut" style="margin-top:8px">«Можно один звонок?» Кто-то даёт, кто-то отводит глаза. Публичной связи как услуги больше не существует.</p>
       </div>
       <div class="step hot">
+        <svg class="step-vign" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#xb-v-terminal"/></svg>
         <div class="step-when">Сегодня</div>
         <h3>Терминал Paynet</h3>
         <p class="small mut" style="margin-top:8px">28 000 точек уже стоят на улицах. Осталось научить их отправлять сообщения. Это и есть Xabar.</p>
@@ -838,6 +1056,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
         <p class="cap" style="margin-top:16px">Точка безубыточности при FIX-расходах 60 млн сум/мес — <span class="mono" style="font-weight:700;color:var(--ink)">≈ 1 750 SMS в день</span>. Это два сообщения на каждые сто пополнений в Ташкенте, где ежедневно ~100 000 терминальных пополнений. Нам нужно 1,8% из них.</p>
       </div>
       <div>
+        <svg class="xb-note-fig rv" viewBox="0 0 360 168" aria-label="Стилизованная купюра 2 000 сум"><use href="#xb-note"/></svg>
         <div class="marginalia rv">
           <b>Почему именно 2 000</b>
           Это минимальная ходовая купюра — платёж «не думая». Это цена экстренности: в момент «мне срочно» человек не сравнивает тарифы. И это цена достоинства: заплатить автомату проще, чем просить незнакомца. Купюра, а не тариф — вот почему цена не масштабируется вниз.
@@ -976,7 +1195,14 @@ footer{border-top:1px solid var(--line);padding:34px 0;background:var(--bg2)}
       <div class="rv">
         <div style="display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap">
           <div class="bignum">360<sup>млн сум</sup></div>
-          <div class="stamp" aria-hidden="true">раунд<br>открыт<br>· 2026 ·</div>
+          <svg class="xb-ring" viewBox="0 0 160 160" aria-hidden="true">
+            <defs><path id="xb-circ" d="M80 22a58 58 0 1 1-.01 0"/></defs>
+            <circle cx="80" cy="80" r="73" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 6" opacity=".55"/>
+            <text font-size="12.5" letter-spacing="3.1" fill="currentColor" style="font-family:var(--mono);font-weight:700">
+              <textPath href="#xb-circ">РАУНД ОТКРЫТ ✦ XABAR × PAYNET ✦ 2026 ✦</textPath>
+            </text>
+            <g transform="translate(80,80)" color="currentColor"><use href="#xb-env" width="36" height="36" x="-18" y="-18"/></g>
+          </svg>
         </div>
         <p class="small mut" style="margin-top:10px">≈ $28 000 — полный бюджет до конца пилота включительно. Оценка раунда — 30 млн сум за 1% акций: раунд закрывает 12%.</p>
         <table class="ledger" style="margin-top:26px">
