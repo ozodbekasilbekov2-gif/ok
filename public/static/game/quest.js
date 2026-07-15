@@ -174,7 +174,32 @@
   }
   function denySound() { tone(340, .12); tone(260, .18, .12); }
 
-  /* ---------- озвучка реплик (speechSynthesis, ru-RU) ---------- */
+  /* ---------- озвучка реплик: студийные mp3 (мягкие голоса), fallback — speechSynthesis ---------- */
+  const VOICE_BASE = '/static/game/voice/';
+  const voiceFiles = {
+    'Блин… телефон остался дома. А сообщение нужно отправить прямо сейчас.': 'gero-home-0.mp3',
+    'Извините, можно на минуту ваш телефон? Нужно срочно отправить сообщение.': 'gero-streetask-0.mp3',
+    'Нет, извини, не могу.': 'passer-streetask-1.mp3',
+    'Пожалуйста, буквально одно сообщение…': 'gero-streetagain-0.mp3',
+    'Извини, я спешу.': 'passer-streetagain-1.mp3',
+    'Похоже, нужен другой путь.': 'gero-streetagain-2.mp3',
+    'Так… магазин. И рядом терминал Paynet. Может, здесь получится решить вопрос быстрее.': 'gero-shop-0.mp3',
+    'Сейчас всем дай телефон — и останешься без него. Неудобно.': 'owner-owner-0.mp3',
+    'Подожди… тут есть Xabar. Значит, можно отправить сообщение прямо через терминал.': 'gero-menu-0.mp3',
+    'Номер отправителя… номер получателя… текст готов. Осталось внести 2 000 сум и отправить.': 'gero-form-0.mp3',
+    'Так… поправлю пару слов. Теперь точно готово.': 'gero-edit-0.mp3',
+    'Готово. Сообщение ушло.': 'gero-success-0.mp3',
+    'Ладно, давай быстро. Только недолго.': 'owner-humanend-0.mp3',
+    'Готово! Сообщение отправлено через терминал Хабар.': 'gero-end-success.mp3',
+    'Сообщение ушло, но только после уговоров. Терминал Хабар был бы надёжнее.': 'gero-end-human.mp3'
+  };
+  const voiceCache = {};
+  let voicePlayer = null;
+  Object.values(voiceFiles).forEach(file => {
+    const clip = new Audio(VOICE_BASE + file);
+    clip.preload = 'auto';
+    voiceCache[file] = clip;
+  });
   const speech = 'speechSynthesis' in window ? window.speechSynthesis : null;
   function pickVoice() {
     if (!speech) return;
@@ -186,8 +211,8 @@
     pickVoice();
     speech.onvoiceschanged = pickVoice;
   }
-  function speakLine(value, speakerName) {
-    if (!speech || !sound) return;
+  function speakFallback(value, speakerName) {
+    if (!speech) return;
     try {
       speech.cancel();
       const utterance = new SpeechSynthesisUtterance(value);
@@ -201,7 +226,27 @@
       speech.speak(utterance);
     } catch (_) {}
   }
-  function stopSpeech() { try { speech?.cancel(); } catch (_) {} }
+  function speakLine(value, speakerName) {
+    if (!sound) return;
+    stopSpeech();
+    const file = voiceFiles[value];
+    if (file && voiceCache[file]) {
+      const clip = voiceCache[file];
+      try {
+        clip.currentTime = 0;
+        clip.volume = .95;
+        voicePlayer = clip;
+        const played = clip.play();
+        if (played?.catch) played.catch(() => speakFallback(value, speakerName));
+        return;
+      } catch (_) {}
+    }
+    speakFallback(value, speakerName);
+  }
+  function stopSpeech() {
+    try { speech?.cancel(); } catch (_) {}
+    try { if (voicePlayer) { voicePlayer.pause(); voicePlayer.currentTime = 0; voicePlayer = null; } } catch (_) {}
+  }
   function tone(frequency = 520, duration = .07, delay = 0) {
     if (!sound) return;
     try {
