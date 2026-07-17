@@ -59,6 +59,21 @@ npm install && npm run build
 pm2 start ecosystem.config.cjs   # порт 3000
 ```
 
+## Деплой
+
+### Vercel (статика, рекомендуется для презентации)
+- В репозитории есть `vercel.json` с `outputDirectory: "public"`
+- В `public/index.html` лежит та же презентация, что и в `src/presentation.html`
+- Импортируйте репозиторий в Vercel → Framework Preset: **Other** → Deploy
+- Никакой сборки не требуется: Vercel раздаёт папку `public/` как статику
+- Все ассеты (`/static/*`) кешируются на 1 год (`immutable`)
+
+### Cloudflare Pages (оригинальная конфигурация)
+```bash
+npm run build
+npx wrangler pages deploy
+```
+
 ## Статус
 - ✅ v3.2: ask 360 млн за 12%, блок cloud-API vs свой сервер (DeepSeek 1–2 сум/SMS, но ЗРУ-547 запрещает трансграничную передачу ПД), прозрачные бары графика, немедленная передача криминальных сообщений в органы
 - ✅ v3.3: убран ai-flow SVG; добавлен умеренный Driftwood-декор (squig / contours / route / stamp)
