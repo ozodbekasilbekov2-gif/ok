@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode, Ref } from 'react'
-import { SearchPanel } from '@/components/ui/search-panel'
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
 
 export function FilterToolbar({
   searchValue,
@@ -19,16 +19,14 @@ export function FilterToolbar({
   children?: ReactNode
 }) {
   return (
-    <div className="grid gap-3 rounded-xl border border-border bg-card p-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-      <SearchPanel
-        inputRef={inputRef}
-        value={searchValue}
-        onChange={onSearchChange}
-        placeholder={searchPlaceholder}
-        ariaLabel={searchAriaLabel || searchPlaceholder}
-        className="max-w-none"
-      />
-      {children && <div className="flex flex-wrap items-center gap-2">{children}</div>}
-    </div>
+    <ResourceActionBar
+      searchValue={searchValue}
+      searchPlaceholder={searchPlaceholder}
+      searchAriaLabel={searchAriaLabel}
+      onSearchChange={onSearchChange}
+      inputRef={inputRef}
+    >
+      {children}
+    </ResourceActionBar>
   )
 }

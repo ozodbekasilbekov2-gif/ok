@@ -9,10 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Pencil, Trash2, Plus, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { IconButton } from '@/components/ui/icon-button';
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton';
-import { SearchPanel } from '@/components/ui/search-panel';
-import { RightActionLine } from '@/components/ui/right-action-line';
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar';
 
 interface Ingredient {
     id: string;
@@ -243,28 +241,28 @@ export function IngredientsManager({ onUpdate }: IngredientsManagerProps) {
     return (
         <div className="space-y-4">
             <div className="rounded-xl border border-border bg-card p-3">
-                <RightActionLine>
-                    <IconButton
-                        label={uiText.addIngredient}
+                <ResourceActionBar
+                    searchValue={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    searchPlaceholder={uiText.searchPlaceholder}
+                >
+                    <Button
+                        type="button"
+                        size="icon"
+                        className="size-9"
                         onClick={() => { setCurrentIngredient({ unit: 'gr', amount: 0 }); setIsDialogOpen(true); }}
+                        aria-label={uiText.addIngredient}
+                        title={uiText.addIngredient}
                     >
                         <Plus className="size-4" />
-                    </IconButton>
-
+                    </Button>
                     <RefreshIconButton
                         label={language === 'ru' ? 'Обновить' : language === 'uz' ? 'Yangilash' : 'Refresh'}
                         onClick={() => void fetchIngredients()}
                         isLoading={loading}
                         iconSize="md"
                     />
-
-                    <SearchPanel
-                        value={searchTerm}
-                        onChange={setSearchTerm}
-                        placeholder={uiText.searchPlaceholder}
-                        className="w-[200px] sm:w-[260px] md:w-[320px] flex-none"
-                    />
-                </RightActionLine>
+                </ResourceActionBar>
             </div>
 
             <div className="relative max-h-[600px] overflow-y-auto rounded-lg border border-border bg-card">
