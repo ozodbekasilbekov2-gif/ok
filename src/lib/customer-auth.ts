@@ -5,8 +5,7 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { customerAccessSelect, customerProfileSelect, type CustomerAccess } from '@/lib/customer-access'
 import { z } from 'zod'
-
-const JWT_SECRET = process.env.JWT_SECRET
+import { getJwtSecret } from '@/lib/jwt-secret'
 
 export interface CustomerTokenPayload {
     id: string
@@ -27,20 +26,22 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export function createCustomerToken(payload: Omit<CustomerTokenPayload, 'role'>): string {
-    if (!JWT_SECRET) {
+    const jwtSecret = getJwtSecret()
+    if (!jwtSecret) {
         throw new Error('JWT_SECRET is not set in environment')
     }
     const tokenPayload: CustomerTokenPayload = {
         ...payload,
         role: 'CUSTOMER'
     }
-    return jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' }) // Long expiration for mobile app
+    return jwt.sign(tokenPayload, jwtSecret, { expiresIn: '30d' }) // Long expiration for mobile app
 }
 
 export function verifyCustomerToken(token: string): CustomerTokenPayload | null {
     try {
-        if (!JWT_SECRET) return null
-        const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] })
+        const jwtSecret = getJwtSecret()
+        if (!jwtSecret) return null
+        const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] })
         const parsed = z
             .object({
                 id: z.string().min(1),

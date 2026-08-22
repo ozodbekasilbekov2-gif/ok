@@ -3,14 +3,14 @@ import { db } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
-
-const JWT_SECRET = process.env.JWT_SECRET
+import { getJwtSecret } from '@/lib/jwt-secret'
 const LOGIN_RATE_LIMIT = 10
 const LOGIN_WINDOW_MS = 10 * 60 * 1000
 
 export async function POST(request: NextRequest) {
   try {
-    if (!JWT_SECRET) {
+    const jwtSecret = getJwtSecret()
+    if (!jwtSecret) {
       return NextResponse.json({ error: 'JWT_SECRET is not set in environment' }, { status: 500 })
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     const token = jwt.sign(
       { id: admin.id, email: admin.email, role: admin.role },
-      JWT_SECRET as string,
+      jwtSecret,
       { expiresIn: '24h' }
     )
 

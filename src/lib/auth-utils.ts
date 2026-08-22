@@ -5,8 +5,7 @@ import { db } from '@/lib/db'
 import jwt from 'jsonwebtoken'
 import { z } from 'zod'
 import { type AdminRole, isAdminRole, ADMIN_ROLE_LEVEL } from '@/lib/roles'
-
-const JWT_SECRET = process.env.JWT_SECRET
+import { getJwtSecret } from '@/lib/jwt-secret'
 
 export interface AuthUser {
     id: string
@@ -91,8 +90,9 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
 
     const token = authHeader.substring(7)
     try {
-        if (!JWT_SECRET) return null
-        const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] })
+        const jwtSecret = getJwtSecret()
+        if (!jwtSecret) return null
+        const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] })
         const parsed = adminJwtPayloadSchema.safeParse(decoded)
         if (!parsed.success) return null
         if (!isAdminRole(parsed.data.role)) return null
