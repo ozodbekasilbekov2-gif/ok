@@ -37,7 +37,9 @@ import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIc
 import type { DateRange } from 'react-day-picker'
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getSetDayGroups } from '@/lib/menu/set-groups';
-import { parseCookingDeliveryDays } from '@/lib/warehouse/cooking-data';
+import { parseCookingDeliveryDays } from '@/lib/warehouse/cooking-data'
+import { keepDateInRange, listLocalIsoDates, toLocalIsoDate } from '@/lib/warehouse/cooking-range'
+;
 import {
     parseCookingPlanAuditResponse,
     parseWarehouseClients,
@@ -206,52 +208,20 @@ export function WarehouseTab({ className }: WarehouseTabProps) {
     const [cookingPlansError, setCookingPlansError] = useState<string>('')
     const [cookingSelectedSetId, setCookingSelectedSetId] = useState<string>('active')
 
-    const toLocalIsoDate = useCallback((d: Date) => {
-        const yyyy = d.getFullYear()
-        const mm = String(d.getMonth() + 1).padStart(2, '0')
-        const dd = String(d.getDate()).padStart(2, '0')
-        return `${yyyy}-${mm}-${dd}`
-    }, [])
+    const calcRangeDays = useMemo(
+        () => listLocalIsoDates(calcRange?.from, calcRange?.to, 45),
+        [calcRange],
+    )
 
-    const calcRangeDays = useMemo(() => {
-        if (!calcRange?.from) return [] as string[]
-        const end = calcRange.to ?? calcRange.from
-
-        const dates: string[] = []
-        const cursor = new Date(calcRange.from)
-        cursor.setHours(0, 0, 0, 0)
-
-        const limit = 45 // keep UI & calculations bounded
-        while (cursor.getTime() <= end.getTime() && dates.length < limit) {
-            dates.push(toLocalIsoDate(cursor))
-            cursor.setDate(cursor.getDate() + 1)
-        }
-
-        return dates
-    }, [calcRange, toLocalIsoDate])
-
-    const cookingRangeDays = useMemo(() => {
-        if (!cookingRange?.from) return [] as string[]
-        const end = cookingRange.to ?? cookingRange.from
-
-        const dates: string[] = []
-        const cursor = new Date(cookingRange.from)
-        cursor.setHours(0, 0, 0, 0)
-
-        const limit = 31 // keep the UI usable (month max)
-        while (cursor.getTime() <= end.getTime() && dates.length < limit) {
-            dates.push(toLocalIsoDate(cursor))
-            cursor.setDate(cursor.getDate() + 1)
-        }
-        return dates
-    }, [cookingRange, toLocalIsoDate])
+    const cookingRangeDays = useMemo(
+        () => listLocalIsoDates(cookingRange?.from, cookingRange?.to, 31),
+        [cookingRange],
+    )
 
     useEffect(() => {
         if (!cookingRangeDays.length) return
-        // Ensure selected day stays inside the chosen range.
-        if (!cookingRangeDays.includes(selectedCookingDateISO)) {
-            setSelectedCookingDateISO(cookingRangeDays[0])
-        }
+        const nextDate = keepDateInRange(selectedCookingDateISO, cookingRangeDays)
+        if (nextDate !== selectedCookingDateISO) setSelectedCookingDateISO(nextDate)
     }, [cookingRangeDays, selectedCookingDateISO])
 
     const refreshCookingPlansForRange = useCallback(async () => {
@@ -281,7 +251,7 @@ export function WarehouseTab({ className }: WarehouseTabProps) {
         } finally {
             setIsCookingPlansLoading(false)
         }
-    }, [cookingRange, toLocalIsoDate, auditUiText.failedLoadCookingPlans])
+    }, [cookingRange, auditUiText.failedLoadCookingPlans])
 
     useEffect(() => {
         void refreshCookingPlansForRange()
