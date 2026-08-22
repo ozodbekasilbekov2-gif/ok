@@ -120,3 +120,46 @@ The official Medusa repository was re-opened and verified at https://github.com/
 ## TastyIgniter verification refresh — 2026-08-21
 
 The official TastyIgniter repository was re-opened and verified at https://github.com/tastyigniter/TastyIgniter. Its README identifies an open-source restaurant system for online ordering, table reservations, and restaurant management. The repository visibly separates `app`, `database`, `routes`, `resources`, `themes`, `extensions`, `tests`, `storage`, and CI/security configuration; recent first-party commits include Docker/Nginx/PHP-FPM setup, storage privacy/hardening, extension/theme cleanup, and database/config structure work. The reference lesson for AutoFood is explicit separation of restaurant/order workflows, back-office management, themes/customer-facing sites, extensions/integrations, storage, and tests, while retaining the existing Next.js/Prisma/Vercel runtime rather than copying the Laravel/PHP deployment model.
+
+
+## Reference 4: `ozodbekasilbekov2-gif/-1` resource-management UI audit — 2026-08-22
+
+Source repository: https://github.com/ozodbekasilbekov2-gif/-1
+Audited revision: `297fed5` (`v1.2.184-local.360`). The repository is an Android/Kotlin/Jetpack Compose application for scooter-rental resource management. Its README is generic AI Studio scaffolding, so the authoritative evidence for product behavior is the source code itself. The app is not a stack reference for AutoFood; it is a product-interaction and resource-management reference.
+
+### Transferable product patterns
+
+The reference has a single resource-management shell in `app/src/main/java/com/example/MainActivity.kt`. Top-level state lifts tab selection, date range, search mode, selection sets, create/edit/delete triggers, trash mode, archive mode, and navigation state above feature screens. The same source also centralizes intent-driven actions from widgets and notifications. This creates a consistent command surface across renters, scooters, contracts, transactions, finance, and reports, although the 7,629-line activity is itself too large to copy. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/MainActivity.kt
+
+`UnifiedButton.kt` defines a small semantic button interface with six variants, one icon, one short label, loading state, enabled state, and a restrained press confirmation. The useful AutoFood lesson is semantic action consistency and a compact interaction grammar; the exact animated icon rotation or Android `Surface` implementation should not be copied into the web app. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/ui/components/UnifiedButton.kt
+
+`UnifiedTable.kt` provides shared search, column filtering, manual column visibility, sort-state cycling, date-range filtering, and a reusable filter side panel. Its strongest principle is that table behavior is shared while item-specific value extraction remains a caller-supplied adapter. The filter helper ANDs active filters and performs case-insensitive contains matching. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/ui/components/UnifiedTable.kt
+
+`ReportsScreen.kt` models reports as a list of typed widgets backed by one `ReportWidgetData` payload. Widget order and hidden state persist in preferences; global search, date range, and filter triggers are controlled by the parent shell; each widget has move-up/move-down controls. This is the clearest transferable pattern for AutoFood statistics: a compact dashboard contract plus configurable widgets, not a copy of the Android charts. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/ReportsScreen.kt
+
+`FinansiPanel.kt` applies the same resource pattern to virtual cards: live/trash source switching, persisted card order, search and column filters, lifted selection, external create/edit/delete triggers, and a header action zone that scrolls with the card grid. For AutoFood this suggests a shared resource-list contract usable by warehouse items, menu sets, couriers, and finance records where appropriate. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/FinansiPanel.kt
+
+`ContractCalendar.kt` exposes a controlled calendar interface with explicit group state, active group, edit/view mode, status selection before date selection, add/remove/edit callbacks, and normalized day boundaries. Its value is the state machine and invariant enforcement: users cannot select a period before choosing a status, and date cells use stable start-of-day values. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/ContractCalendar.kt
+
+`BackupManager.kt` demonstrates explicit import order, backup statistics, temporary-file safety, and a user-visible success/error result. It is not suitable to copy as a data strategy for AutoFood because AutoFood already has PostgreSQL/Prisma and must not import unrelated historical business data. The transferable lesson is scoped, observable, rollback-conscious import/export workflows. Source: https://github.com/ozodbekasilbekov2-gif/-1/blob/297fed5/app/src/main/java/com/example/data/BackupManager.kt
+
+The source also includes Room repositories/DAOs for renters, scooters, contract history, transactions, virtual cards, and notifications; WorkManager workers for payment checks/SMS; Android widgets for dashboard, quick actions, reports, renters, scooters, contracts, and transactions; and a CameraX/Mistral OCR scanner. These are useful capability references, but most are platform-specific and should be translated into web notifications, responsive quick actions, server jobs, or browser upload/OCR only when AutoFood’s current domain requires them.
+
+### Current AutoFood insertion points
+
+AutoFood already has the right domain substrate for the strongest reference patterns: `AdminDashboardPage.tsx` lifts active tab, period/date selection, multi-selection sets, search, modal triggers, warehouse state, and a `useDashboardData` seam; `StatisticsTab.tsx` renders grouped metrics; `WarehouseTab.tsx` owns inventory, cooking calculations, shopping list, cooking audit range, selected date, and plan loading; `SetsTab.tsx` owns set/day/group/dish/ingredient editing; and `FinanceTab.tsx`/`HistoryTable.tsx` provide adjacent resource surfaces. The current Prisma schema already models `WarehouseItem`, `Dish`, `Menu`, `MenuSet`, `DailyCookingPlan`, `Order`, `Customer`, `Admin`, and transactions, so the safe migration is primarily UI/state modularization and interaction consistency, not a schema rewrite.
+
+### Explicit non-goals and risks
+
+Do not copy the reference’s Android/Kotlin/Room/WorkManager stack into the Next.js/Vercel application. Do not copy its single 7,629-line `MainActivity`; instead extract small deep modules behind narrow interfaces. Do not introduce its local-only backup semantics into production PostgreSQL. Preserve AutoFood’s existing API response shapes, role scoping, Prisma schema, customer/courier/order workflows, and flat/no-glass UI preference. The reference’s warm cream/terracotta palette can be considered only as an optional product theme; the immediate visual direction should remain AutoFood’s existing flat token system rather than adding gradients, glass, shadows, or 3D effects.
+
+### Proposed transfer sequence
+
+1. Define a web-native resource-list interface for search, date/filter state, selection, CRUD action availability, loading/error/empty states, and soft-delete/restore behavior; adapt existing clients, orders, warehouse, sets, and finance screens incrementally.
+2. Extract `AdminDashboardPage.tsx` orchestration into small dashboard state/data modules while preserving its current tab and API contracts.
+3. Add a configurable statistics widget registry with persisted order/visibility per admin, using existing stats API data and explicit server-side scope checks.
+4. Normalize reusable table/filter/selection primitives and apply them first to clients/orders/warehouse; make keyboard access, labels, focus, responsive reflow, and reduced motion acceptance criteria.
+5. Improve warehouse/set workflow around a compact master-detail layout, date-scoped cooking planning, ingredient availability, shopping-list actions, and clear optimistic/rollback behavior without destructive refreshes.
+6. Add browser/API regression tests for each migrated surface, plus measured Core Web Vitals, request latency, error rate, and memory/render-cost baselines before broader UI changes.
+
+This note is a research record, not an implementation authorization. Each step requires a small spec, tests, browser verification, and a separate cohesive commit.
