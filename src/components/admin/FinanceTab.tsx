@@ -48,7 +48,7 @@ import type { ProfileUiText } from '@/components/admin/dashboard/shared/profile-
 
 import { CalendarDateSelector } from '@/components/admin/dashboard/shared/CalendarDateSelector';
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton'
-import { SearchPanel } from '@/components/ui/search-panel'
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
 import type { DateRange } from 'react-day-picker'
 
 interface FinanceTabProps {
@@ -448,7 +448,7 @@ export function FinanceTab({
         <div className={`space-y-6 ${className}`}>
             {/* Top Stats Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="glass-card">
+                <Card className="bg-card">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-blue-900">
                             {t.finance.companyBalance}
@@ -487,7 +487,7 @@ export function FinanceTab({
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card">
+                <Card className="bg-card">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                             {t.finance.clientDebt}
@@ -504,7 +504,7 @@ export function FinanceTab({
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card">
+                <Card className="bg-card">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                             {t.finance.clientPrepaid}
@@ -532,7 +532,7 @@ export function FinanceTab({
 
                 {/* HISTORY TAB */}
                 <TabsContent value="history">
-                    <Card className="border-none shadow-sm">
+                    <Card className="border-none">
                         <CardHeader>
                             <CardTitle className="text-lg font-medium">{t.finance.history}</CardTitle>
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
@@ -540,7 +540,12 @@ export function FinanceTab({
                                     {t.finance.historyDesc}
                                 </CardDescription>
                                  {/* Orders-tab style: wrap on mobile so actions never disappear off-screen. */}
-                                 <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
+                                 <ResourceActionBar
+                                     searchValue={historySearchQuery}
+                                     onSearchChange={setHistorySearchQuery}
+                                     searchPlaceholder={t.admin.searchPlaceholder}
+                                     className="w-full border-0 pb-0 sm:w-auto sm:flex-1 sm:border-0 sm:pb-0"
+                                 >
                                      <RefreshIconButton
                                          label={profileUiText?.refresh ?? 'Refresh'}
                                          onClick={() => void handleRefreshFinance()}
@@ -563,15 +568,8 @@ export function FinanceTab({
                                          />
                                        ) : null}
 
-                                     <SearchPanel
-                                         value={historySearchQuery}
-                                         onChange={setHistorySearchQuery}
-                                         placeholder={t.admin.searchPlaceholder}
-                                         className="w-full sm:w-[260px] md:w-[320px] flex-none basis-full sm:basis-auto"
-                                     />
-
                                      {/* Category filter removed: search + date period are the primary audit controls. */}
-                                 </div>
+                                 </ResourceActionBar>
                              </div>
                          </CardHeader>
                         <CardContent>
