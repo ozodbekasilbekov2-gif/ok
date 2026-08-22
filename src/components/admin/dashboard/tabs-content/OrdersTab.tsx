@@ -5,8 +5,8 @@ import type { DateRange } from 'react-day-picker'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { SearchPanel } from '@/components/ui/search-panel'
 import { CalendarDateSelector } from '@/components/admin/dashboard/shared/CalendarDateSelector'
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton'
 import { TabEmptyState } from '@/components/admin/dashboard/shared/TabEmptyState'
 import type { Order } from '@/components/admin/dashboard/types'
@@ -57,6 +57,7 @@ export type OrdersTabProps = {
   selectedOrdersSize: number
   isDeletingOrders: boolean
   onOpenDeleteDialog: () => void
+  onClearSelection?: () => void
   searchInputRef: RefObject<HTMLInputElement | null>
   searchTerm: string
   onSearchTermChange: (value: string) => void
@@ -89,6 +90,7 @@ export function OrdersTab({
   selectedOrdersSize,
   isDeletingOrders,
   onOpenDeleteDialog,
+  onClearSelection,
   searchInputRef,
   searchTerm,
   onSearchTermChange,
@@ -108,7 +110,15 @@ export function OrdersTab({
               <CardTitle>{copy.title}</CardTitle>
               <CardDescription>{copy.description}</CardDescription>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-end gap-2 lg:w-auto">
+            <ResourceActionBar
+              searchValue={searchTerm}
+              onSearchChange={onSearchTermChange}
+              searchPlaceholder={profileCopy.searchOrdersPlaceholder}
+              inputRef={searchInputRef}
+              selectedCount={selectedOrdersSize}
+              onClearSelection={onClearSelection}
+              className="w-full border-0 pb-0 sm:w-auto sm:flex-1 sm:border-0 sm:pb-0"
+            >
               <CalendarDateSelector
                 selectedDate={selectedDate}
                 applySelectedDate={applySelectedDate}
@@ -152,15 +162,7 @@ export function OrdersTab({
                 {isDeletingOrders ? <span className="text-xs">{copy.loading}</span> : <Trash2 className="size-4" />}
               </Button>
               {selectedOrdersSize > 0 ? <Badge variant="secondary" className="h-7 px-2 text-xs">{selectedOrdersSize}</Badge> : null}
-            </div>
-          </div>
-          <div className="flex items-center">
-            <SearchPanel
-              inputRef={searchInputRef}
-              value={searchTerm}
-              onChange={onSearchTermChange}
-              placeholder={profileCopy.searchOrdersPlaceholder}
-            />
+            </ResourceActionBar>
           </div>
         </CardHeader>
         <CardContent>

@@ -78,6 +78,8 @@ import {
 
 import { CalendarDateSelector } from '@/components/admin/dashboard/shared/CalendarDateSelector'
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton'
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
+import { reconcileResourceSelection } from '@/components/admin/dashboard/shared/resource-state'
 import { SearchPanel } from '@/components/ui/search-panel'
 import type { DateRange } from 'react-day-picker'
 import {
@@ -811,6 +813,14 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
         .some((field) => String(field).toLowerCase().includes(normalizedSearch))
     })
   }, [clientSearchTerm, clients])
+
+  useEffect(() => {
+    setSelectedClients((selected) => {
+      const reconciled = reconcileResourceSelection(selected, clients, (client) => client.id)
+      if (reconciled.size === selected.size && [...reconciled].every((id) => selected.has(id))) return selected
+      return reconciled
+    })
+  }, [clients])
 
   const selectedClientsSnapshot = useMemo(
     () => clients.filter((client) => selectedClients.has(client.id)),
@@ -2198,6 +2208,7 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
               selectedOrdersSize={selectedOrders.size}
               isDeletingOrders={isDeletingOrders}
               onOpenDeleteDialog={() => setIsDeleteOrdersDialogOpen(true)}
+              onClearSelection={() => setSelectedOrders(new Set())}
               searchInputRef={searchInputRef}
               searchTerm={searchTerm}
               onSearchTermChange={setSearchTerm}
@@ -2224,7 +2235,14 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
                       {t.admin.manageClientsDesc}
                     </CardDescription>
                   </div>
-                  <div className="flex w-full flex-wrap items-center justify-end gap-2 lg:w-auto">
+                  <ResourceActionBar
+                    searchValue={clientSearchTerm}
+                    onSearchChange={setClientSearchTerm}
+                    searchPlaceholder={profileUiText.searchClientPlaceholder}
+                    selectedCount={selectedClients.size}
+                    onClearSelection={() => setSelectedClients(new Set())}
+                    className="w-full border-0 pb-0 sm:w-auto sm:flex-1 sm:border-0 sm:pb-0"
+                  >
                     <CalendarDateSelector
                       selectedDate={selectedDate}
                       applySelectedDate={applySelectedDate}
@@ -2318,16 +2336,9 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
                         {selectedClients.size}
                       </Badge>
                     )}
-                  </div>
+                  </ResourceActionBar>
                 </div>
-                <div className="flex items-center">
-                  <SearchPanel
-                    value={clientSearchTerm}
-                    onChange={setClientSearchTerm}
-                    placeholder={profileUiText.searchClientPlaceholder}
-                  />
-                </div>
-                    <ClientEditorDialog
+                <ClientEditorDialog
                       open={isCreateClientModalOpen}
                       onOpenChange={setIsCreateClientModalOpen}
                       editingClientId={editingClientId}
