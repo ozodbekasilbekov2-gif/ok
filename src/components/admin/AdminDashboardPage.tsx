@@ -80,7 +80,6 @@ import { CalendarDateSelector } from '@/components/admin/dashboard/shared/Calend
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton'
 import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
 import { filterResources, reconcileResourceSelection } from '@/components/admin/dashboard/shared/resource-state'
-import { SearchPanel } from '@/components/ui/search-panel'
 import type { DateRange } from 'react-day-picker'
 import {
   filterDeletedClients,
@@ -346,6 +345,10 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
     if (!q) return binClients
     return filterDeletedClients(binClients, q)
   }, [binClients, binClientsSearch])
+
+  useEffect(() => {
+    setSelectedBinClients((selected) => reconcileResourceSelection(selected, binClients, (client) => client.id))
+  }, [binClients])
 
   const handleRefreshBinOrders = useCallback(async () => {
     setIsBinOrdersRefreshing(true)
@@ -2499,53 +2502,37 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <h2 className="text-2xl font-bold tracking-tight">{profileUiText.clientsBin}</h2>
                   {/* Orders-tab style: wrap on mobile so actions never disappear off-screen. */}
-                  <div className="flex w-full flex-wrap items-center justify-end gap-2">
-                    <div className="relative">
-                      <IconButton
-                        label={`${t.admin.deleteSelected} (${selectedBinClients.size})`}
-                        onClick={handlePermanentDeleteClients}
-                        variant="destructive"
-                        disabled={selectedBinClients.size === 0}
-                      >
-                        <Trash2 className="size-4" />
-                      </IconButton>
-                      {selectedBinClients.size > 0 ? (
-                        <span className="pointer-events-none absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-background px-1 text-[11px] font-semibold text-foreground">
-                          {selectedBinClients.size}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <div className="relative">
-                      <IconButton
-                        label={`${t.admin.restoreSelected} (${selectedBinClients.size})`}
-                        onClick={handleRestoreSelectedClients}
-                        variant="outline"
-                        disabled={selectedBinClients.size === 0}
-                      >
-                        <History className="size-4" />
-                      </IconButton>
-                      {selectedBinClients.size > 0 ? (
-                        <span className="pointer-events-none absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-foreground px-1 text-[11px] font-semibold text-background">
-                          {selectedBinClients.size}
-                        </span>
-                      ) : null}
-                    </div>
-
+                  <ResourceActionBar
+                    searchValue={binClientsSearch}
+                    onSearchChange={setBinClientsSearch}
+                    searchPlaceholder={t.admin.searchPlaceholder}
+                    selectedCount={selectedBinClients.size}
+                    onClearSelection={() => setSelectedBinClients(new Set())}
+                    className="w-full border-0 pb-0 sm:w-auto sm:flex-1 sm:border-0 sm:pb-0"
+                  >
+                    <IconButton
+                      label={t.admin.deleteSelected}
+                      onClick={handlePermanentDeleteClients}
+                      variant="destructive"
+                      disabled={selectedBinClients.size === 0}
+                    >
+                      <Trash2 className="size-4" />
+                    </IconButton>
+                    <IconButton
+                      label={t.admin.restoreSelected}
+                      onClick={handleRestoreSelectedClients}
+                      variant="outline"
+                      disabled={selectedBinClients.size === 0}
+                    >
+                      <History className="size-4" />
+                    </IconButton>
                     <RefreshIconButton
                       label={profileUiText.refresh}
                       onClick={() => void handleRefreshBinClients()}
                       isLoading={isBinClientsRefreshing}
                       iconSize="md"
                     />
-
-                    <SearchPanel
-                      value={binClientsSearch}
-                      onChange={setBinClientsSearch}
-                      placeholder={t.admin.searchPlaceholder}
-                      className="w-full sm:w-[260px] md:w-[320px] flex-none basis-full sm:basis-auto"
-                    />
-                  </div>
+                  </ResourceActionBar>
                 </div>
 
                 <div className="rounded-md border">
