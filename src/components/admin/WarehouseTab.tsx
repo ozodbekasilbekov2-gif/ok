@@ -366,7 +366,7 @@ export function WarehouseTab({ className }: WarehouseTabProps) {
         });
 
         return distribution;
-    }, [allClients, allOrders, toLocalIsoDate]);
+    }, [allClients, allOrders]);
 
     // Fetch client calorie distribution from database
     const fetchClientCalories = useCallback(async () => {
@@ -447,7 +447,7 @@ export function WarehouseTab({ className }: WarehouseTabProps) {
         } finally {
             setIsLoadingClients(false);
         }
-    }, [auditUiText, toLocalIsoDate]);
+    }, [auditUiText]);
 
     useEffect(() => {
         fetchClientCalories();
@@ -546,7 +546,7 @@ export function WarehouseTab({ className }: WarehouseTabProps) {
             console.error('Error fetching warehouse data:', error);
             toast.error(auditUiText.warehouseLoadError);
         }
-    }, [auditUiText.warehouseLoadError, fetchInventory, toLocalIsoDate, tomorrowMenuNumber]);
+    }, [auditUiText.warehouseLoadError, fetchInventory, tomorrowMenuNumber]);
 
     // Load tomorrow's menu on mount
     useEffect(() => {
