@@ -1,36 +1,26 @@
 import type { Client, Order } from '@/components/admin/dashboard/types'
+import { filterResources } from '@/components/admin/dashboard/shared/resource-state'
 
 export type ClientFinanceProjection = {
   balance: number
   dailyPrice: number
 }
 
-function searchableText(values: unknown[]): string {
-  return values
-    .filter((value): value is string | number => typeof value === 'string' || typeof value === 'number')
-    .join(' ')
-    .toLowerCase()
-}
-
 export function filterDeletedOrders(orders: Order[], query: string): Order[] {
-  const normalizedQuery = query.trim().toLowerCase()
-  if (!normalizedQuery) return orders
-  return orders.filter((order) => searchableText([
-    order.id,
-    order.orderStatus,
-    order.customer?.name,
-    order.customer?.phone,
-  ]).includes(normalizedQuery))
+  return filterResources(orders, query, [
+    { id: 'id', getValue: (order) => order.id },
+    { id: 'status', getValue: (order) => order.orderStatus },
+    { id: 'customer', getValue: (order) => order.customer?.name },
+    { id: 'phone', getValue: (order) => order.customer?.phone },
+  ])
 }
 
 export function filterDeletedClients(clients: Client[], query: string): Client[] {
-  const normalizedQuery = query.trim().toLowerCase()
-  if (!normalizedQuery) return clients
-  return clients.filter((client) => searchableText([
-    client.name,
-    client.phone,
-    client.address,
-  ]).includes(normalizedQuery))
+  return filterResources(clients, query, [
+    { id: 'name', getValue: (client) => client.name },
+    { id: 'phone', getValue: (client) => client.phone },
+    { id: 'address', getValue: (client) => client.address },
+  ])
 }
 
 export function parseClientFinanceProjections(value: unknown): Record<string, ClientFinanceProjection> {
