@@ -41,6 +41,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { MENUS, MEAL_TYPES, type Dish, type Ingredient } from '@/lib/menuData';
 import type { DateRange } from 'react-day-picker';
 import { CalendarRangeSelector } from '@/components/admin/dashboard/shared/CalendarRangeSelector';
+import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar';
 import { parseDishDraft, type DishDraft } from '@/lib/menu/dish-draft';
 
 // Types for custom sets
@@ -1462,7 +1463,12 @@ export function SetsTab() {
                 </div>
 
                 {/* Orders-tab style: wrap on mobile so actions never disappear off-screen. */}
-                <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
+                <ResourceActionBar
+                    searchValue={setSearch}
+                    onSearchChange={setSetSearch}
+                    searchPlaceholder={uiText.search}
+                    className="w-full border-0 pb-0 sm:w-auto sm:flex-1 sm:border-0 sm:pb-0"
+                >
                     <CalendarRangeSelector
                         value={periodRange}
                         onChange={(next) => {
@@ -1497,18 +1503,12 @@ export function SetsTab() {
                     >
                         {setToThisSetLabel}
                     </Button>
-                    <SearchPanel
-                        value={setSearch}
-                        onChange={setSetSearch}
-                        placeholder={uiText.search}
-                        className="w-full sm:w-[260px] md:w-[320px] flex-none basis-full sm:basis-auto"
-                    />
-                </div>
+                </ResourceActionBar>
             </div>
 
             <div className="space-y-4">
                 {/* Sets Selector Row (replaces sidebar) */}
-                <Card className="glass-card border-2 border-border shadow-shadow overflow-hidden">
+                <Card className="bg-card border-2 border-border overflow-hidden">
                     <div className="p-2 overflow-x-auto">
                         <div className="flex items-center gap-1 min-w-max">
                             <span className="text-xs font-medium px-2 text-main-foreground/80 mr-2 flex items-center gap-1">
@@ -1525,9 +1525,9 @@ export function SetsTab() {
                                         onClick={() => setSelectedSet(set)}
                                         variant="ghost"
                                         className={[
-                                            "h-9 min-w-[140px] max-w-[220px] px-3 rounded-base flex items-center border-2 transition-all justify-start",
+                                            "h-9 min-w-[140px] max-w-[220px] px-3 rounded-base flex items-center border-2 justify-start",
                                             isSelected
-                                                ? "border-border bg-background text-foreground shadow-shadow"
+                                                ? "border-border bg-background text-foreground"
                                                 : "border-transparent bg-transparent text-main-foreground hover:border-border hover:bg-secondary-background",
                                         ].join(" ")}
                                         title={set.name}
@@ -1563,28 +1563,28 @@ export function SetsTab() {
 
                 {selectedSet ? (
                     <div className="space-y-4">
-                            <Card className="glass-card border border-border/70 shadow-shadow">
+                            <Card className="bg-card border border-border/70">
                                 <CardContent className="px-4 py-3">
                                     {selectedDayBadgeLabel ? (
                                         <div className="mb-2 text-xs font-semibold text-main-foreground/80">{selectedDayBadgeLabel}</div>
                                     ) : null}
                                     <div className="grid gap-2 text-sm sm:grid-cols-3">
-                                        <div className="glass-card rounded-md border px-3 py-2">
+                                        <div className="bg-card rounded-md border px-3 py-2">
                                             <p className="text-[11px] text-muted-foreground">{uiText.dishesLabel}</p>
                                             <p className="font-semibold tabular-nums">{selectedDaysSummary.dishes}</p>
                                         </div>
-                                        <div className="glass-card rounded-md border px-3 py-2">
+                                        <div className="bg-card rounded-md border px-3 py-2">
                                             <p className="text-[11px] text-muted-foreground">{uiText.caloriesLabel}</p>
                                             <p className="font-semibold tabular-nums">{new Intl.NumberFormat('ru-RU').format(selectedDaysSummary.calories)}</p>
                                         </div>
-                                        <div className="glass-card rounded-md border px-3 py-2">
+                                        <div className="bg-card rounded-md border px-3 py-2">
                                             <p className="text-[11px] text-muted-foreground">{uiText.priceLabel}</p>
                                             <p className="font-semibold tabular-nums">{formatUzs(selectedDaysSummary.price)}</p>
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
-                            <Card className="glass-card min-h-[600px] flex flex-col shadow-shadow">
+                            <Card className="bg-card min-h-[600px] flex flex-col">
                                 {/* Day Content */}
                                 <CardContent className="flex-1 p-0">
                                     {!hasDataForDay ? (
@@ -1659,7 +1659,7 @@ export function SetsTab() {
                                                         })
 
                                                     return (
-                                                        <TabsContent key={group.id} value={group.id as string} className="flex-1 p-6 m-0 glass-card">
+                                                        <TabsContent key={group.id} value={group.id as string} className="flex-1 p-6 m-0 bg-card">
                                                             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                                                                 <div className="min-w-0">
                                                                     <div className="flex items-center gap-2">
@@ -1711,7 +1711,7 @@ export function SetsTab() {
                                                                     const dishKcal = getDishCalories(dish, availableDishes, kcalPerGramByName)
 
                                                                     return (
-                                                                        <div key={`${dish.dishId}-${idx}`} className="glass-card p-3 rounded-xl border border-border hover:shadow-md transition-all flex gap-3 group relative">
+                                                                        <div key={`${dish.dishId}-${idx}`} className="bg-card p-3 rounded-xl border border-border flex gap-3 group relative">
                                                                             <div className="flex-1 min-w-0">
                                                                                 <div className="flex justify-between items-start gap-2">
                                                                                     <div className="min-w-0">
@@ -1910,7 +1910,7 @@ export function SetsTab() {
                             />
 
                             {mealNameToAdd.trim().length > 0 ? (
-                                <div className="glass-card rounded-md border border-border">
+                                <div className="bg-card rounded-md border border-border">
                                     <ScrollArea className="max-h-44">
                                         <div className="p-2 space-y-1">
                                             {availableDishes
@@ -1950,7 +1950,7 @@ export function SetsTab() {
                         </div>
 
                         <div className="rounded-xl border border-border overflow-hidden">
-                            <div className="glass-card px-4 py-3 border-b flex items-center justify-between gap-3">
+                            <div className="bg-card px-4 py-3 border-b flex items-center justify-between gap-3">
                                 <div className="min-w-0">
                                     <div className="text-sm font-semibold">{uiText.ingredients}</div>
                                     <div className="text-xs text-muted-foreground truncate">{uiText.ingredientsDesc}</div>
@@ -2064,7 +2064,7 @@ export function SetsTab() {
                                 </TableBody>
                             </Table>
 
-                            <div className="glass-card p-4 border-t border-border space-y-3">
+                            <div className="bg-card p-4 border-t border-border space-y-3">
                                 <div className="space-y-2">
                                     <Label className="text-xs text-muted-foreground uppercase font-bold">{uiText.addIngredient}</Label>
                                     <Select onValueChange={(val) => addDraftIngredient(val)}>
@@ -2119,7 +2119,7 @@ export function SetsTab() {
                     {editingDish && (
                         <div className="flex-1 overflow-auto">
                             <Table className="[&_tr]:!bg-transparent [&_tr]:text-foreground">
-                                <TableHeader className="glass-card sticky top-0">
+                                <TableHeader className="bg-card sticky top-0">
                                     <TableRow className="!bg-transparent">
                                         <TableHead className="pl-6">{uiText.tableName}</TableHead>
                                         <TableHead>{uiText.tableAmount}</TableHead>
@@ -2202,7 +2202,7 @@ export function SetsTab() {
                         </div>
                     )}
 
-                    <div className="glass-card p-4 border-t border-border space-y-3">
+                    <div className="bg-card p-4 border-t border-border space-y-3">
                         <div className="grid grid-cols-12 gap-2">
                             <Input className="col-span-4 h-8" list="edit-ingredients-list" placeholder="New ingredient" value={customEditIngredient.name} onChange={(e) => setCustomEditIngredient((prev) => ({ ...prev, name: e.target.value }))} />
                             <datalist id="edit-ingredients-list">
