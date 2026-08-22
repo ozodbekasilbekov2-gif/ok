@@ -1,8 +1,8 @@
 # AutoFood uchun `-1` reference-driven UI va resurs boshqaruvi rejasi
 
-**Sana:** 2026-08-22  
-**Muallif:** Manus AI  
-**Reference revision:** `ozodbekasilbekov2-gif/-1`, commit `297fed5` (`v1.2.184-local.360`)  
+**Sana:** 2026-08-22
+**Muallif:** Manus AI
+**Reference revision:** `ozodbekasilbekov2-gif/-1`, commit `297fed5` (`v1.2.184-local.360`)
 **Maqsad:** `-1` ilovasining resurslarni boshqarishdagi kuchli UX va funksional patternlarini AutoFood’ning oziq-ovqat yetkazib berish domeniga moslashtirish, lekin AutoFood’ning Prisma/PostgreSQL modeli, API response shape’lari, rollari, order lifecycle’i va Vercel deployment’ini saqlab qolish.
 
 ## 1. Asosiy xulosa
