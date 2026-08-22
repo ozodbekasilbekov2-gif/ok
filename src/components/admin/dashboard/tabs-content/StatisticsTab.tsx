@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { ChevronDown, ChevronUp, Eye, EyeOff, Settings2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Eye, EyeOff, RotateCcw, Settings2 } from 'lucide-react'
 
 import type { Stats } from '@/components/admin/dashboard/types'
 import { Button } from '@/components/ui/button'
@@ -201,7 +201,23 @@ export function StatisticsTab({ stats, copy }: { stats: Stats | null; copy: Stat
       </div>
 
       {showSettings && (
-        <div id="statistics-widget-settings" className="grid gap-2 rounded-base border border-border bg-card p-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="statistics-widget-settings" className="space-y-3 rounded-base border border-border bg-card p-3">
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                setOrder(DEFAULT_WIDGET_ORDER)
+                setHidden(new Set())
+              }}
+            >
+              <RotateCcw className="size-4" />
+              Reset
+            </Button>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {order.map((id, index) => {
             const widget = widgetById.get(id)
             if (!widget) return null
@@ -235,6 +251,7 @@ export function StatisticsTab({ stats, copy }: { stats: Stats | null; copy: Stat
               </div>
             )
           })}
+          </div>
         </div>
       )}
 
