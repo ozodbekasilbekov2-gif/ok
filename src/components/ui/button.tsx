@@ -11,26 +11,26 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "text-main-foreground bg-main border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "text-main-foreground bg-main border-2 border-border",
         outline:
-          "bg-background text-foreground border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-background text-foreground border-2 border-border",
         secondary:
-          "bg-secondary-background text-foreground border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-secondary-background text-foreground border-2 border-border",
         ghost:
           "bg-transparent text-foreground border-2 border-transparent shadow-none hover:border-border hover:bg-secondary-background",
         destructive:
-          "bg-rose-300 text-black border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-rose-300 text-black border-2 border-border",
         success:
-          "bg-emerald-300 text-black border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-emerald-300 text-black border-2 border-border",
         warning:
-          "bg-orange-300 text-black border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-orange-300 text-black border-2 border-border",
         link:
           "border-0 bg-transparent text-foreground underline-offset-4 hover:underline shadow-none px-0 h-auto",
         noShadow: "text-main-foreground bg-main border-2 border-border",
         neutral:
-          "bg-secondary-background text-foreground border-2 border-border shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
+          "bg-secondary-background text-foreground border-2 border-border",
         reverse:
-          "text-main-foreground bg-main border-2 border-border hover:translate-x-reverseBoxShadowX hover:translate-y-reverseBoxShadowY hover:shadow-shadow",
+          "text-main-foreground bg-main border-2 border-border",
       },
       size: {
         default: "h-10 px-4 py-2",

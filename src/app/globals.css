@@ -58,11 +58,11 @@
 :root {
   --radius: 0.75rem;
   --color-brand: var(--primary);
-  --box-shadow-x: 4px;
-  --box-shadow-y: 4px;
-  --reverse-box-shadow-x: -4px;
-  --reverse-box-shadow-y: -4px;
-  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0 0 #000;
+  --box-shadow-x: 0px;
+  --box-shadow-y: 0px;
+  --reverse-box-shadow-x: 0px;
+  --reverse-box-shadow-y: 0px;
+  --shadow: none;
   --app-bg-grid: none;
   --app-bg-grid-size: 18px 18px;
   --app-bg-paper: none;
@@ -129,7 +129,7 @@
 
 .dark {
   --color-brand: var(--primary);
-  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0 0 #000;
+  --shadow: none;
   --background: #111112;
   --foreground: #fff7cc;
   --main: #ffe44d;
@@ -391,35 +391,28 @@
 
   /* —— Premium Glass Cards —— */
   .glass-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 
-      0 4px 24px -1px rgba(0, 0, 0, 0.2),
-      0 1px 2px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(24px) saturate(1.8);
-    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
-
-  /* —— Hover Effects —— */
+  /* Keep shared surfaces flat so content remains the visual priority. */
   .glass-card:hover {
-    border-color: rgba(255, 255, 255, 0.14);
-    box-shadow: 
-      0 8px 40px -4px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.09);
-    transform: translateY(-2px);
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    border-color: var(--border);
+    box-shadow: none;
+    transform: none;
+    transition: border-color 0.15s ease;
   }
 
   .hover-lift {
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), 
-                box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: border-color 0.15s ease;
   }
 
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.35);
+    transform: none;
+    box-shadow: none;
   }
 
   .hover-glow {

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import type { LucideIcon } from 'lucide-react'
 
-import { SitePageSurface, SitePanel, SitePublicHeader } from '@/components/site/SiteScaffold'
+import { SitePageSurface, SitePublicHeader } from '@/components/site/SiteScaffold'
 import { makeClientSiteHref } from '@/lib/site-urls'
 import type { SiteConfig } from '@/hooks/useSiteConfig'
 
@@ -47,7 +47,7 @@ export function SiteAuthShell({
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_420px]">
-          <SitePanel className="space-y-6">
+          <section className="space-y-6 border-b pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6" style={{ borderColor: 'var(--site-border)' }}>
             <div
               className="inline-flex items-center gap-2 rounded-md border px-3 py-1 text-xs font-medium"
               style={{ borderColor: 'var(--site-border)', color: 'var(--site-accent)' }}
@@ -76,9 +76,9 @@ export function SiteAuthShell({
                 </div>
               ))}
             </div>
-          </SitePanel>
+          </section>
 
-          <SitePanel className="mx-auto w-full max-w-lg space-y-4">
+          <section className="mx-auto w-full max-w-lg space-y-4 lg:pl-2">
             <div>
               <h2 className="text-2xl font-semibold">{formTitle}</h2>
               <p className="mt-1 text-sm" style={{ color: 'var(--site-muted)' }}>
@@ -86,7 +86,7 @@ export function SiteAuthShell({
               </p>
             </div>
             {children}
-          </SitePanel>
+          </section>
         </div>
       </main>
     </SitePageSurface>

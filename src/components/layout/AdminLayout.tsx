@@ -97,15 +97,12 @@ export function AdminLayout({ children, activeTab, onTabChange, onLogout, userNa
         />
 
         <main className="flex-1 overflow-auto pt-4 px-4 pb-20 lg:p-6 xl:p-8">
-          <div
-            key={activeTab}
-            className="h-full min-h-[80vh] rounded-2xl border border-border bg-card p-4 md:p-6 lg:p-8 shadow-sm"
-          >
+          <div key={activeTab} className="h-full min-h-[80vh]">
             {children}
           </div>
         </main>
 
-        <nav className="safe-area-inset-bottom fixed bottom-3 left-3 right-3 z-40 rounded-2xl border border-border bg-background px-2 py-2.5 lg:hidden shadow-sm">
+        <nav className="safe-area-inset-bottom fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background px-2 py-2.5 lg:hidden">
           <div className="mx-auto flex max-w-md items-center justify-around">
             <MobileNavItem
               isActive={activeTab === 'orders'}

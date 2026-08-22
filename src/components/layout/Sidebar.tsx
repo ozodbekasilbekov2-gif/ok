@@ -66,7 +66,7 @@ export function Sidebar({ className, activeTab, onTabChange, isOpen, onClose, on
         className={cn(
           'fixed inset-y-0 left-0 z-50 w-72 -translate-x-full transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]',
           'border-r border-border bg-background',
-          'lg:static lg:translate-x-0 lg:border-none lg:w-[260px] lg:m-4 lg:rounded-2xl lg:bg-card lg:border lg:border-border lg:shadow-sm',
+          'lg:static lg:translate-x-0 lg:w-[260px]',
           isOpen && 'translate-x-0',
           className
         )}

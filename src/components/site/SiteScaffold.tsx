@@ -84,14 +84,8 @@ export function SitePublicHeader({ site, rightSlot }: { site: SiteConfig; rightS
   const showAuthButtons = isAuthenticated !== true
 
   return (
-    <header className="sticky top-0 z-30 px-3 pt-3 sm:px-4" style={{ color: 'var(--site-text)' }}>
-      <div
-        className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-base border-2 px-4 py-3"
-        style={{
-          borderColor: 'var(--site-border)',
-          backgroundColor: 'var(--site-panel)',
-        }}
-      >
+    <header className="sticky top-0 z-30 border-b px-3 py-3 sm:px-4" style={{ color: 'var(--site-text)', borderColor: 'var(--site-border)', backgroundColor: 'var(--site-bg)' }}>
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
         <Link href={makeClientSiteHref(site.subdomain, '')} className="flex items-center gap-3">
           <span
             className="flex h-10 w-10 items-center justify-center rounded-base border-2 text-sm font-semibold"
@@ -155,10 +149,9 @@ export function SiteHero({
   return (
     <section className="px-4 pt-5">
       <div
-        className="mx-auto grid max-w-6xl gap-6 overflow-hidden rounded-base border-2 px-5 py-8 lg:grid-cols-[minmax(0,1.3fr)_320px] lg:px-8 lg:py-10"
+        className="mx-auto grid max-w-6xl gap-6 border-b px-5 py-8 lg:grid-cols-[minmax(0,1.3fr)_320px] lg:px-8 lg:py-10"
         style={{
           borderColor: 'var(--site-border)',
-          background: 'var(--site-panel)',
         }}
       >
         <div className="relative">
@@ -182,10 +175,9 @@ export function SiteHero({
         </div>
 
         <div
-          className="rounded-base border-2 p-5"
+          className="border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6"
           style={{
             borderColor: 'var(--site-border)',
-            backgroundColor: 'var(--site-panel)',
           }}
         >
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em]" style={{ color: 'var(--site-accent)' }}>

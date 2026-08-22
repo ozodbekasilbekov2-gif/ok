@@ -33,17 +33,15 @@ export function AuthShell({
   footer,
 }: AuthShellProps) {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background bg-app-paper text-foreground">
-      <div className="pointer-events-none absolute inset-0 z-0 [background:var(--app-bg-grid)] opacity-45" />
-
-      <div className="absolute top-4 right-4 z-50">
+    <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
+      <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
 
-        <div className="relative z-10 grid w-full max-w-5xl gap-8 px-4 py-12 lg:grid-cols-[1fr_420px]">
+      <div className="grid w-full max-w-5xl gap-8 px-4 py-12 lg:grid-cols-[1fr_420px]">
         <aside className="flex flex-col justify-center space-y-8 lg:pr-12">
           <Link href="/" className="inline-flex items-center gap-3 w-max">
-            <div className="flex h-11 w-11 items-center justify-center rounded-base border-2 border-border bg-main text-sm font-heading font-bold text-main-foreground shadow-shadow">
+            <div className="flex h-11 w-11 items-center justify-center rounded-base border-2 border-border bg-main text-sm font-heading font-bold text-main-foreground">
               AF
             </div>
             <span className="text-xl font-heading font-bold tracking-tight">AutoFood</span>
@@ -62,9 +60,9 @@ export function AuthShell({
           <div className="grid gap-3 sm:grid-cols-2">
             {highlights.map((item) => {
               return (
-                <div key={item.label} className="rounded-base border-2 border-border bg-card p-4 shadow-shadow">
+                <div key={item.label} className="rounded-base border-2 border-border bg-card p-4">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground shadow-shadow">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground">
                       <item.icon className="h-5 w-5" />
                     </div>
                     <div>
@@ -78,10 +76,10 @@ export function AuthShell({
           </div>
         </aside>
 
-        <section className="relative overflow-hidden rounded-base border-2 border-border bg-card p-8 shadow-shadow">
-          <div className="relative z-10">
+        <section className="rounded-base border-2 border-border bg-card p-8">
+          <div>
             <div className="mb-8 text-center">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-base border-2 border-border bg-main text-sm font-heading font-bold text-main-foreground shadow-shadow">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-base border-2 border-border bg-main text-sm font-heading font-bold text-main-foreground">
                 AF
               </div>
               <h2 className="text-xl font-heading font-bold tracking-tight">{cardTitle}</h2>
