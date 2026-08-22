@@ -79,7 +79,7 @@ import {
 import { CalendarDateSelector } from '@/components/admin/dashboard/shared/CalendarDateSelector'
 import { RefreshIconButton } from '@/components/admin/dashboard/shared/RefreshIconButton'
 import { ResourceActionBar } from '@/components/admin/dashboard/shared/ResourceActionBar'
-import { reconcileResourceSelection } from '@/components/admin/dashboard/shared/resource-state'
+import { filterResources, reconcileResourceSelection } from '@/components/admin/dashboard/shared/resource-state'
 import { SearchPanel } from '@/components/ui/search-panel'
 import type { DateRange } from 'react-day-picker'
 import {
@@ -802,17 +802,16 @@ export function AdminDashboardPage({ mode }: { mode: AdminDashboardMode }) {
     })
   }, [normalizedOrdersForSelectedDate, searchTerm])
 
-  const filteredClients = useMemo(() => {
-    const normalizedSearch = clientSearchTerm.trim().toLowerCase()
-
-    return clients.filter((client) => {
-      if (!normalizedSearch) return true
-
-      return [client.name, client.nickName, client.phone, client.address]
-        .filter(Boolean)
-        .some((field) => String(field).toLowerCase().includes(normalizedSearch))
-    })
-  }, [clientSearchTerm, clients])
+  const filteredClients = useMemo(() => filterResources(
+    clients,
+    clientSearchTerm,
+    [
+      { id: 'name', getValue: (client: Client) => client.name },
+      { id: 'nickname', getValue: (client: Client) => client.nickName },
+      { id: 'phone', getValue: (client: Client) => client.phone },
+      { id: 'address', getValue: (client: Client) => client.address },
+    ],
+  ), [clientSearchTerm, clients])
 
   useEffect(() => {
     setSelectedClients((selected) => {
